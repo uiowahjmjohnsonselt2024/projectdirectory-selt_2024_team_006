@@ -25,6 +25,10 @@ jobs:
         run: |
           bundle exec rubocop
 
-      - name: Run RSpec
+      - name: Run RSpec Tests
         run: |
           bundle exec rspec
+
+      - name: Run Cucumber Tests
+        run: |
+          bundle exec cucumber
