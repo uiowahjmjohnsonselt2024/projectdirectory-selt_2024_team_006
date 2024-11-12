@@ -1,22 +1,30 @@
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Getting started
 
-Things you may want to cover:
+### Install Dependencies
+```
+bundle install
+```
+### Migrate the Database
+```
+rake db:create
+rake db:migrate
+rake db:reset
+rake db:setup
+```
 
-- Ruby version
+# Checks before creating a PR
 
-- System dependencies
+### Linter
+```
+bundle exec rubocop
+```
 
-- Configuration
+### Run Rspec Tests (100% coverage)
+```
+bundle exec rspec
+```
 
-- Database creation
-
-- Database initialization
-
-- How to run the test suite
-
-- Services (job queues, cache servers, search engines, etc.)
-
-- Deployment instructions
-
-- ...
+### Run Cucumber Tests
+```
+bundle exec cucumber
+```

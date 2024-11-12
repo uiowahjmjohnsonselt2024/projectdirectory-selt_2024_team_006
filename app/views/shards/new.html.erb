@@ -1,0 +1,114 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card p-4 shadow-sm">
+        <h1 class="h4 mb-4 text-center">Purchase Shards</h1>
+
+        <%= form_with url: shards_purchase_path, method: :post, data: { turbo: false }, html: { class: "purchase-form" } do |f| %>
+          <div class="form-group">
+            <%= f.label :currency, "Choose Currency", class: "form-label" %>
+            <% if @supported_currencies.present? %>
+              <%= f.select :currency, options_for_select(@supported_currencies, @currency), {}, class: "form-control rounded-pill", id: "currency-select" %>
+            <% else %>
+              <p class="text-danger">Error: No Currencies Found</p>
+            <% end %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :shards_amount, "Amount", class: "form-label" %>
+            <%= f.number_field :shards_amount, min: 1, required: true, class: "form-control rounded-pill", value: @shards_amount, id: "amount-input" %>
+          </div>
+
+          <p id="conversion-info" class="text-muted">You will receive <span id="shards-output">0</span> Shards for this purchase.</p>
+
+          <div class="form-group">
+            <%= f.label :card_number, "Credit Card Number", class: "form-label" %>
+            <%= f.text_field :card_number, required: true, placeholder: "Must start with '1' and end with '2' and be 16 digits long", class: "form-control rounded-pill", value: @card_number %>
+          </div>
+
+          <div class="form-group text-center">
+            <%= f.submit "Purchase Shards", class: "btn btn-primary btn-lg form-control rounded-pill" %>
+          </div>
+        <% end %>
+
+        <div class="text-center mt-3">
+          <%= link_to "Back to Home", root_path %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+      document.addEventListener("DOMContentLoaded", function() {
+            const amountInput = document.getElementById("amount-input");
+            const currencySelect = document.getElementById("currency-select");
+            const shardsOutput = document.getElementById("shards-output");
+            let conversionRate = 0;
+
+            function updateShards() {
+                  const amount = parseFloat(amountInput.value) || 0;
+                  shardsOutput.textContent = Math.round(amount * conversionRate);
+            }
+
+            function fetchInitialConversionRate() {
+                  fetch('/shards/fetch_rate', {
+                        method: 'POST',
+                        headers: {
+                              'Content-Type': 'application/json',
+                              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({ currency: currencySelect.value })
+                  })
+                    .then(response => {
+                          if (!response.ok) {
+                                throw new Error(`HTTP error! Status: ${response.status}`);
+                          }
+                          return response.json();
+                    })
+                    .then(data => {
+                          if (data.conversion_rate) {
+                                conversionRate = data.conversion_rate;
+                                updateShards();
+                          } else {
+                                alert("Failed to fetch initial conversion rate.");
+                          }
+                    })
+                    .catch(error => {
+                          alert("An error occurred while fetching the initial conversion rate.");
+                    });
+            }
+
+            amountInput.addEventListener("input", updateShards);
+
+            currencySelect.addEventListener("change", function() {
+                  fetch('/shards/fetch_rate', {
+                        method: 'POST',
+                        headers: {
+                              'Content-Type': 'application/json',
+                              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({ currency: currencySelect.value })
+                  })
+                    .then(response => {
+                          if (!response.ok) {
+                                throw new Error(`Error fetching data: Status: ${response.status}`);
+                          }
+                          return response.json();
+                    })
+                    .then(data => {
+                          if (data.conversion_rate) {
+                                conversionRate = data.conversion_rate;
+                                updateShards();
+                          } else {
+                                alert("Failed to fetch conversion rate.");
+                          }
+                    })
+                    .catch(error => {
+                          alert("An error occurred while fetching the conversion rate. ", error)
+                    });
+            });
+
+            fetchInitialConversionRate();
+      });
+</script>
