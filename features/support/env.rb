@@ -7,6 +7,16 @@
 # files.
 
 require 'cucumber/rails'
+require 'webmock/cucumber'
+require 'factory_bot_rails'
+
+Cucumber::Rails::World.class_eval do
+  include Warden::Test::Helpers
+end
+
+World(FactoryBot::Syntax::Methods)
+
+WebMock.disable_net_connect!(allow_localhost: true)
 
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
