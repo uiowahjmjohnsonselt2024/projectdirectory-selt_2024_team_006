@@ -157,3 +157,26 @@
 .nav-link-signup:hover {
     background-color: #0056b3;
 }
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height to center vertically */
+}
+
+.single-player-button {
+    font-size: 1.5em; /* Make the button text larger */
+    padding: 1em 2em; /* Add padding for a larger button */
+}
+.single-player-button {
+    font-size: 1.5em;
+    padding: 1em 2em;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+}
+
+/* Hover Effect */
+.single-player-button:hover {
+    background-color: #0056b3; /* Change the background color on hover */
+    color: #fff; /* Change the text color on hover */
+    transform: scale(1.05); /* Slightly increase size on hover */
+}
