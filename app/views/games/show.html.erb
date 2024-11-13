@@ -1,0 +1,12 @@
+<!-- app/views/games/show.html.erb -->
+
+<% if @world %>
+  <h1>Welcome to <%= @world.name %>!</h1>
+  <p>Created on: <%= @world.created_at.strftime("%Y-%m-%d") %></p>
+  <p>Start your adventure in <%= @world.name %>.</p>
+<% else %>
+  <h1>World not found</h1>
+  <p>It seems that this world could not be loaded or does not belong to you.</p>
+  <p>Please return to the <%= link_to 'Single Player', single_player_path %> page and try again.</p>
+<% end %>
+
