@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root 'home#index'
   devise_for :users
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  root 'home#index'
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  get 'shards/purchase', to: 'shards#new', as: 'new_shards_purchase'
+  post 'shards/purchase', to: 'shards#create', as: 'shards_purchase'
+  post 'shards/fetch_rate', to: 'shards#fetch_rate'
 end
