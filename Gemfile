@@ -46,6 +46,14 @@ gem 'bootsnap', require: false
 
 gem 'devise'
 
+gem 'byebug'
+
+gem 'rails-controller-testing'
+
+gem 'warden'
+
+gem 'bootstrap', '~> 5.0.0'
+
 # Use Sass to process CSS
 gem "sassc-rails"
 
@@ -75,11 +83,11 @@ group :development do
 end
 
 group :test do
-  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner-active_record'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'webdrivers'
+  gem 'webmock'
 end
