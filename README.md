@@ -10,6 +10,7 @@ rake db:create
 rake db:migrate
 rake db:reset
 rake db:setup
+rails db:seed
 ```
 
 # Checks before creating a PR

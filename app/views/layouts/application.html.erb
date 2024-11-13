@@ -19,7 +19,8 @@
         <ul class="navbar-nav d-flex align-items-center ml-auto gap-4">
           <li class="nav-item mr-3"><%= link_to "Home", root_path, class: "nav-link text-white" %></li>
           <% if user_signed_in? %>
-            <li class="nav-item mr-3"><%= link_to "Profile", edit_user_registration_path, class: "nav-link text-white" %></li>
+            <li class="nav-item mr-3"><%= link_to "Inventory", user_profile_path, class: "nav-link text-white" %></li>
+            <li class="nav-item mr-3"><%= link_to "Item Shop", shop_index_path, class: "nav-link text-white" %></li>
             <li class="nav-item mr-3"><%= link_to "Buy Shards", new_shards_purchase_path, class: "nav-link text-white" %></li>
             <li class="nav-item mr-3">
               <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "nav-link button-link text-white bg-danger" %>
