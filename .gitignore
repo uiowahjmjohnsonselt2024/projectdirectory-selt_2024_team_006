@@ -18,8 +18,10 @@
 !/tmp/.keep
 
 /idea/*
-.idea/*
+.idea/
 /coverage/*
+
+.byebug_history
 
 # Ignore pidfiles, but keep the directory.
 /tmp/pids/*

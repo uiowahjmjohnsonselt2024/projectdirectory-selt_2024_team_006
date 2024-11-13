@@ -20,10 +20,6 @@ Given('I am signed in as {string}') do |email|
   click_button 'Log in'
 end
 
-When('I fill in {string} with {string}') do |field, value|
-  fill_in field, with: value
-end
-
 When('I press {string}') do |button|
   click_button button
 end
