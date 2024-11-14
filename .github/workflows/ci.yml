@@ -32,3 +32,12 @@ jobs:
       - name: Run Cucumber Tests
         run: |
           bundle exec cucumber
+
+      - name: Deploy to Heroku
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: 'selt2024-team-006-project'
+          heroku_email: 'glottes@uiowa.edu'
+          branch: main
