@@ -1,0 +1,30 @@
+<h1 class="text-center mb-4 mt-4">Shop</h1>
+
+<div class="container">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <% @items.each do |item| %>
+      <div class="col">
+        <div class="card shadow-sm h-100">
+          <div class="d-flex justify-content-center align-items-center bg-white" style="height: 200px;">
+            <%= image_tag item.image_url, class: 'card-img-top', alt: item.name, style: 'max-height: 100%; max-width: 100%; object-fit: contain;' %>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title"><%= item.name %></h5>
+            <p class="card-text mb-3"><%= item.description %></p>
+            <p class="card-text mb-3"><strong>Price: <%= item.price %> Shards</strong></p>
+            <p class="card-text mb-3"><strong>Damage: <%= item.damage %></strong></p>
+
+            <% user_item = current_user.user_items.find_by(item: item) %>
+
+            <% if user_item %>
+              <%= button_to 'Sell', buy_item_path(item.id), method: :post, class: 'btn btn-warning w-100' %>
+              <p class="text-muted text-center mt-2">Sell for <%= (item.price * 0.75).round %> Shards</p>
+            <% else %>
+              <%= button_to 'Buy', buy_item_path(item.id), method: :post, class: 'btn btn-primary w-100' %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
