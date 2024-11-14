@@ -1,0 +1,19 @@
+<h1 class="text-center mb-4 mt-4">Your Inventory</h1>
+
+<div class="container">
+  <div class="row">
+    <% @inventory_items.each do |item| %>
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+          <div class="d-flex justify-content-center align-items-center bg-white" style="height: 200px;">
+            <%= image_tag item.image_url, class: 'card-img-top', alt: item.name, style: 'max-height: 100%; max-width: 100%; object-fit: contain;' %>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title"><%= item.name %></h5>
+            <p class="card-text">Damage: <%= item.damage %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
