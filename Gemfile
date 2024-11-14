@@ -91,3 +91,7 @@ group :test do
   gem 'webdrivers'
   gem 'webmock'
 end
+
+group :production do
+  gem 'pg', '~> 0.2'
+end
