@@ -1,0 +1,8 @@
+<%= form_with model: @world, url: worlds_path, method: :post, html: { id: 'new_world_form' } do |form| %>
+  <div class="form-group">
+    <%= form.label :name, "World Name" %>
+    <%= form.text_field :name, class: "form-control", id: "world_name" %> <!-- Added ID here -->
+  </div>
+
+  <%= form.submit "Create World", class: "btn btn-primary" %>
+<% end %>
