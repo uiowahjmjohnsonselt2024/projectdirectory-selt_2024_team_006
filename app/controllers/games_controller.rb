@@ -25,9 +25,20 @@ class GamesController < ApplicationController
   def show
     @world = find_world
 
-    return unless @world.nil?
+    # Redirect if the world is not found
+    if @world.nil?
+      redirect_to single_player_path, alert: 'World not found.'
+      return
+    end
 
-    redirect_to single_player_path, alert: 'World not found.'
+    # Load cells for the grid view, ordered by rows (y) and columns (x)
+    @cells = @world.cells.order(:y, :x)
+  end
+
+  private
+
+  def find_world
+    World.find_by(id: params[:id], creator_id: current_user.id)
   end
 
   private
