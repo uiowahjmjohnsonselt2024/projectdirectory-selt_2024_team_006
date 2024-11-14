@@ -10,7 +10,7 @@ class World < ApplicationRecord
   def generate_grid
     (0..6).each do |x|
       (0..6).each do |y|
-        cells.create(x: x, y: y, content: "empty") # or set default content
+        cells.create(x: x, y: y, content: 'empty') # or set default content
       end
     end
   end

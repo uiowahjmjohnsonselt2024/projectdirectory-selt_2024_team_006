@@ -41,12 +41,6 @@ class GamesController < ApplicationController
     World.find_by(id: params[:id], creator_id: current_user.id)
   end
 
-  private
-
-  def find_world
-    World.find_by(id: params[:id], creator_id: current_user.id)
-  end
-
   def world_params
     params.require(:world).permit(:name)
   end
