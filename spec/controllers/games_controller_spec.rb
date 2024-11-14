@@ -5,17 +5,20 @@ require 'rails_helper'
 
 RSpec.describe GamesController, type: :controller do
   let(:user) { create(:user) }
+  let(:other_user) { create(:user, email: "unique_email@example.com") }
   let!(:world) { create(:world, creator_id: user.id) }
+  let!(:other_world) { create(:world, creator_id: other_user.id) }
 
   before do
     sign_in user
   end
+
   describe 'GET #single_player' do
     it 'assigns @saved_worlds and renders the single_player template' do
       get :single_player
 
-      expect(assigns(:saved_worlds)).to eq([world]) # Check that @saved_worlds is assigned correctly
-      expect(response).to render_template(:single_player) # Ensure it renders the correct template
+      expect(assigns(:saved_worlds)).to eq([world])
+      expect(response).to render_template(:single_player)
     end
   end
 
@@ -28,26 +31,44 @@ RSpec.describe GamesController, type: :controller do
     end
   end
 
-  describe 'GET #show' do
-    context 'when the world exists and belongs to the user' do
-      it 'assigns @world and renders the show template' do
+  describe "GET #show" do
+    context "when the world exists and belongs to the user" do
+      it "assigns the requested world to @world" do
         get :show, params: { id: world.id }
-
         expect(assigns(:world)).to eq(world)
+      end
+
+      it "loads the cells in the correct order" do
+        get :show, params: { id: world.id }
+        expect(assigns(:cells).uniq.count).to eq(49)
+        expect(assigns(:cells).first.x).to eq(0)
+        expect(assigns(:cells).first.y).to eq(0)
+      end
+
+      it "renders the show template" do
+        get :show, params: { id: world.id }
         expect(response).to render_template(:show)
       end
     end
 
-    context 'when the world does not exist or does not belong to the user' do
-      it 'redirects to single_player_path with an alert message' do
-        get :show, params: { id: 9999 }
+    context "when the world does not belong to the user" do
+      it "redirects to single player path with an alert" do
+        get :show, params: { id: other_world.id }
+        expect(response).to redirect_to(single_player_path)
+        expect(flash[:alert]).to eq("World not found.")
+      end
+    end
 
+    context 'when the world does not exist' do
+      it 'redirects to single player path with an alert' do
+        get :show, params: { id: 9999 }
         expect(assigns(:world)).to be_nil
         expect(response).to redirect_to(single_player_path)
-        expect(flash[:alert]).to eq('World not found.')
+        expect(flash[:alert]).to eq("World not found.")
       end
     end
   end
+
   describe 'POST #create' do
     context 'with a provided name' do
       it 'creates a new world with the specified name' do
@@ -68,7 +89,7 @@ RSpec.describe GamesController, type: :controller do
     end
 
     context 'with a blank name' do
-      it 'creates a new world with the default name "Default World"' do
+      it 'creates a new world with the default name "New World"' do
         expect do
           post :create, params: { world: { name: '' } }
         end.to change(World, :count).by(1)
@@ -99,6 +120,28 @@ RSpec.describe GamesController, type: :controller do
       it 'renders the new world template with an error message' do
         post :create, params: { world: { name: '' } }
         expect(response).to render_template(:new_world)
+      end
+    end
+  end
+  describe '#find_world' do
+    context 'when the world exists and belongs to the user' do
+      it 'returns the world' do
+        # Sign in as the user who owns the world
+        sign_in user
+        controller.params = { id: world.id }  # Set params to simulate request
+
+        found_world = controller.send(:find_world)  # Directly call find_world
+        expect(found_world).to eq(world)
+      end
+    end
+
+    context 'when the world does not belong to the user' do
+      it 'returns nil' do
+        sign_in other_user  # Sign in as a different user
+        controller.params = { id: world.id }  # Use the original world's ID
+
+        found_world = controller.send(:find_world)
+        expect(found_world).to be_nil
       end
     end
   end
