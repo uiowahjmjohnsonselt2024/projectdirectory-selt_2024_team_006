@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 Item.create(name: 'Flaming Axe', damage: 100, description: 'An axe engulfed in flames, dealing extra fire damage',
-            price: 150, image_url: 'https://media.discordapp.net/attachments/1183678966226235392/1305964950442741882/DALLE_2024-11-12_12.37.18_-_A_pixel_art-style_flaming_axe_with_an_8-bit_design_wooden_handle_and_metal_head_engulfed_in_flames_set_against_a_dungeon_background_with_stone_wall.webp?ex=6734f223&is=6733a0a3&hm=2d414817d9bd614abfc60637b07595917e0179244effdbee638884bdeecfc9cb&=&format=webp&width=641&height=641')
+            price: 150, image_url: 'flaming_axe.jpg')
 Item.create(name: 'Ice Dagger', damage: 250,
-            description: 'A dagger imbued with the power of ice, slowing down enemies', price: 120, image_url: 'https://media.discordapp.net/attachments/1183678966226235392/1305965158656376879/DALLE_2024-11-12_12.39.06_-_An_8-bit_pixel_art-style_ice_dagger_with_an_icy-blue_blade_and_a_simple_hilt_displayed_in_a_dungeon_setting_with_stone_walls_and_frosty_textures._The.webp?ex=6734f255&is=6733a0d5&hm=047225d31d6b31485fae77856b9b676cd535eccf37511b07861bff2ec8e42f2c&=&format=webp&width=641&height=641')
+            description: 'ice_dagger.jpg')
 Item.create(name: 'Thunder Hammer', damage: 450, description: 'A hammer that strikes with the power of thunder',
-            price: 200, image_url: 'https://media.discordapp.net/attachments/1183678966226235392/1305965277053321236/DALLE_2024-11-12_12.39.37_-_An_8-bit_pixel_art-style_thunder_hammer_with_a_large_sturdy_head_and_electric_sparks_set_in_a_dungeon_background_with_stone_walls_and_a_dim_mystica.webp?ex=6734f271&is=6733a0f1&hm=1ebf5c9b4b0ab7bea1578817b2e014a505f75d6df48ddc6045486b58008ea195&=&format=webp&width=641&height=641')
+            price: 200, image_url: 'hammer.jpg')
 Item.create(name: 'Poisonous Bow', damage: 100,
-            description: 'A bow that shoots poisoned arrows, weakening enemies over time', price: 130, image_url: 'https://media.discordapp.net/attachments/1183678966226235392/1305965467520860272/DALLE_2024-11-12_12.40.27_-_An_8-bit_pixel_art-style_poison_bow_with_a_green_venomous_glow_curved_wood_and_detailed_string_set_in_a_dungeon_background_with_stone_walls_and_eer.webp?ex=6734f29f&is=6733a11f&hm=605d9e76ac8c8d05a1bdae294afa4a306165a9dd3288f60bced8ac1236cdba1f&=&format=webp&width=641&height=641')
+            description: 'A bow that shoots poisoned arrows, weakening enemies over time',
+            price: 130, image_url: 'poison_bow.jpg')
 Item.create(name: 'Steel Sword', damage: 80, description: 'A sword forged from high-quality steel, reliable in battle',
-            price: 90, image_url: 'https://media.discordapp.net/attachments/1183678966226235392/1305965666649641000/DALLE_2024-11-12_12.41.14_-_An_8-bit_pixel_art-style_steel_sword_with_a_polished_metal_blade_and_simple_hilt_set_in_a_dungeon_background_with_stone_walls_and_low_lighting._The_s.webp?ex=6734f2ce&is=6733a14e&hm=90c925ca9ae1c201542c7fff2f3d4495e6f520fb2749a1aa914077e14fc66667&=&format=webp&width=641&height=641')
+            price: 90, image_url: 'steel_sword.jpg')
 Item.create(name: 'Basic Dagger', damage: 20,
-            description: 'A sword forged from high-quality steel, reliable in battle', price: 99_999, image_url: 'https://media.discordapp.net/attachments/1183678966226235392/1305966130233344020/DALLE_2024-11-12_12.43.01_-_An_8-bit_pixel_art-style_wooden_dagger_with_a_simple_carved_wood_blade_and_hilt_set_against_a_dungeon_background_with_stone_walls_and_dim_lighting._T.webp?ex=6734f33d&is=6733a1bd&hm=7e9a463ae960119902a2af2b3c65274d46618bdcc7df195d913f556e856fcadc&=&format=webp&width=641&height=641')
+            description: 'A sword forged from high-quality steel, reliable in battle',
+            price: 99_999, image_url: 'dagger.jpg')
