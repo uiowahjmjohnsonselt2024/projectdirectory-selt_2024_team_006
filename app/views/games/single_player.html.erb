@@ -1,0 +1,17 @@
+<h1>Select a World</h1>
+
+<!-- Selection Box for Worlds -->
+<div class="world-selection-box">
+  <% @saved_worlds.each do |world| %>
+    <div class="world-card" onclick="window.location.href='<%= game_path(world) %>'">
+      <h3><%= world.name %></h3>
+      <p>Created on: <%= world.created_at.strftime("%Y-%m-%d") %></p>
+    </div>
+  <% end %>
+</div>
+
+
+<!-- Create New World Button -->
+<div style="margin-top: 20px;">
+  <%= button_to 'Create New World', new_world_path, method: :get, class: 'btn btn-primary' %>
+</div>
