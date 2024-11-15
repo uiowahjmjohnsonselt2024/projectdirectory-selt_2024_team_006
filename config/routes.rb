@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get 'new_world', to: 'games#new_world'
   post 'worlds', to: 'games#create'
   get 'games/:id', to: 'games#show', as: 'game'
+  delete 'single_player/:id', to: 'games#destroy', as: 'destroy'
   resources :worlds, only: [:create]
 
   root 'home#index'

@@ -11,13 +11,25 @@ class GamesController < ApplicationController
     @world = World.new
   end
 
+  def destroy
+    puts "HELLOOO"
+    puts "HELLOOO"
+    puts params
+    @world = find_world
+    @world.destroy
+
+    redirect_to single_player_path
+  end
+
+
+
   def create
     @world = World.new(world_params)
     @world.creator_id = current_user.id
     @world.name = 'New World' if @world.name.blank?
 
     if @world.save
-      redirect_to single_player_path, notice: 'World created successfully!'
+      redirect_to single_player_path
     else
       render :new_world, alert: 'Error creating world.'
     end
