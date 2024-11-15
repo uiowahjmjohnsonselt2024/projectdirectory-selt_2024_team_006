@@ -12,9 +12,6 @@ class GamesController < ApplicationController
   end
 
   def destroy
-    puts "HELLOOO"
-    puts "HELLOOO"
-    puts params
     @world = find_world
     @world.destroy
 
