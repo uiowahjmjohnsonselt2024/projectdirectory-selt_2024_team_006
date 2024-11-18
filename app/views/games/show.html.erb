@@ -1,12 +1,76 @@
-<!-- app/views/games/show.html.erb -->
+<h1 class="text-center" style="font-family: 'Press Start 2P', cursive; color: black; padding-top: 2.5rem"><%= @world.name %></h1>
+<div class="container mt-5 dungeon-bg">
+  <div class="grid">
+    <% (0..6).each do |y| %>
+      <div class="row justify-content-center">
+        <% (0..6).each do |x| %>
+          <% cell = @cells.find { |c| c.x == x && c.y == y } %>
+          <div class="col cell text-center pixel-cell">
+            <%= cell.content %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
 
-<% if @world %>
-  <h1>Welcome to <%= @world.name %>!</h1>
-  <p>Created on: <%= @world.created_at.strftime("%Y-%m-%d") %></p>
-  <p>Start your adventure in <%= @world.name %>.</p>
-<% else %>
-  <h1>World not found</h1>
-  <p>It seems that this world could not be loaded or does not belong to you.</p>
-  <p>Please return to the <%= link_to 'Single Player', single_player_path %> page and try again.</p>
-<% end %>
+<div class="mt-4 text-center">
+  <div class="d-flex flex-column align-items-center">
+    <%= button_to '⬆️', move_world_path(@world, direction: 'up'), method: :post, class: 'btn btn-primary arrow-btn' %>
+    <div class="d-flex justify-content-center mt-2">
+      <%= button_to '⬅️', move_world_path(@world, direction: 'left'), method: :post, class: 'btn btn-primary arrow-btn' %>
+      <%= button_to '➡️', move_world_path(@world, direction: 'right'), method: :post, class: 'btn btn-primary arrow-btn' %>
+    </div>
+    <%= button_to '⬇️', move_world_path(@world, direction: 'down'), method: :post, class: 'btn btn-primary arrow-btn mt-2' %>
+  </div>
+</div>
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    .dungeon-bg {
+        background-image: url('<%= asset_path("dungeon_bg.jpg") %>');
+        background-size: cover;
+        background-position: center;
+        padding: 20px;
+        border: 4px solid #333;
+        max-width: 80vw;
+    }
+
+    .pixel-cell {
+        width: 80px;
+        height: 80px;
+        padding: 10px;
+        font-size: 2.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #3e3e3e;
+        background-color: rgba(162, 213, 242, 0.8);
+        color: #333;
+        font-family: 'Press Start 2P', cursive;
+        box-sizing: border-box;
+    }
+
+    .pixel-cell:hover {
+        cursor: pointer;
+        background-color: rgba(242, 141, 53, 0.8);
+        border-color: #000;
+    }
+
+    .arrow-btn {
+        font-size: 1.5rem;
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        margin: 2px;
+        background-color: #333;
+        color: #f2f2f2;
+        border: 2px solid #555;
+    }
+
+    .arrow-btn:hover {
+        background-color: #555;
+        color: #fff;
+    }
+</style>
