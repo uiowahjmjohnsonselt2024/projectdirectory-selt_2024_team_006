@@ -2,9 +2,9 @@
 
 FactoryBot.define do
   factory :cell do
-    x { 1 }
-    y { 1 }
-    world { nil }
-    content { 'MyString' }
+    association :world
+    x { 0 }
+    y { 0 }
+    content { 'empty' }
   end
 end

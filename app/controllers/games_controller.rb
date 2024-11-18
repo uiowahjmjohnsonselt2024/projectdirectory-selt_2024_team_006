@@ -13,22 +13,24 @@ class GamesController < ApplicationController
 
   def destroy
     @world = find_world
+
+    if @world.nil?
+      redirect_to single_player_path, alert: 'World not found.'
+      return
+    end
+
     @world.destroy
 
     redirect_to single_player_path
   end
 
-
-
   def create
-    @world = World.new(world_params)
-    @world.creator_id = current_user.id
-    @world.name = 'New World' if @world.name.blank?
+    @world = build_world
 
     if @world.save
-      redirect_to single_player_path
+      handle_success
     else
-      render :new_world, alert: 'Error creating world.'
+      handle_failure
     end
   end
 
@@ -47,6 +49,23 @@ class GamesController < ApplicationController
   end
 
   private
+
+  def build_world
+    World.new(world_params).tap do |world|
+      world.creator_id = current_user.id
+      world.name = 'New World' if world.name.blank?
+    end
+  end
+
+  def handle_success
+    flash[:notice] = 'World created successfully!'
+    redirect_to single_player_path
+  end
+
+  def handle_failure
+    flash[:alert] = 'Error creating world.'
+    render :new_world
+  end
 
   def find_world
     World.find_by(id: params[:id], creator_id: current_user.id)

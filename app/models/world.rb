@@ -4,6 +4,7 @@ class World < ApplicationRecord
   belongs_to :creator, class_name: 'User', foreign_key: 'creator_id'
   has_many :cells, dependent: :destroy
   after_create :generate_grid
+  validates :creator, presence: true
 
   private
 
@@ -29,7 +30,7 @@ class World < ApplicationRecord
   def create_cells(grid_size, player_position, treasure_positions, enemy_positions)
     (0...grid_size).each do |x|
       (0...grid_size).each do |y|
-        cells.create(x: x, y: y, content: cell_content(x, y, player_position, treasure_positions, enemy_positions))
+        cells.create!(x: x, y: y, content: cell_content(x, y, player_position, treasure_positions, enemy_positions))
       end
     end
   end
