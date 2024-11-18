@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :world do
+    association :creator, factory: :user
     name { 'MyString' }
     creator_id { 1 }
   end

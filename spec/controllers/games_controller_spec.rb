@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# spec/controllers/games_controller_spec.rb
 require 'rails_helper'
 
 RSpec.describe GamesController, type: :controller do
@@ -123,22 +122,56 @@ RSpec.describe GamesController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    context 'when the world exists and belongs to the user' do
+      it 'deletes the world and redirects to the single player path with a success message' do
+        expect do
+          delete :destroy, params: { id: world.id }
+        end.to change(World, :count).by(-1)
+
+        expect(response).to redirect_to(single_player_path)
+      end
+    end
+
+    context 'when the world does not belong to the user' do
+      it 'does not delete the world and redirects to the single player path with an alert' do
+        expect do
+          delete :destroy, params: { id: other_world.id }
+        end.not_to change(World, :count)
+
+        expect(response).to redirect_to(single_player_path)
+        expect(flash[:alert]).to eq('World not found.')
+      end
+    end
+
+    context 'when the world does not exist' do
+      it 'does not delete any world and redirects to the single player path with an alert' do
+        expect do
+          delete :destroy, params: { id: 9999 }
+        end.not_to change(World, :count)
+
+        expect(response).to redirect_to(single_player_path)
+        expect(flash[:alert]).to eq('World not found.')
+      end
+    end
+  end
+
   describe '#find_world' do
     context 'when the world exists and belongs to the user' do
       it 'returns the world' do
-        # Sign in as the user who owns the world
         sign_in user
-        controller.params = { id: world.id } # Set params to simulate request
+        controller.params = { id: world.id }
 
-        found_world = controller.send(:find_world) # Directly call find_world
+        found_world = controller.send(:find_world)
         expect(found_world).to eq(world)
       end
     end
 
     context 'when the world does not belong to the user' do
       it 'returns nil' do
-        sign_in other_user # Sign in as a different user
-        controller.params = { id: world.id } # Use the original world's ID
+        sign_in other_user
+        controller.params = { id: world.id }
 
         found_world = controller.send(:find_world)
         expect(found_world).to be_nil

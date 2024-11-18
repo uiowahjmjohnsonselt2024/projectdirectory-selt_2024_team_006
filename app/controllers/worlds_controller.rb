@@ -5,17 +5,12 @@ class WorldsController < ApplicationController
 
   def move
     @world = find_world
-    player_cell = @world.cells.find_by(content: 'player')
+    return redirect_to single_player_path, alert: 'World not found.' unless @world
 
-    redirect_to world_path(@world), alert: 'Player not found on grid.' and return unless player_cell
+    player_cell = find_player_cell
+    return redirect_to world_path(@world), alert: 'Player not found on grid.' unless player_cell
 
-    new_position = calculate_new_position(player_cell, params[:direction])
-
-    if valid_position?(new_position)
-      handle_move(player_cell, new_position)
-    else
-      flash[:alert] = 'Invalid move!'
-    end
+    process_player_move(player_cell, params[:direction])
 
     redirect_to world_path(@world)
   end
@@ -24,6 +19,20 @@ class WorldsController < ApplicationController
 
   def find_world
     World.find_by(id: params[:id], creator_id: current_user.id)
+  end
+
+  def find_player_cell
+    @world.cells.find_by(content: 'player')
+  end
+
+  def process_player_move(player_cell, direction)
+    new_position = calculate_new_position(player_cell, direction)
+
+    if valid_position?(new_position)
+      move_player(player_cell, new_position)
+    else
+      flash[:alert] = 'Invalid move!'
+    end
   end
 
   def calculate_new_position(player_cell, direction)
@@ -41,7 +50,7 @@ class WorldsController < ApplicationController
     position.all? { |coord| coord.between?(0, 6) }
   end
 
-  def handle_move(player_cell, new_position)
+  def move_player(player_cell, new_position)
     new_cell = @world.cells.find_by(x: new_position[0], y: new_position[1])
 
     return unless new_cell
@@ -53,15 +62,23 @@ class WorldsController < ApplicationController
   def handle_cell_content(cell)
     case cell.content
     when 'treasure'
-      current_user.update(shards_balance: current_user.shards_balance + 10)
-      flash[:notice] = 'You found a treasure and earned 10 shards!'
+      award_treasure
     when 'enemy'
-      flash[:alert] = 'You encountered an enemy! Prepare for battle.'
+      encounter_enemy
     end
   end
 
+  def award_treasure
+    current_user.update!(shards_balance: current_user.shards_balance + 10)
+    flash[:notice] = 'You found a treasure and earned 10 shards!'
+  end
+
+  def encounter_enemy
+    flash[:alert] = 'You encountered an enemy! Prepare for battle.'
+  end
+
   def update_cells(player_cell, new_cell)
-    player_cell.update(content: 'empty')
-    new_cell.update(content: 'player')
+    player_cell.update!(content: 'empty')
+    new_cell.update!(content: 'player')
   end
 end
