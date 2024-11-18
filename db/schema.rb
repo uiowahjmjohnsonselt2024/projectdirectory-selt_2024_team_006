@@ -12,7 +12,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_241_112_232_841) do
+ActiveRecord::Schema[7.0].define(version: 20_241_114_201_828) do
+  create_table 'cells', force: :cascade do |t|
+    t.integer 'x'
+    t.integer 'y'
+    t.integer 'world_id', null: false
+    t.string 'content'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['world_id'], name: 'index_cells_on_world_id'
+  end
+
   create_table 'items', force: :cascade do |t|
     t.string 'name'
     t.text 'description'
@@ -52,6 +62,7 @@ ActiveRecord::Schema[7.0].define(version: 20_241_112_232_841) do
     t.datetime 'updated_at', null: false
   end
 
+  add_foreign_key 'cells', 'worlds'
   add_foreign_key 'user_items', 'items'
   add_foreign_key 'user_items', 'users'
 end
