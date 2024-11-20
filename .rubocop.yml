@@ -44,6 +44,8 @@ Lint/EmptyBlock:
   Enabled: true
 Lint/EmptyClass:
   Enabled: true
+Metrics/ClassLength:
+  Enabled: false
 Lint/EmptyInPattern:
   Enabled: true
 Lint/IncompatibleIoSelectWithFiberScheduler:

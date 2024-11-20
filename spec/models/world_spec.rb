@@ -5,6 +5,39 @@ require 'rails_helper'
 RSpec.describe World, type: :model do
   let(:creator) { User.create!(email: 'test@example.com', password: 'password') }
 
+  before do
+    allow(ChatGptService).to receive(:call).and_return(
+      { 'choices' => [{ 'message' => { 'content' => 'Test response.' } }] }
+    )
+    allow(ChatGptService).to receive(:generate_image).and_return({ 'data' => [{ 'url' => 'default_image_url' }] })
+  end
+
+  describe '#generate_background_image' do
+    let(:world) { World.create!(name: 'MysticLand', creator: creator) }
+
+    it 'generates and saves a background image URL' do
+      expect(world.background_image_url).to eq('default_image_url')
+    end
+
+    it 'generates and saves a background image URL with error defaults to dungeon_bg.png' do
+      allow(ChatGptService).to receive(:generate_image).and_return(nil)
+      expect(world.background_image_url).to eq('dungeon_bg.png')
+    end
+
+    it 'generates and saves a background image URL with wrong response structure' do
+      allow(ChatGptService).to receive(:generate_image).and_return({ 'data2' => [{ 'url' => 'default_image_url' }] })
+      expect(world.background_image_url).to eq('dungeon_bg.png')
+    end
+  end
+
+  describe '#generate_lore' do
+    let(:world) { World.create!(name: 'MysticLand', creator: creator) }
+
+    it 'generates and saves lore for the world' do
+      expect(world.lore).to eq('Test response.')
+    end
+  end
+
   describe '#generate_grid' do
     let(:world) { World.create!(creator: creator) }
 

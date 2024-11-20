@@ -3,14 +3,18 @@
 require 'rails_helper'
 
 RSpec.describe GamesController, type: :controller do
+  before do
+    sign_in user
+    allow(ChatGptService).to receive(:call).and_return(
+      { 'choices' => [{ 'message' => { 'content' => 'Test response.' } }] }
+    )
+    allow(ChatGptService).to receive(:generate_image).and_return({ 'data' => [{ 'url' => 'default_image_url' }] })
+  end
+
   let(:user) { create(:user) }
   let(:other_user) { create(:user, email: 'unique_email@example.com') }
   let!(:world) { create(:world, creator_id: user.id) }
   let!(:other_world) { create(:world, creator_id: other_user.id) }
-
-  before do
-    sign_in user
-  end
 
   describe 'GET #single_player' do
     it 'assigns @saved_worlds and renders the single_player template' do

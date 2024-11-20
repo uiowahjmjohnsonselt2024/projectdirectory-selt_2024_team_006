@@ -1,5 +1,23 @@
 # frozen_string_literal: true
 
+Before do
+  stub_request(:post, 'https://api.openai.com/v1/chat/completions')
+    .to_return(
+      status: 200,
+      body: JSON.generate(
+        'choices' => [{ 'message' => { 'content' => 'Test response.' } }]
+      )
+    )
+
+  stub_request(:post, 'https://api.openai.com/v1/images/generations')
+    .to_return(
+      status: 200,
+      body: JSON.generate(
+        'data' => [{ 'url' => 'default_image_url' }]
+      )
+    )
+end
+
 Given('I am logged in as a user') do
   @user = FactoryBot.create(:user)
   login_as(@user, scope: :user)

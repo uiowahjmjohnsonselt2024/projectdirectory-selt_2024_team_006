@@ -19,6 +19,8 @@
 
 .DS_Store
 
+.env
+
 /idea/*
 .idea/
 /coverage/*

@@ -12,7 +12,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_241_114_201_828) do
+ActiveRecord::Schema[7.0].define(version: 20_241_119_151_437) do
+  create_table 'battles', force: :cascade do |t|
+    t.integer 'world_id', null: false
+    t.integer 'cell_id', null: false
+    t.integer 'player_id', null: false
+    t.string 'state', default: 'active', null: false
+    t.json 'enemy_data', default: {}
+    t.json 'player_data', default: {}
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.string 'turn'
+    t.index ['cell_id'], name: 'index_battles_on_cell_id'
+    t.index ['player_id'], name: 'index_battles_on_player_id'
+    t.index ['world_id'], name: 'index_battles_on_world_id'
+  end
+
   create_table 'cells', force: :cascade do |t|
     t.integer 'x'
     t.integer 'y'
@@ -42,6 +57,18 @@ ActiveRecord::Schema[7.0].define(version: 20_241_114_201_828) do
     t.index ['user_id'], name: 'index_user_items_on_user_id'
   end
 
+  create_table 'user_world_states', force: :cascade do |t|
+    t.integer 'user_id', null: false
+    t.integer 'world_id', null: false
+    t.integer 'health'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.integer 'x'
+    t.integer 'y'
+    t.index ['user_id'], name: 'index_user_world_states_on_user_id'
+    t.index ['world_id'], name: 'index_user_world_states_on_world_id'
+  end
+
   create_table 'users', force: :cascade do |t|
     t.string 'email', default: '', null: false
     t.string 'encrypted_password', default: '', null: false
@@ -51,6 +78,8 @@ ActiveRecord::Schema[7.0].define(version: 20_241_114_201_828) do
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.integer 'shards_balance'
+    t.integer 'current_battle_id'
+    t.index ['current_battle_id'], name: 'index_users_on_current_battle_id'
     t.index ['email'], name: 'index_users_on_email', unique: true
     t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
   end
@@ -60,9 +89,17 @@ ActiveRecord::Schema[7.0].define(version: 20_241_114_201_828) do
     t.integer 'creator_id'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.text 'lore'
+    t.string 'background_image_url'
   end
 
-  add_foreign_key 'cells', 'worlds'
+  add_foreign_key 'battles', 'cells'
+  add_foreign_key 'battles', 'users', column: 'player_id'
+  add_foreign_key 'battles', 'worlds', on_delete: :cascade
+  add_foreign_key 'cells', 'worlds', on_delete: :cascade
   add_foreign_key 'user_items', 'items'
   add_foreign_key 'user_items', 'users'
+  add_foreign_key 'user_world_states', 'users'
+  add_foreign_key 'user_world_states', 'worlds', on_delete: :cascade
+  add_foreign_key 'users', 'battles', column: 'current_battle_id'
 end
