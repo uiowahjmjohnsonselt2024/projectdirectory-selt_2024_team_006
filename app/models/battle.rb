@@ -9,6 +9,7 @@ class Battle < ApplicationRecord
 
   def resolve(result)
     update!(state: result)
+    destroy
   end
 
   def toggle_turn

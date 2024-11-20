@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'chat_gpt_service'
+require 'concurrent'
 
 class World < ApplicationRecord
   belongs_to :creator, class_name: 'User', foreign_key: 'creator_id'
@@ -25,16 +26,20 @@ class World < ApplicationRecord
   def generate_background_image
     return if lore.blank?
 
-    prompt = build_image_prompt
-    response = fetch_image_from_service(prompt)
+    Concurrent::Future.execute do
+      begin
+        prompt = build_image_prompt
+        response = fetch_image_from_service(prompt)
 
-    if valid_image_response?(response)
-      process_valid_image_response(response)
-    else
-      handle_image_generation_error(response)
+        if valid_image_response?(response)
+          process_valid_image_response(response)
+        else
+          handle_image_generation_error(response)
+        end
+      rescue StandardError => e
+        handle_standard_error(e)
+      end
     end
-  rescue StandardError => e
-    handle_standard_error(e)
   end
 
   def generate_grid
