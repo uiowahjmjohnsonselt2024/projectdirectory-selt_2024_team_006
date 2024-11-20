@@ -376,7 +376,6 @@ DEPENDENCIES
   puma (~> 5.0)
   rails (~> 7.0.6)
   rails-controller-testing
-  rspec-mocks
   rspec-rails
   rubocop
   rubocop-rails

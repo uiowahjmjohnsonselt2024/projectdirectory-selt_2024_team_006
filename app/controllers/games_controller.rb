@@ -19,7 +19,7 @@ class GamesController < ApplicationController
       return
     end
 
-    @world.destroy
+    destroy_world
     redirect_to single_player_path
   end
 
@@ -41,6 +41,13 @@ class GamesController < ApplicationController
   end
 
   private
+
+  def destroy_world
+    @world.battles.destroy_all
+    @world.cells.destroy_all
+    @world.user_world_states.destroy_all
+    @world.destroy!
+  end
 
   def build_world
     World.new(world_params).tap do |world|
