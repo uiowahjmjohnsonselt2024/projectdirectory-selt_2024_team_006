@@ -16,6 +16,89 @@
 
 @import "bootstrap";
 
+.enemy-health-bar {
+    margin: 20px auto;
+    text-align: center;
+    width: 80%;
+}
+
+.health-bar {
+    background-color: #ccc;
+    border: 2px solid #555;
+    border-radius: 8px;
+    height: 20px;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.user-health {
+    font-size: 1.5rem;
+    color: green;
+    font-weight: bold;
+}
+
+.health-bar-fill {
+    background-color: #f00;
+    height: 100%;
+    text-align: center;
+    white-space: nowrap;
+    transition: width 0.3s ease;
+    color: #fff;
+    line-height: 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.health-text {
+    position: relative;
+    z-index: 2;
+    font-weight: bold;
+}
+
+.inventory {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    padding-top: 1rem;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+.item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.item-details {
+    flex: 1;
+    text-align: left;
+}
+
+.item-details p {
+    margin: 5px 0;
+}
+
+.btn-danger {
+    margin-top: 8px;
+    align-self: flex-start;
+}
+
 .auth-container {
     display: flex;
     justify-content: center;

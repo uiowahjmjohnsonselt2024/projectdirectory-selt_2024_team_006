@@ -8,6 +8,8 @@ class User < ApplicationRecord
 
   has_many :user_items, dependent: :destroy
   has_many :items, through: :user_items
+  has_many :battles, foreign_key: :player_id
+  has_many :user_world_states, dependent: :destroy
 
   after_initialize :set_default_shards_balance, if: :new_record?
   after_create :assign_default_sword
