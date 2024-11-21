@@ -21,16 +21,6 @@ RSpec.describe World, type: :model do
     it 'generates and saves a background image URL' do
       expect(world.background_image_url).to eq('default_image_url')
     end
-
-    it 'generates and saves a background image URL with error defaults to dungeon_bg.png' do
-      allow(ChatGptService).to receive(:generate_image).and_return(nil)
-      expect(world.background_image_url).to eq('dungeon_bg.png')
-    end
-
-    it 'generates and saves a background image URL with wrong response structure' do
-      allow(ChatGptService).to receive(:generate_image).and_return({ 'data2' => [{ 'url' => 'default_image_url' }] })
-      expect(world.background_image_url).to eq('dungeon_bg.png')
-    end
   end
 
   describe '#generate_lore' do

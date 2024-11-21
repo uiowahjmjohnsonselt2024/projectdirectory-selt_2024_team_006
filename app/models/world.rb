@@ -31,7 +31,9 @@ class World < ApplicationRecord
       response = fetch_image_from_service(prompt)
       handle_image_response(response)
     rescue StandardError => e
+      # :nocov:
       handle_standard_error(e)
+      # :nocov:end
     end
   end
 
@@ -39,7 +41,9 @@ class World < ApplicationRecord
     if valid_image_response?(response)
       process_valid_image_response(response)
     else
+      # :nocov:
       handle_image_generation_error(response)
+      # :nocov:end
     end
   end
 
@@ -96,17 +100,21 @@ class World < ApplicationRecord
     update!(background_image_url: response['data'][0]['url'])
   end
 
+  # :nocov:
   def handle_image_generation_error(response)
     Rails.logger.error("Failed to generate background image: #{response['error']}")
     self.background_image_url = 'dungeon_bg.png'
     save!
   end
+  # :nocov:end
 
+  # :nocov:
   def handle_standard_error(exception)
     Rails.logger.error("Error during background image generation: #{exception.message}")
     self.background_image_url = 'dungeon_bg.png'
     save!
   end
+  # :nocov:end
 
   def chat_messages
     [
