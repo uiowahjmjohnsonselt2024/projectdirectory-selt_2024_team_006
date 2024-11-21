@@ -5,6 +5,13 @@ require 'rails_helper'
 RSpec.describe Cell, type: :model do
   let(:world) { create(:world, creator: create(:user)) }
 
+  before do
+    allow(ChatGptService).to receive(:call).and_return(
+      { 'choices' => [{ 'message' => { 'content' => 'Test response.' } }] }
+    )
+    allow(ChatGptService).to receive(:generate_image).and_return({ 'data' => [{ 'url' => 'default_image_url' }] })
+  end
+
   describe 'validations' do
     it 'is valid with valid attributes' do
       cell = Cell.new(world: world, x: 0, y: 0, content: 'player')
