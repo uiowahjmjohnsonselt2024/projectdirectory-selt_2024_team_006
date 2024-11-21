@@ -1,5 +1,26 @@
 <h1 class="text-center" style="font-family: 'Press Start 2P', cursive; color: black; padding-top: 2.5rem"><%= @world.name %></h1>
-<div class="container mt-5 dungeon-bg">
+
+<% if @world.lore.present? %>
+  <div class="world-lore" style="margin-top: 20px; background: #f8f8f8; padding: 10px; border-radius: 8px; text-align: center; font-size: 1rem;">
+    <p><%= @world.lore %></p>
+  </div>
+<% end %>
+
+<% if @user_world_state %>
+  <h2 class="text-center" style="color: green;">Your Health:</h2>
+  <div class="enemy-health-bar">
+    <% user_health = @user_world_state.health %>
+    <% max_health = 100 %>
+    <div class="health-bar">
+      <div class="user-health-bar-fill" style="width: <%= (user_health.to_f / max_health * 100).round(2) %>%;">
+        <span class="health-text"><%= user_health %> / <%= max_health %></span>
+      </div>
+    </div>
+  </div>
+
+<% end %>
+
+<div class="container mt-5" style="background-image: url('<%= @world.background_image_url %>'); background-size: cover; background-position: center; padding: 20px; border: 4px solid #333;">
   <div class="grid">
     <% (0..6).each do |y| %>
       <div class="row justify-content-center">
@@ -14,27 +35,63 @@
   </div>
 </div>
 
-<div class="mt-4 text-center">
-  <div class="d-flex flex-column align-items-center">
-    <%= button_to '⬆️', move_world_path(@world, direction: 'up'), method: :post, class: 'btn btn-primary arrow-btn' %>
-    <div class="d-flex justify-content-center mt-2">
-      <%= button_to '⬅️', move_world_path(@world, direction: 'left'), method: :post, class: 'btn btn-primary arrow-btn' %>
-      <%= button_to '➡️', move_world_path(@world, direction: 'right'), method: :post, class: 'btn btn-primary arrow-btn' %>
-    </div>
-    <%= button_to '⬇️', move_world_path(@world, direction: 'down'), method: :post, class: 'btn btn-primary arrow-btn mt-2' %>
+<% if player_in_battle?(@world) %>
+  <div class="world-lore" style="margin-top: 20px; background: #f8f8f8; padding: 10px; border-radius: 8px; text-align: center;">
+    <p class="text-center"><%= @current_battle.enemy_data['narration'] %></p>
   </div>
-</div>
+
+  <h2 class="text-center" style="color: red;">Enemy Stats</h2>
+  <div class="enemy-health-bar">
+    <% enemy_health = @current_battle.enemy_data['health'] || 0 %>
+    <% max_health = @current_battle.enemy_data['max_health'] || 100 %> <!-- Default to 100 if nil -->
+    <div class="health-bar">
+      <div class="health-bar-fill" style="width: <%= (enemy_health.to_f / max_health * 100).round(2) %>%;">
+        <span class="health-text"><%= enemy_health %> / <%= max_health %></span>
+      </div>
+    </div>
+  </div>
+  <p class="text-center"><strong>Enemy Attack:</strong> <%= @current_battle.enemy_data['attack'] %></p>
+
+  <% if @current_battle.turn == 'player' %>
+    <h3 class="text-center" style="color: blue;">It's Your Turn!</h3>
+    <div class="inventory">
+      <% current_user.items.each do |item| %>
+        <div class="item">
+          <%= image_tag item.image_url, class: 'item-image', alt: item.name %>
+          <div class="item-details">
+            <p><strong><%= item.name %></strong></p>
+            <p>Damage: <%= item.damage %> (±5)</p>
+            <%= button_to 'Attack with this item', attack_with_item_world_path(item_id: item.id), method: :post, class: 'btn btn-danger' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <h3 class="text-center" style="color: darkorange;">Waiting for Enemy's Turn...</h3>
+  <% end %>
+<% else %>
+  <div class="mt-4 text-center">
+    <div class="d-flex flex-column align-items-center">
+      <%= button_to '⬆️', move_world_path(@world, direction: 'up'), method: :post, class: 'btn btn-primary arrow-btn' %>
+      <div class="d-flex justify-content-center mt-2">
+        <%= button_to '⬅️', move_world_path(@world, direction: 'left'), method: :post, class: 'btn btn-primary arrow-btn' %>
+        <%= button_to '➡️', move_world_path(@world, direction: 'right'), method: :post, class: 'btn btn-primary arrow-btn' %>
+      </div>
+      <%= button_to '⬇️', move_world_path(@world, direction: 'down'), method: :post, class: 'btn btn-primary arrow-btn mt-2' %>
+    </div>
+  </div>
+<% end %>
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
     .dungeon-bg {
-        background-image: url('<%= asset_path("dungeon_bg.jpg") %>');
         background-size: cover;
         background-position: center;
         padding: 20px;
         border: 4px solid #333;
         max-width: 80vw;
+        margin: 0 auto;
     }
 
     .pixel-cell {
@@ -72,5 +129,57 @@
     .arrow-btn:hover {
         background-color: #555;
         color: #fff;
+    }
+
+    .enemy-health-bar {
+        margin: 20px auto;
+        text-align: center;
+        width: 80%;
+    }
+
+    .health-bar {
+        background-color: #ccc;
+        border: 2px solid #555;
+        border-radius: 8px;
+        height: 20px;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .user-health-bar-fill {
+        background-color: green; /* Red for health */
+        height: 100%;
+        text-align: center;
+        white-space: nowrap;
+        transition: width 0.3s ease;
+        color: #fff;
+        line-height: 20px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .health-bar-fill {
+        background-color: #f00; /* Red for health */
+        height: 100%;
+        text-align: center;
+        white-space: nowrap;
+        transition: width 0.3s ease;
+        color: #fff;
+        line-height: 20px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .world-lore {
+        margin-top: 20px;
+        background: #f8f8f8;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
     }
 </style>
