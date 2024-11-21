@@ -137,7 +137,7 @@ RSpec.describe WorldsController, type: :controller do
     context 'when there is no active battle' do
       it 'redirects with an alert' do
         battle.update!(state: 'won')
-        post :attack_with_item, params: { id: world.id, item_id: item1.id } # Pass a valid item
+        post :attack_with_item, params: { id: world.id, item_id: item1.id }
         expect(response).to redirect_to(world_path(world))
         expect(flash[:alert]).to eq('No active battle to attack!')
       end
