@@ -9,7 +9,7 @@ RSpec.describe World, type: :model do
     allow_any_instance_of(World).to receive(:generate_background_image).and_wrap_original do |m, *args|
       m.call(*args)
     end
-      allow(ChatGptService).to receive(:call).and_return(
+    allow(ChatGptService).to receive(:call).and_return(
       { 'choices' => [{ 'message' => { 'content' => 'Test response.' } }] }
     )
     allow(ChatGptService).to receive(:generate_image).and_return({ 'data' => [{ 'url' => 'default_image_url' }] })

@@ -27,18 +27,19 @@ class World < ApplicationRecord
     return if lore.blank?
 
     Concurrent::Future.execute do
-      begin
-        prompt = build_image_prompt
-        response = fetch_image_from_service(prompt)
+      prompt = build_image_prompt
+      response = fetch_image_from_service(prompt)
+      handle_image_response(response)
+    rescue StandardError => e
+      handle_standard_error(e)
+    end
+  end
 
-        if valid_image_response?(response)
-          process_valid_image_response(response)
-        else
-          handle_image_generation_error(response)
-        end
-      rescue StandardError => e
-        handle_standard_error(e)
-      end
+  def handle_image_response(response)
+    if valid_image_response?(response)
+      process_valid_image_response(response)
+    else
+      handle_image_generation_error(response)
     end
   end
 
