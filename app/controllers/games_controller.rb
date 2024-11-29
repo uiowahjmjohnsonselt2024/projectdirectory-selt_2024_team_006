@@ -40,6 +40,59 @@ class GamesController < ApplicationController
     load_world_details
   end
 
+  def multiplayer_menu
+    # Displays the menu to host or join
+  end
+
+  def host
+    # Displays the host game menu with available worlds
+    @worlds = World.where(creator: current_user)
+  end
+
+  def host_world
+    # Marks the selected world as hosted
+    @world = World.find(params[:id])
+    @world.host_game(request.remote_ip)
+    flash[:notice] = "Hosting #{@world.name}. Share your IP: #{request.remote_ip}"
+    redirect_to host_active_game_path(@world)
+  end
+
+  def host_active
+    # Displays the currently hosted world and players
+    @world = World.find(params[:id])
+    @players = @world.users # This assumes you’re storing players in `users`
+  end
+
+  def join
+    # Displays the join game form
+  end
+
+  def join_world
+    ip_address = params[:ip_address]
+    host_world = World.find_by(host_ip: ip_address, is_hosted: true)
+
+    if host_world.nil?
+      flash[:alert] = "No active game found at #{ip_address}."
+      redirect_to join_game_path and return
+    end
+
+    # Find or create the UserWorldState for this user in the world
+    user_world_state = UserWorldState.find_or_create_by(user: current_user, world: host_world) do |state|
+      state.health ||= 100 # Set default health for new players
+    end
+
+    flash[:notice] = "Joined world: #{host_world.name}."
+    redirect_to world_path(host_world)
+  end
+
+  def stop_hosting
+    # Logic to stop hosting a world
+    @world = World.find(params[:id])
+    @world.stop_hosting
+    flash[:notice] = "Stopped hosting #{@world.name}."
+    redirect_to multiplayer_menu_path
+  end
+
   private
 
   def destroy_world

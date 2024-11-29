@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_19_143615) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_29_182450) do
   create_table "battles", force: :cascade do |t|
     t.integer "world_id", null: false
     t.integer "cell_id", null: false
@@ -21,6 +21,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_19_143615) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "turn", default: "player"
+    t.integer "current_turn"
+    t.text "turn_order"
     t.index ["cell_id"], name: "index_battles_on_cell_id"
     t.index ["player_id", "world_id"], name: "index_battles_on_player_id_and_world_id", unique: true
     t.index ["player_id"], name: "index_battles_on_player_id"
@@ -86,6 +88,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_19_143615) do
     t.datetime "updated_at", null: false
     t.text "lore"
     t.string "background_image_url"
+    t.boolean "is_hosted"
+    t.string "host_ip"
   end
 
   add_foreign_key "battles", "cells"
