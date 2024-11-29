@@ -24,6 +24,11 @@ class GamesController < ApplicationController
   end
 
   def create
+    unless current_user.charge_shards(10)
+      flash[:alert] = "You don't have enough shards to create a world. Creating a new world costs 10 shards!"
+      redirect_to worlds_path and return
+    end
+
     @world = build_world
 
     if @world.save
