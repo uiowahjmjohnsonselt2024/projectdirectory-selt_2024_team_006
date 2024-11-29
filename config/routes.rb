@@ -3,12 +3,18 @@
 Rails.application.routes.draw do
   devise_for :users
 
+  #sSingle Player Routes
   get 'single_player', to: 'games#single_player'
   get 'new_world', to: 'games#new_world'
   post 'worlds', to: 'games#create'
   get 'games/:id', to: 'games#show', as: 'game'
   delete 'single_player/:id', to: 'games#destroy', as: 'destroy'
   resources :worlds, only: [:create]
+
+  #Multiplayer routes
+  get 'multiplayer', to: 'multiplayer#index', as: 'multiplayer'
+  get 'multiplayer/host', to: 'multiplayer#host', as: 'host_multiplayer'
+  get 'multiplayer/join', to: 'multiplayer#join', as: 'join_multiplayer'
 
   root 'home#index'
 
