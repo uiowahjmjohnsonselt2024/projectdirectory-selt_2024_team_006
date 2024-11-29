@@ -182,4 +182,35 @@ RSpec.describe GamesController, type: :controller do
       end
     end
   end
+  describe "POST #host_world" do
+    it "marks a world as hosted and assigns an IP address" do
+      post :host_world, params: { id: world.id, ip_address: '127.0.0.1' }
+
+      world.reload
+      expect(world.is_hosted).to be_truthy
+      expect(world.host_ip).to eq('127.0.0.1')
+      expect(response).to redirect_to(host_active_game_path(world))
+      expect(flash[:notice]).to eq("Hosting world: #{world.name} at 127.0.0.1")
+    end
+  end
+  describe "POST #join_world" do
+    let(:host_world) { create(:world, is_hosted: true, host_ip: '127.0.0.1') }
+
+    it "allows a player to join a hosted world" do
+      post :join_world, params: { ip_address: '127.0.0.1' }
+
+      user_world_state = UserWorldState.find_by(user: user, world: host_world)
+      expect(user_world_state).not_to be_nil
+      expect(user_world_state.health).to eq(100)
+      expect(response).to redirect_to(play_world_path(host_world))
+      expect(flash[:notice]).to eq("Joined world: #{host_world.name}!")
+    end
+
+    it "fails to join a non-hosted world" do
+      post :join_world, params: { ip_address: '192.168.1.1' }
+
+      expect(flash[:alert]).to eq("No active game found at 192.168.1.1.")
+      expect(response).to redirect_to(join_game_path)
+    end
+  end
 end

@@ -2,7 +2,14 @@
 
 class WorldsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_world, only: %i[move resolve_battle attack_with_item]
+  before_action :set_world, only: %i[move resolve_battle attack_with_item host stop_hosting]
+
+  def show
+    @world = World.find(params[:id])
+    @user_world_state = UserWorldState.find_by(user: current_user, world: @world)
+    @players = @world.users # Fetch all players in the world
+  end
+
 
   def move
     @world = find_world
@@ -21,21 +28,73 @@ class WorldsController < ApplicationController
     battle = find_active_battle
     user_world_state = user_world
 
-    return unless item && battle && player_turn?(battle)
+    unless item && battle && player_turn?(battle)
+      flash[:alert] = "It's not your turn!"
+      redirect_to play_world_path(battle.world) and return
+    end
 
+    # Process the attack
     process_attack(item, battle, user_world_state)
+
+    # Check if the enemy has been defeated
+    if enemy_defeated?(battle)
+      handle_victory(battle)
+      return
+    end
+
+    # Rotate to the next player's turn
+    battle.next_turn
+
+    # If it's the enemy's turn, handle enemy attacks
+    if battle.player_turn?(nil) # Assuming `nil` or a special value is used for the enemy's turn
+      handle_enemy_turn(battle)
+      battle.next_turn # Move back to the next player
+    end
+
+    flash[:notice] = "Your attack was successful! It's now the next player's turn."
+    redirect_to play_world_path(battle.world)
   end
 
-  def handle_enemy_turn(battle, user_world_state)
-    damage = calculate_damage_battle(battle)
-    apply_damage_to_player(user_world_state, damage)
 
-    if player_defeated?(user_world_state)
-      handle_loss(battle, damage)
+  def handle_enemy_turn(battle)
+    damage = calculate_damage_battle(battle)
+
+    # Handle single-player or multiplayer dynamically
+    if battle.world.users.count == 1
+      # Single-player: Find the only player in the world
+      user_world_state = UserWorldState.find_by(user: battle.player, world: battle.world)
+      apply_damage_to_player(user_world_state, damage)
+
+      if player_defeated?(user_world_state)
+        handle_loss(battle, damage)
+      else
+        flash[:notice] = "The enemy attacked you for #{damage} damage!"
+      end
     else
-      handle_enemy_attack_success(battle, damage)
+      # Multiplayer: Apply damage to all players
+      battle.world.users.each do |player|
+        user_world_state = UserWorldState.find_by(user: player, world: battle.world)
+        next unless user_world_state
+
+        apply_damage_to_player(user_world_state, damage)
+        handle_loss_for_player(battle, player, damage) if player_defeated?(user_world_state)
+      end
+
+      flash[:notice] = "The enemy attacked all players for #{damage} damage!"
     end
   end
+  def handle_loss_for_player(battle, player, damage)
+    user_world_state = UserWorldState.find_by(user: player, world: battle.world)
+    user_world_state.destroy # Remove the defeated player from the game
+
+    flash[:alert] = "#{player.name} has been defeated by the enemy after taking #{damage} damage!"
+
+    # End the battle if no players are left
+    if battle.world.users.count.zero?
+      handle_loss(battle, damage) # Reuse single-player logic to end the battle
+    end
+  end
+
 
   def resolve_battle
     battle = Battle.find_by(player: current_user, world: @world, state: 'active')
@@ -297,4 +356,27 @@ class WorldsController < ApplicationController
     @world.user_world_states.destroy_all
     @world.destroy!
   end
+
+  #Multiplayer functionality
+  def host
+    @world = World.find(params[:id])
+    @world.host_game(request.remote_ip)
+    flash[:notice] = "Hosting world: #{@world.name}. Share your IP: #{request.remote_ip}"
+    redirect_to world_path(@world)
+  end
+
+  def stop_hosting
+    @world = World.find(params[:id])
+    @world.stop_hosting
+    flash[:notice] = "Stopped hosting world: #{@world.name}."
+    redirect_to world_path(@world)
+  end
+
+  def join
+    ip_address = params[:ip_address]
+    # Logic to connect to the host's game
+    flash[:notice] = "Attempting to join game hosted at IP: #{ip_address}"
+    redirect_to multiplayer_path
+  end
+
 end

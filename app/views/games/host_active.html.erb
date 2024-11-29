@@ -1,0 +1,16 @@
+<h1>Hosting World: <%= @world.name %></h1>
+<p>Share your IP address with friends so they can join: <strong><%= request.remote_ip %></strong></p>
+<p>Players currently in the world:</p>
+
+<% if @players.present? %>
+  <ul>
+    <% @players.each do |player| %>
+      <li><%= player.email %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No players have joined yet.</p>
+<% end %>
+
+<%= button_to 'Stop Hosting', stop_hosting_world_path(@world), method: :post, class: 'btn btn-danger' %>
+<%= link_to 'Back to Multiplayer Menu', multiplayer_menu_path, class: 'btn btn-secondary' %>
