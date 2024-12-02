@@ -14,6 +14,13 @@ class User < ApplicationRecord
   after_initialize :set_default_shards_balance, if: :new_record?
   after_create :assign_default_sword
 
+  def charge_shards(amount)
+    return false if shards_balance < amount
+
+    decrement!(:shards_balance, amount)
+    true
+  end
+
   private
 
   def set_default_shards_balance
