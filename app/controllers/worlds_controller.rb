@@ -16,11 +16,37 @@ class WorldsController < ApplicationController
     return redirect_to single_player_path, alert: 'World not found.' unless @world
 
     player_cell = find_player_cell
-    return redirect_to world_path(@world), alert: 'Player not found on grid.' unless player_cell
+    return redirect_to worlds_path(@world), alert: 'Player not found on grid.' unless player_cell
 
     process_player_move(player_cell, params[:direction])
 
-    redirect_to world_path(@world)
+    redirect_to worlds_path(@world)
+  end
+
+  def shard_move
+    @world = find_world
+    x = params[:x].to_i
+    y = params[:y].to_i
+    return redirect_to single_player_path, alert: 'World not found.' unless @world
+
+    player_cell = find_player_cell
+    player_cell_x = player_cell.x
+    player_cell_y = player_cell.y
+
+    if player_cell_x == x and player_cell_y == y
+      return redirect_to worlds_path(@world), alert: "Player already at this location"
+    end
+
+    return redirect_to worlds_path(@world), alert: 'Player not found on grid.' unless player_cell
+
+    if current_user.shards_balance < 50
+      return redirect_to single_player_path, alert: "insufficent funds"
+    end
+    if valid_position?([x,y])
+      move_player(player_cell,[x,y])
+      current_user.decrement!(:shards_balance, 50)
+    end
+    redirect_to worlds_path(@world)
   end
 
   def attack_with_item

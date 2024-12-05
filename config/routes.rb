@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     post 'move', on: :member
     post 'resolve_battle', on: :member
     post 'attack_with_item', on: :member
+    post 'shard_move', on: :member
   end
 
   get 'shards/purchase', to: 'shards#new', as: 'new_shards_purchase'
