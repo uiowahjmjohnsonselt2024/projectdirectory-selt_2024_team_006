@@ -27,8 +27,9 @@ class WorldsController < ApplicationController
     @world = find_world
     x = params[:x].to_i
     y = params[:y].to_i
+    is_in_battle = Battle.find_by(player: current_user, world: @world, state: 'active')
     return redirect_to single_player_path, alert: 'World not found.' unless @world
-
+    return redirect_to worlds_path(@world), alert: 'Player is in battle' if is_in_battle
     player_cell = find_player_cell
     player_cell_x = player_cell.x
     player_cell_y = player_cell.y
