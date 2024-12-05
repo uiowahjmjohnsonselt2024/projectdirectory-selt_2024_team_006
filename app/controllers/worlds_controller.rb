@@ -43,8 +43,22 @@ class WorldsController < ApplicationController
 
     turn_outcome(params, battle)
 
+    if battle.state == 'won'
+      track_achievement_progress
+    end
+
     battle.destroy
     redirect_to world_path(@world)
+  end
+
+  private
+  def track_achievement_progress
+    achievement = Achievement.find_by(name: 'Defeated 50 enemies')
+    player_progress = current_user.player_progresses.find_or_create_by(achievement: achievement)
+    player_progress.increment!(:current_progress)
+    if player_progress.completed? && !player_progress.claimed?
+      flash[:success] = "Achievement unlocked: Defeated 50 enemies! Claim your reward."
+    end
   end
 
   def set_world

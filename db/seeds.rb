@@ -14,3 +14,6 @@ Item.create(name: 'Steel Sword', damage: 80, description: 'A sword forged from h
 Item.create(name: 'Basic Dagger', damage: 20,
             description: 'A sword forged from high-quality steel, reliable in battle',
             price: 99_999, image_url: 'dagger.jpg')
+
+Achievement.create(name: "First Kill", description: "Complete your first kill")
+Achievement.create(name: "Explorer", description: "Explore 10 different grids")

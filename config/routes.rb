@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   get 'single_player', to: 'games#single_player'
   get 'new_world', to: 'games#new_world'
+  get 'users/achievements', to: 'users#achievements', as: 'achievements'
   post 'worlds', to: 'games#create'
   get 'games/:id', to: 'games#show', as: 'game'
   delete 'single_player/:id', to: 'games#destroy', as: 'destroy'
@@ -28,4 +29,10 @@ Rails.application.routes.draw do
   get 'user/inventory', to: 'users#inventory', as: 'user_inventory'
 
   get 'profile', to: 'users#show', as: 'user_profile'
+
+  resources :users do
+    collection do
+      post 'claim_achievement', to: 'users#claim_achievement'
+    end
+  end
 end
