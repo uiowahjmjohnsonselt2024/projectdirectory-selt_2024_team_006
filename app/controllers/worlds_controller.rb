@@ -140,7 +140,7 @@ class WorldsController < ApplicationController
   end
 
   def find_player_cell
-    @world.cells.find_by(content: 'player')
+    @world.cells.find_by(content: user_id_str)
   end
 
   def process_player_move(player_cell, direction)
@@ -247,7 +247,7 @@ class WorldsController < ApplicationController
 
   def update_cells(player_cell, new_cell)
     player_cell.update!(content: 'empty')
-    new_cell.update!(content: 'player')
+    new_cell.update!(content: user_id_str)
   end
 
   def calculate_shard_drop(enemy_data)
@@ -296,5 +296,9 @@ class WorldsController < ApplicationController
     @world.cells.destroy_all
     @world.user_world_states.destroy_all
     @world.destroy!
+  end
+
+  def user_id_str
+    current_user.id.to_s
   end
 end

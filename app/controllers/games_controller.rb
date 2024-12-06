@@ -76,7 +76,7 @@ class GamesController < ApplicationController
 
   def emoji_map(content)
     case content
-    when 'player' then '🧍'
+    when current_user.id.to_s then '🧍'
     when 'treasure' then '💰'
     when 'enemy' then '👾'
     else ''

@@ -74,9 +74,18 @@ class World < ApplicationRecord
     end
   end
 
+  # def cell_content(x_pos, y_pos, player_position, treasure_positions, enemy_positions)
+  #   position = [x_pos, y_pos]
+  #   return 'player' if position == player_position
+  #   return 'treasure' if treasure_positions.include?(position)
+  #   return 'enemy' if enemy_positions.include?(position)
+  #
+  #   'empty'
+  # end
+
   def cell_content(x_pos, y_pos, player_position, treasure_positions, enemy_positions)
     position = [x_pos, y_pos]
-    return 'player' if position == player_position
+    return creator_id.to_s if position == player_position
     return 'treasure' if treasure_positions.include?(position)
     return 'enemy' if enemy_positions.include?(position)
 
