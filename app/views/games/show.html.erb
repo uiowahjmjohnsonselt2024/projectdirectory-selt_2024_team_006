@@ -20,19 +20,9 @@
 
 <% end %>
 
-<div class="container mt-5" style="background-image: url('<%= @world.background_image_url %>'); background-size: cover; background-position: center; padding: 20px; border: 4px solid #333;">
-  <div class="grid">
-    <% (0..6).each do |y| %>
-      <div class="row justify-content-center">
-        <% (0..6).each do |x| %>
-          <% cell = @cells.find { |c| c.x == x && c.y == y } %>
-          <div class="col cell text-center pixel-cell">
-            <%= cell.content %>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+<div id="world-grid" data-world-id="<%= @world.id %>" class="container mt-5"
+     style="background-image: url('<%= @world.background_image_url %>'); background-size: cover; background-position: center; padding: 20px; border: 4px solid #333;">
+  <%= render partial: "games/grid", locals: { cells: @cells } %>
 </div>
 
 <% if player_in_battle?(@world) %>
@@ -52,7 +42,7 @@
   </div>
   <p class="text-center"><strong>Enemy Attack:</strong> <%= @current_battle.enemy_data['attack'] %></p>
 
-  <% if @current_battle.turn == 'player' %>
+  <% if @current_battle.turn == current_user.id.to_s %>
     <h3 class="text-center" style="color: blue;">It's Your Turn!</h3>
     <div class="inventory">
       <% current_user.items.each do |item| %>
