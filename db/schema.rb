@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_241_119_143_615) do
+ActiveRecord::Schema[7.0].define(version: 20_241_207_204_731) do
   create_table 'battles', force: :cascade do |t|
     t.integer 'world_id', null: false
     t.integer 'cell_id', null: false
@@ -88,6 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 20_241_119_143_615) do
     t.datetime 'updated_at', null: false
     t.text 'lore'
     t.string 'background_image_url'
+    t.boolean 'is_public'
   end
 
   add_foreign_key 'battles', 'cells'

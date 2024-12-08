@@ -13,7 +13,7 @@ class Battle < ApplicationRecord
   end
 
   def toggle_turn
-    self.turn = turn == 'player' ? 'enemy' : 'player'
+    self.turn = turn == player.id.to_s ? 'enemy' : player.id.to_s
     save!
   end
 end

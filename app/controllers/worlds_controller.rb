@@ -47,12 +47,46 @@ class WorldsController < ApplicationController
     redirect_to world_path(@world)
   end
 
+  def player_in_world?
+    @world.cells.exists?(content: current_user.id.to_s)
+  end
+
   def set_world
-    @world = World.find_by(id: params[:id], creator_id: current_user.id)
-    redirect_to single_player_path, alert: 'World not found.' unless @world
+    @world = World.find_by(id: params[:id])
+
+    return if @world && (@world.is_public == true || @world.creator_id == current_user.id || player_in_world?)
+
+    redirect_to single_player_path, alert: 'World not found or access denied.'
+    nil
   end
 
   private
+
+  def authorized_to_move?
+    @world.creator_id == current_user.id || player_in_world?
+  end
+
+  def flash_invalid_move
+    flash[:alert] = 'Invalid move!'
+  end
+
+  def find_new_cell(position)
+    @world.cells.find_by(x: position[0], y: position[1])
+  end
+
+  def player_square_occupied?(cell)
+    cell.content.match(/^\d+$/)
+  end
+
+  def flash_occupied_square
+    flash[:alert] = 'That square is occupied by another player!'
+  end
+
+  def process_move(player_cell, new_cell)
+    handle_cell_content(new_cell)
+    update_cells(player_cell, new_cell)
+    @world.broadcast_grid(current_user)
+  end
 
   def process_attack(item, battle, user_world_state)
     handle_damage(item, battle)
@@ -87,6 +121,9 @@ class WorldsController < ApplicationController
     battle.resolve('won')
     shards = award_victory_shards(battle)
     flash[:notice] = "You defeated the enemy and earned #{shards} shards!"
+
+    @world.broadcast_grid(current_user)
+
     redirect_to resolve_battle_world_path(@world, outcome: 'win')
   end
 
@@ -119,7 +156,7 @@ class WorldsController < ApplicationController
   end
 
   def player_turn?(battle)
-    return true if battle.turn == 'player'
+    return true if battle.turn == current_user.id.to_s
 
     redirect_to world_path(@world), alert: 'It is not your turn!'
     false
@@ -136,21 +173,25 @@ class WorldsController < ApplicationController
   end
 
   def find_world
-    World.find_by(id: params[:id], creator_id: current_user.id)
+    World.find_by(id: params[:id]).tap do |world|
+      return nil unless world && (world.is_public == true || world.creator_id == current_user.id)
+    end
   end
 
   def find_player_cell
-    @world.cells.find_by(content: 'player')
+    @world.cells.find_by(content: user_id_str)
   end
 
   def process_player_move(player_cell, direction)
-    new_position = calculate_new_position(player_cell, direction)
+    return unless authorized_to_move?
 
-    if valid_position?(new_position)
-      move_player(player_cell, new_position)
-    else
-      flash[:alert] = 'Invalid move!'
-    end
+    new_position = calculate_new_position(player_cell, direction)
+    return flash_invalid_move unless valid_position?(new_position)
+
+    new_cell = find_new_cell(new_position)
+    return flash_occupied_square if player_square_occupied?(new_cell)
+
+    process_move(player_cell, new_cell)
   end
 
   def calculate_new_position(player_cell, direction)
@@ -168,15 +209,6 @@ class WorldsController < ApplicationController
     position.all? { |coord| coord.between?(0, 6) }
   end
 
-  def move_player(player_cell, new_position)
-    new_cell = @world.cells.find_by(x: new_position[0], y: new_position[1])
-
-    return unless new_cell
-
-    handle_cell_content(new_cell)
-    update_cells(player_cell, new_cell)
-  end
-
   def handle_cell_content(cell)
     case cell.content
     when 'treasure'
@@ -184,6 +216,8 @@ class WorldsController < ApplicationController
     when 'enemy'
       start_battle(cell)
     end
+
+    @world.broadcast_grid(current_user)
   end
 
   def start_battle(cell)
@@ -217,7 +251,7 @@ class WorldsController < ApplicationController
       player: current_user,
       enemy_data: enemy_stats.merge('narration' => narration_text),
       state: 'active',
-      turn: 'player'
+      turn: current_user.id.to_s
     )
   end
 
@@ -247,7 +281,7 @@ class WorldsController < ApplicationController
 
   def update_cells(player_cell, new_cell)
     player_cell.update!(content: 'empty')
-    new_cell.update!(content: 'player')
+    new_cell.update!(content: current_user.id)
   end
 
   def calculate_shard_drop(enemy_data)
@@ -278,6 +312,9 @@ class WorldsController < ApplicationController
     resolve_battle_loss(battle)
     destroy_world
     flash[:alert] = "The enemy defeated you! You took #{damage} damage and your world has been destroyed. Game over!"
+
+    @world.broadcast_grid(current_user)
+
     redirect_to single_player_path
   end
 
@@ -296,5 +333,9 @@ class WorldsController < ApplicationController
     @world.cells.destroy_all
     @world.user_world_states.destroy_all
     @world.destroy!
+  end
+
+  def user_id_str
+    current_user.id.to_s
   end
 end
