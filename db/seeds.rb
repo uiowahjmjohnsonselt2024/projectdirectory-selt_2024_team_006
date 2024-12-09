@@ -15,5 +15,7 @@ Item.create(name: 'Basic Dagger', damage: 20,
             description: 'A sword forged from high-quality steel, reliable in battle',
             price: 99_999, image_url: 'dagger.jpg')
 
-Achievement.create(name: "First Kill", description: "Complete your first kill")
-Achievement.create(name: "Explorer", description: "Explore 10 different grids")
+Achievement.create(name: "First Kill", description: "Complete your first kill", target: 1, reward: 10)
+Achievement.create(name: "First World", description: "Create your first world", target: 1, reward: 10)
+Achievement.create(name: "Slayer", description: "Defeat 10 enemies", target: 10, reward: 50)
+Achievement.create(name: "Explorer", description: "Explore 10 different worlds", target: 10, reward: 50)

@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_05_053304) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_09_195352) do
   create_table "achievements", force: :cascade do |t|
     t.string "name"
     t.integer "target"
     t.integer "reward"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "description"
   end
 
   create_table "battles", force: :cascade do |t|

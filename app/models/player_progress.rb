@@ -9,6 +9,7 @@ class PlayerProgress < ApplicationRecord
   end
 
   def completed?
+    return false if current_progress.nil? || achievement.target.nil?
     current_progress >= achievement.target
   end
 end

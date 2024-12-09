@@ -42,9 +42,9 @@ class WorldsController < ApplicationController
     return redirect_to world_path(@world), alert: 'No active battle found!' unless battle
 
     turn_outcome(params, battle)
+    byebug
 
     if battle.state == 'won'
-      track_achievement_progress
     end
 
     battle.destroy
@@ -52,12 +52,14 @@ class WorldsController < ApplicationController
   end
 
   private
-  def track_achievement_progress
-    achievement = Achievement.find_by(name: 'Defeated 50 enemies')
+  def track_achievement_progress(name)
+    achievement = Achievement.find_by(name: name)
     player_progress = current_user.player_progresses.find_or_create_by(achievement: achievement)
-    player_progress.increment!(:current_progress)
+    unless player_progress.completed?
+      player_progress.increment!(:current_progress)
+    end
     if player_progress.completed? && !player_progress.claimed?
-      flash[:success] = "Achievement unlocked: Defeated 50 enemies! Claim your reward."
+      flash[:success] = "Achievement unlocked: " + name + " Claim your reward."
     end
   end
 
@@ -99,6 +101,8 @@ class WorldsController < ApplicationController
 
   def handle_victory(battle)
     battle.resolve('won')
+    track_achievement_progress("First Kill")
+    track_achievement_progress("Slayer")
     shards = award_victory_shards(battle)
     flash[:notice] = "You defeated the enemy and earned #{shards} shards!"
     redirect_to resolve_battle_world_path(@world, outcome: 'win')

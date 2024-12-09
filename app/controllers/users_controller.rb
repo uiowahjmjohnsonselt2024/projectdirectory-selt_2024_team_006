@@ -11,6 +11,7 @@ class UsersController < ApplicationController
   def achievements
     @user = current_user
     @achievements = Achievement.all
+    @player_progress = current_user.player_progresses.index_by(&:achievement_id)
   end
 
   def claim_achievement
@@ -19,11 +20,11 @@ class UsersController < ApplicationController
 
     if progress.completed? && !progress.claimed?
 
-      current_user.update!(shards_balance: current_user.shards_balance + 50)
+      current_user.update!(shards_balance: current_user.shards_balance + achievement.reward)
 
       progress.update!(claimed: true)
 
-      flash[:success] = "Achievement unlocked and reward claimed! You received 50 shards."
+      flash[:success] = "Achievement unlocked and reward claimed! You received " + achievement.reward.to_s + " shards."
     else
       flash[:alert] = "Achievement not completed or already claimed."
     end

@@ -1,26 +1,29 @@
 <!-- app/views/users/achievements.html.erb -->
 <h1>Your Achievements</h1>
 
-<% @user.achievements.each do |achievement| %>
+<% @achievements.each do |achievement| %>
   <div class="achievement">
     <h3><%= achievement.name %></h3>
 
     <!-- Display progress -->
-    <p>Progress: <%= @user.player_progresses.find_by(achievement: achievement).current_progress %>/<%= achievement.target %></p>
+    <% progress = @player_progress[achievement.id] %>
+    <p>Progress: <%= progress&.current_progress || 0 %>/<%= achievement.target %></p>
 
     <!-- Progress Bar -->
     <div class="progress-bar" style="background-color: #e0e0e0; border-radius: 5px; width: 100%; height: 20px;">
       <div
-        style="width: <%= (@user.player_progresses.find_by(achievement: achievement).current_progress / achievement.target.to_f * 100) %>%;
+        style="width: <%= ((progress&.current_progress || 0) / achievement.target.to_f * 100).round(2) %>%;
           background-color: #76c7c0; height: 100%; border-radius: 5px;">
       </div>
     </div>
 
+    <!-- Reward -->
+    <p>Reward: <%= achievement.reward.to_s + " Shards" %></p>
+
     <!-- Claim button -->
-    <% progress = @user.player_progresses.find_by(achievement: achievement) %>
-    <% if progress.completed? && !progress.claimed? %>
-      <%= button_to 'Claim Reward', claim_achievement_path(achievement_id: achievement.id), method: :post, class: 'claim-button' %>
-    <% elsif progress.completed? && progress.claimed? %>
+    <% if progress&.completed? && !progress&.claimed? %>
+      <%= button_to 'Claim Reward', claim_achievement_users_path(achievement_id: achievement.id), method: :post, class: 'claim-button' %>
+    <% elsif progress&.completed? && progress&.claimed? %>
       <p>You have already claimed this reward.</p>
     <% else %>
       <p>Keep going to complete this achievement!</p>
