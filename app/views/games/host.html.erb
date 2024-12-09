@@ -1,0 +1,15 @@
+<h1>Host a Game</h1>
+
+<% if @worlds.present? %>
+  <h2>Your Worlds</h2>
+  <% @worlds.each do |world| %>
+    <div>
+      <p><strong>World Name:</strong> <%= world.name %></p>
+      <%= button_to 'Host This World', host_world_path(world), method: :post, class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+<% else %>
+  <p>You don’t have any worlds to host. Create one in single-player mode first!</p>
+<% end %>
+
+<%= link_to 'Back to Multiplayer Menu', multiplayer_menu_path, class: 'btn btn-secondary' %>
