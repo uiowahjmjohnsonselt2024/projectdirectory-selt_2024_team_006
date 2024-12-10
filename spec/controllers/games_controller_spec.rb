@@ -91,6 +91,26 @@ RSpec.describe GamesController, type: :controller do
       end
     end
 
+    context 'when the user does not have enough shards' do
+      before do
+        user.update(shards_balance: 5)
+      end
+
+      it 'does not create a new world' do
+        expect do
+          post :create, params: { world: { name: 'My Custom World' } }
+        end.not_to change(World, :count)
+      end
+
+      it 'redirects to the worlds path with an error message' do
+        post :create, params: { world: { name: 'My Custom World' } }
+        expect(response).to redirect_to(worlds_path)
+        expect(flash[:alert]).to eq(
+          "You don't have enough shards to create a world. Creating a new world costs 10 shards!"
+        )
+      end
+    end
+
     context 'with a blank name' do
       it 'creates a new world with the default name "New World"' do
         expect do

@@ -15,6 +15,32 @@ RSpec.describe World, type: :model do
     allow(ChatGptService).to receive(:generate_image).and_return({ 'data' => [{ 'url' => 'default_image_url' }] })
   end
 
+  describe '#charge_shards' do
+    let(:user) { User.create!(email: 'test_user@example.com', password: 'password', shards_balance: 20) }
+
+    context 'when the user has enough shards' do
+      it 'deducts the specified amount from the user\'s shards balance' do
+        expect { user.charge_shards(10) }.to change { user.reload.shards_balance }.from(20).to(10)
+      end
+
+      it 'returns true' do
+        result = user.charge_shards(10)
+        expect(result).to be true
+      end
+    end
+
+    context 'when the user does not have enough shards' do
+      it 'does not deduct shards from the user\'s balance' do
+        expect { user.charge_shards(30) }.not_to(change { user.reload.shards_balance })
+      end
+
+      it 'returns false' do
+        result = user.charge_shards(30)
+        expect(result).to be false
+      end
+    end
+  end
+
   describe '#generate_background_image' do
     let(:world) { World.create!(name: 'MysticLand', creator: creator) }
 
