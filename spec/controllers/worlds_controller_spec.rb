@@ -138,6 +138,20 @@ RSpec.describe WorldsController, type: :controller do
       end
     end
 
+    context 'when tracking achievements for victory' do
+      it 'increments progress for relevant achievements and resolves battle' do
+        battle.update!(enemy_data: { 'health' => 0, 'attack' => 10, 'max_health' => 10 })
+
+        expect_any_instance_of(WorldsController).to receive(:track_achievement_progress).with('First Kill')
+        expect_any_instance_of(WorldsController).to receive(:track_achievement_progress).with('Slayer')
+
+        post :attack_with_item, params: { id: world.id, item_id: item1.id }
+
+        expect(Battle.exists?(battle.id)).to be_falsey
+        expect(flash[:notice]).to match(/You defeated the enemy and earned \d+ shards!/)
+      end
+    end
+
     context 'when there is no active battle' do
       it 'redirects with an alert' do
         battle.update!(state: 'won')

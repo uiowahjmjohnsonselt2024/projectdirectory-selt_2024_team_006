@@ -182,4 +182,26 @@ RSpec.describe GamesController, type: :controller do
       end
     end
   end
+
+  describe '#track_achievement_progress' do
+    let!(:achievement) { create(:achievement, name: 'First World', target: 1) }
+
+    before do
+      create(:player_progress, user: user, achievement: achievement, current_progress: 0)
+    end
+
+    it 'creates player progress if not already present and increments progress' do
+      expect do
+        controller.send(:track_achievement_progress, 'First World')
+      end.to change {
+        user.player_progresses.find_by(achievement: achievement).current_progress || 0
+      }.by(1)
+    end
+
+    it 'displays a flash message for a completed achievement' do
+      create(:player_progress, user: user, achievement: achievement, current_progress: 1)
+      controller.send(:track_achievement_progress, 'First World')
+      expect(flash[:success]).to match(/Achievement unlocked: First World Claim your reward./)
+    end
+  end
 end
