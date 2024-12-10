@@ -14,8 +14,8 @@ class WorldsController < ApplicationController
     process_player_move(player_cell, params[:direction])
 
     redirect_to game_path(@world)
-
   end
+
   def attack_with_item
     item = find_valid_item
     battle = find_active_battle
