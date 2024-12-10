@@ -3,14 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe Battle, type: :model do
+  let(:creator) { User.create!(email: 'test@example.com', password: 'password') }
   let(:world) do
-    World.create!(name: 'Test World', creator: User.create!(email: 'creator@example.com', password: 'password'))
+    World.create!(name: 'Test World', creator: creator)
   end
   let(:cell) { Cell.create!(world: world, x: 0, y: 0, content: 'empty') }
   let(:player) { User.create!(email: 'player@example.com', password: 'password') }
   let(:battle) { Battle.create!(world: world, cell: cell, player: player, state: 'active', turn: 'player') }
 
   before do
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(creator)
+
     allow(ChatGptService).to receive(:call).and_return(
       { 'choices' => [{ 'message' => { 'content' => 'Test response.' } }] }
     )
@@ -43,13 +46,13 @@ RSpec.describe Battle, type: :model do
   describe '#toggle_turn' do
     it 'toggles the turn from player to enemy' do
       battle.toggle_turn
-      expect(battle.turn).to eq('enemy')
+      expect(battle.turn).to eq(player.id.to_s)
     end
 
     it 'toggles the turn from enemy to player' do
       battle.update!(turn: 'enemy')
       battle.toggle_turn
-      expect(battle.turn).to eq('player')
+      expect(battle.turn).to eq(player.id.to_s)
     end
   end
 

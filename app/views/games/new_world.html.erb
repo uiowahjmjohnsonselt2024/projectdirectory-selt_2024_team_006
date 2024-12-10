@@ -1,8 +1,26 @@
-<%= form_with model: @world, url: worlds_path, method: :post, html: { id: 'new_world_form' } do |form| %>
-  <div class="form-group">
-    <%= form.label :name, "World Name" %>
-    <%= form.text_field :name, class: "form-control", id: "world_name" %> <!-- Added ID here -->
-  </div>
+<%= form_with model: @world, url: worlds_path, method: :post, html: { id: 'new_world_form', class: 'form' } do |form| %>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow-sm p-4">
+          <h2 class="text-center mb-4">Create a New World</h2>
 
-  <%= form.submit "Create World", class: "btn btn-primary" %>
+          <div class="form-group">
+            <%= form.label :name, "World Name", class: "form-label" %>
+            <%= form.text_field :name, class: "form-control", id: "world_name", placeholder: "Enter a name for your world" %>
+          </div>
+
+          <div class="form-group form-check">
+            <%= form.check_box :is_public, class: "form-check-input", id: "world_is_public" %>
+            <%= form.label :is_public, "Make this world public", class: "form-check-label" %>
+          </div>
+
+          <div class="form-group text-center">
+            <%= form.submit "Create World", class: "btn btn-primary btn-lg mt-3" %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>

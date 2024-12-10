@@ -4,8 +4,12 @@ require 'rails_helper'
 
 RSpec.describe World, type: :model do
   let(:creator) { User.create!(email: 'test@example.com', password: 'password') }
+  let(:player) { User.create!(email: 'test2@example.com', password: 'password') }
+  let(:world) { World.create!(name: 'MysticLand', creator: creator) }
 
   before do
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(creator)
+
     allow_any_instance_of(World).to receive(:generate_background_image).and_wrap_original do |m, *args|
       m.call(*args)
     end
@@ -19,15 +23,50 @@ RSpec.describe World, type: :model do
     let(:world) { World.create!(name: 'MysticLand', creator: creator) }
 
     it 'generates and saves a background image URL' do
-      expect(world.background_image_url).to eq('default_image_url')
+      expect(world.background_image_url).to eq('default_image_url' || nil)
     end
   end
 
   describe '#generate_lore' do
-    let(:world) { World.create!(name: 'MysticLand', creator: creator) }
-
     it 'generates and saves lore for the world' do
       expect(world.lore).to eq('Test response.')
+    end
+  end
+
+  describe '#place_player' do
+    context 'when the player is already placed in the world' do
+      before do
+        world.cells.find_by(x: 1, y: 1).update!(content: player.id.to_s)
+      end
+
+      it 'does not place the player again' do
+        expect do
+          world.place_player(player.id)
+        end.not_to(change { world.cells.where(content: player.id.to_s).count })
+      end
+    end
+
+    context 'when there is an empty cell' do
+      it 'places the player in the first empty cell' do
+        expect do
+          world.place_player(player.id)
+        end.to change { world.cells.where(content: player.id.to_s).count }.by(1)
+
+        placed_cell = world.cells.find_by(content: player.id.to_s)
+        expect(placed_cell).not_to be_nil
+      end
+    end
+
+    context 'when there are no empty cells' do
+      before do
+        world.cells.update_all(content: creator.id.to_s)
+      end
+
+      it 'raises an error' do
+        expect do
+          world.place_player(player.id)
+        end.to raise_error('No empty squares available in the world')
+      end
     end
   end
 
@@ -40,7 +79,7 @@ RSpec.describe World, type: :model do
 
     it 'places the player at position [0, 0]' do
       player_cell = world.cells.find_by(x: 0, y: 0)
-      expect(player_cell.content).to eq('player')
+      expect(player_cell.content).to eq(creator.id.to_s)
     end
 
     it 'places 5 treasures on the grid' do
@@ -61,8 +100,8 @@ RSpec.describe World, type: :model do
 
     it 'does not overlap player, treasure, or enemy positions' do
       all_positions = world.cells.pluck(:content)
-      expect(all_positions).to include('player', 'treasure', 'enemy', 'empty')
-      expect(all_positions.count('player')).to eq(1)
+      expect(all_positions).to include(creator.id.to_s, 'treasure', 'enemy', 'empty')
+      expect(all_positions.count(creator.id.to_s)).to eq(1)
     end
   end
 

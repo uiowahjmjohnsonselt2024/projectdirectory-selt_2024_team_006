@@ -3,9 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe Cell, type: :model do
-  let(:world) { create(:world, creator: create(:user)) }
+  let(:creator) { User.create!(email: 'test@example.com', password: 'password') }
+  let(:world) { create(:world, creator: creator) }
 
   before do
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(creator)
+
     allow(ChatGptService).to receive(:call).and_return(
       { 'choices' => [{ 'message' => { 'content' => 'Test response.' } }] }
     )

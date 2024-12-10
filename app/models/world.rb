@@ -13,7 +13,54 @@ class World < ApplicationRecord
   after_create :generate_grid, :generate_lore, :generate_background_image
   validates :creator, presence: true
 
+  after_create_commit -> { broadcast_later(creator) }
+  after_update_commit :broadcast_grid, if: :grid_updated?
+
+  def fetch_cells_with_content(_current_user)
+    cells.order(:y, :x).map do |cell|
+      OpenStruct.new(
+        x: cell.x,
+        y: cell.y,
+        content: cell.content
+      )
+    end
+  end
+
+  def place_player(player_id)
+    return if cells.exists?(content: player_id.to_s)
+
+    empty_cell = cells.find_by(content: 'empty')
+
+    raise 'No empty squares available in the world' unless empty_cell
+
+    empty_cell.update!(content: player_id.to_s)
+  end
+
+  def broadcast_later(viewing_user)
+    GameChannel.broadcast_to(
+      self,
+      html: ApplicationController.renderer.render(
+        partial: 'games/grid',
+        locals: { cells: fetch_cells_with_content(viewing_user), current_user: viewing_user, world: self }
+      )
+    )
+  end
+
+  def broadcast_grid(viewing_user)
+    GameChannel.broadcast_to(
+      self,
+      html: ApplicationController.renderer.render(
+        partial: 'games/grid',
+        locals: { cells: fetch_cells_with_content(viewing_user), current_user: viewing_user, world: self }
+      )
+    )
+  end
+
   private
+
+  def grid_updated?
+    saved_changes.key?(:cells) || saved_changes.key?(:grid_state)
+  end
 
   def generate_lore
     messages = chat_messages
@@ -76,7 +123,7 @@ class World < ApplicationRecord
 
   def cell_content(x_pos, y_pos, player_position, treasure_positions, enemy_positions)
     position = [x_pos, y_pos]
-    return 'player' if position == player_position
+    return creator_id.to_s if position == player_position
     return 'treasure' if treasure_positions.include?(position)
     return 'enemy' if enemy_positions.include?(position)
 
@@ -96,8 +143,20 @@ class World < ApplicationRecord
   end
 
   def process_valid_image_response(response)
+    Rails.logger.debug("Updating background_image_url with #{response['data'][0]['url']}")
     self.background_image_url = response['data'][0]['url']
     update!(background_image_url: response['data'][0]['url'])
+    broadcast_background_image
+  end
+
+  def broadcast_background_image
+    GameChannel.broadcast_to(
+      self,
+      html: ApplicationController.renderer.render(
+        partial: 'worlds/background_image',
+        locals: { world: self }
+      )
+    )
   end
 
   # :nocov:

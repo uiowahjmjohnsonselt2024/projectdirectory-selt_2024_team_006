@@ -20,19 +20,9 @@
 
 <% end %>
 
-<div class="container mt-5" style="background-image: url('<%= @world.background_image_url %>'); background-size: cover; background-position: center; padding: 20px; border: 4px solid #333;">
-  <div class="grid">
-    <% (0..6).each do |y| %>
-      <div class="row justify-content-center">
-        <% (0..6).each do |x| %>
-          <% cell = @cells.find { |c| c.x == x && c.y == y } %>
-          <div class="col cell text-center pixel-cell">
-            <%= cell.content %>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+<div id="world-grid" data-world-id="<%= @world.id %>" class="container mt-5"
+     style="background-image: url('<%= @world.background_image_url %>'); background-size: cover; background-position: center; padding: 20px; border: 4px solid #333;">
+  <%= render partial: "games/grid", locals: { cells: @cells } %>
 </div>
 
 <% if player_in_battle?(@world) %>
@@ -43,7 +33,7 @@
   <h2 class="text-center" style="color: red;">Enemy Stats</h2>
   <div class="enemy-health-bar">
     <% enemy_health = @current_battle.enemy_data['health'] || 0 %>
-    <% max_health = @current_battle.enemy_data['max_health'] || 100 %> <!-- Default to 100 if nil -->
+    <% max_health = @current_battle.enemy_data['max_health'] || 100 %>
     <div class="health-bar">
       <div class="health-bar-fill" style="width: <%= (enemy_health.to_f / max_health * 100).round(2) %>%;">
         <span class="health-text"><%= enemy_health %> / <%= max_health %></span>
@@ -52,7 +42,7 @@
   </div>
   <p class="text-center"><strong>Enemy Attack:</strong> <%= @current_battle.enemy_data['attack'] %></p>
 
-  <% if @current_battle.turn == 'player' %>
+  <% if @current_battle.turn == current_user.id.to_s %>
     <h3 class="text-center" style="color: blue;">It's Your Turn!</h3>
     <div class="inventory">
       <% current_user.items.each do |item| %>
