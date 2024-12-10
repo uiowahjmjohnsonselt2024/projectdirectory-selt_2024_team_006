@@ -7,10 +7,14 @@ RSpec.describe WorldsController, type: :controller do
   let(:world) { create(:world, creator: user) }
   let(:item1) { Item.create!(name: 'Sword', image_url: 'url', price: 10, damage: 20) }
   let(:item2) { Item.create!(name: 'Shield', image_url: 'url', price: 15, damage: 30) }
+  let!(:first_kill) { create(:achievement, name: 'First Kill', target: 1) }
+  let!(:slayer) { create(:achievement, name: 'Slayer', target: 10) }
 
   before do
     sign_in user
     user.items << [item1, item2]
+    create(:player_progress, user: user, achievement: first_kill, current_progress: 0)
+    create(:player_progress, user: user, achievement: slayer, current_progress: 0)
     allow(ChatGptService).to receive(:call).and_return(
       { 'choices' => [{ 'message' => { 'content' => 'Test response.' } }] }
     )
