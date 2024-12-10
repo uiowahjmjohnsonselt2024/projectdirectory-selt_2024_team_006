@@ -23,6 +23,8 @@ ActiveRecord::Schema[7.0].define(version: 20_241_207_204_731) do
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.string 'turn', default: 'player'
+    t.integer 'current_turn'
+    t.text 'turn_order'
     t.index ['cell_id'], name: 'index_battles_on_cell_id'
     t.index %w[player_id world_id], name: 'index_battles_on_player_id_and_world_id', unique: true
     t.index ['player_id'], name: 'index_battles_on_player_id'
@@ -81,6 +83,15 @@ ActiveRecord::Schema[7.0].define(version: 20_241_207_204_731) do
     t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
   end
 
+  create_table 'world_players', force: :cascade do |t|
+    t.integer 'world_id', null: false
+    t.integer 'user_id', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_world_players_on_user_id'
+    t.index ['world_id'], name: 'index_world_players_on_world_id'
+  end
+
   create_table 'worlds', force: :cascade do |t|
     t.string 'name'
     t.integer 'creator_id'
@@ -88,6 +99,9 @@ ActiveRecord::Schema[7.0].define(version: 20_241_207_204_731) do
     t.datetime 'updated_at', null: false
     t.text 'lore'
     t.string 'background_image_url'
+    t.boolean 'public'
+    t.boolean 'is_hosted'
+    t.string 'host_ip'
     t.boolean 'is_public'
   end
 
@@ -99,4 +113,6 @@ ActiveRecord::Schema[7.0].define(version: 20_241_207_204_731) do
   add_foreign_key 'user_items', 'users'
   add_foreign_key 'user_world_states', 'users'
   add_foreign_key 'user_world_states', 'worlds', on_delete: :cascade
+  add_foreign_key 'world_players', 'users'
+  add_foreign_key 'world_players', 'worlds'
 end

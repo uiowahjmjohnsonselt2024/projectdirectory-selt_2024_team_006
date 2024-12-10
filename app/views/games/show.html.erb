@@ -33,7 +33,7 @@
   <h2 class="text-center" style="color: red;">Enemy Stats</h2>
   <div class="enemy-health-bar">
     <% enemy_health = @current_battle.enemy_data['health'] || 0 %>
-    <% max_health = @current_battle.enemy_data['max_health'] || 100 %> <!-- Default to 100 if nil -->
+    <% max_health = @current_battle.enemy_data['max_health'] || 100 %>
     <div class="health-bar">
       <div class="health-bar-fill" style="width: <%= (enemy_health.to_f / max_health * 100).round(2) %>%;">
         <span class="health-text"><%= enemy_health %> / <%= max_health %></span>
