@@ -1,5 +1,6 @@
 <h1 class="text-center" style="font-family: 'Press Start 2P', cursive; color: black; padding-top: 2.5rem"><%= @world.name %></h1>
 
+
 <% if @world.lore.present? %>
   <div class="world-lore" style="margin-top: 20px; background: #f8f8f8; padding: 10px; border-radius: 8px; text-align: center; font-size: 1rem;">
     <p><%= @world.lore %></p>
@@ -27,6 +28,7 @@
         <% (0..6).each do |x| %>
           <% cell = @cells.find { |c| c.x == x && c.y == y } %>
           <div class="col cell text-center pixel-cell">
+            <%= button_to " ", shard_move_world_path(@world, x: cell.x, y: cell.y), method: :post, class: "transparent-button" %>
             <%= cell.content %>
           </div>
         <% end %>
@@ -79,8 +81,21 @@
       </div>
       <%= button_to '⬇️', move_world_path(@world, direction: 'down'), method: :post, class: 'btn btn-primary arrow-btn mt-2' %>
     </div>
+    <!-- New Form for Moving to Specific Cell -->
+    <div class="mt-4">
+      <h5>Move to Specific Cell</h5>
+      <%= form_with url: shard_move_world_path(@world), method: :post, class: 'd-flex align-items-center justify-content-center gap-2',data: { confirm: "This move will cost 50 shards. Are you sure you want to move to this cell?" } do %>
+        <%= number_field_tag :x, nil, placeholder: 'X Coordinate', class: 'form-control', required: true, min: 0, style: 'width: 180px;' %>
+        <%= number_field_tag :y, nil, placeholder: 'Y Coordinate', class: 'form-control', required: true, min: 0, style: 'width: 180px;' %>
+        <%= submit_tag 'Move', class: 'btn btn-success' %>
+      <% end %>
+    </div>
   </div>
 <% end %>
+<div style="height: 50px;"></div>
+
+
+
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -95,6 +110,7 @@
     }
 
     .pixel-cell {
+        position: relative;
         width: 80px;
         height: 80px;
         padding: 10px;
@@ -114,6 +130,24 @@
         background-color: rgba(242, 141, 53, 0.8);
         border-color: #000;
     }
+    .content-wrapper {
+        position: relative; /* Keeps content and button together */
+        width: 100%; /* Ensure it fills the cell */
+        height: 100%;
+    }
+    .transparent-button {
+        position: absolute; /* Position over the content */
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%); /* Adjust for exact centering */
+        background: transparent; /* Optional background */
+        color: transparent; /* Button text color */
+        border: none;
+        border-radius: 5px; /* Optional rounded corners */
+        z-index: 10; /* Ensure it's above content */
+        padding: 40px 40px; /* Adjust button size */
+    }
+
 
     .arrow-btn {
         font-size: 1.5rem;
@@ -182,4 +216,7 @@
         border-radius: 8px;
         text-align: center;
     }
+
+
 </style>
+

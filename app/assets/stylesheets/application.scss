@@ -249,23 +249,35 @@
     align-items: center;
     height: 100vh; /* Full viewport height to center vertically */
 }
-
-.single-player-button {
-    font-size: 1.5em; /* Make the button text larger */
-    padding: 1em 2em; /* Add padding for a larger button */
+.button-container {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center;    /* Horizontally center buttons */
+    justify-content: center; /* Vertically center buttons */
+    height: 100vh;          /* Full viewport height for centering */
+    gap: 20px;              /* Space between buttons */
 }
-.single-player-button {
-    font-size: 1.5em;
-    padding: 1em 2em;
+
+.single-player-button,
+.multiplayer-button {
+    font-size: 2em;         /* Same font size for both buttons */
+    padding: 1em 2em;       /* Consistent padding */
+    width: 300px;           /* Fixed width */
+    text-align: center;     /* Center text inside the button */
+    border: none;           /* Remove default button borders if any */
+    box-shadow: none;       /* Remove any Bootstrap box-shadow */
+    display: inline-block;  /* Ensure consistent block-level rendering */
     transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
 }
 
 /* Hover Effect */
-.single-player-button:hover {
-    background-color: #0056b3; /* Change the background color on hover */
-    color: #fff; /* Change the text color on hover */
-    transform: scale(1.05); /* Slightly increase size on hover */
+.single-player-button:hover,
+.multiplayer-button:hover {
+    background-color: #0056b3;
+    color: #fff;
+    transform: scale(1.05);
 }
+
 .world-selection-box {
     display: flex;
     flex-wrap: wrap;

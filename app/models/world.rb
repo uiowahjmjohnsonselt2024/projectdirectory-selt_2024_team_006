@@ -11,7 +11,24 @@ class World < ApplicationRecord
   has_many :users, through: :user_world_states
 
   after_create :generate_grid, :generate_lore, :generate_background_image
+
   validates :creator, presence: true
+
+  # Scopes for multiplayer
+  scope :hosted, -> { where(is_hosted: true) }
+
+  # Utility methods for multiplayer
+  def host_game(ip_address)
+    update!(is_hosted: true, host_ip: ip_address)
+  end
+
+  def stop_hosting
+    update!(is_hosted: false, host_ip: nil)
+  end
+
+  def hosted_by?(user)
+    creator == user && is_hosted
+  end
 
   private
 
