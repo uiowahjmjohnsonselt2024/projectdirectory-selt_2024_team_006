@@ -4,13 +4,24 @@ class PlayerProgress < ApplicationRecord
   belongs_to :user
   belongs_to :achievement
 
+  validates :achievement, presence: true
+  validates :current_progress, numericality: { greater_than_or_equal_to: 0 }
+
   def progress_percentage
-    (current_progress.to_f / achievement.target) * 100
+    (safe_current_progress.to_f / safe_target) * 100
   end
 
   def completed?
-    return false if current_progress.nil? || achievement.target.nil?
+    safe_current_progress >= safe_target
+  end
 
-    current_progress >= achievement.target
+  private
+
+  def safe_current_progress
+    current_progress || 0
+  end
+
+  def safe_target
+    achievement&.target || 0
   end
 end

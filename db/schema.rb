@@ -12,10 +12,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_241_209_195_352) do
+ActiveRecord::Schema[7.0].define(version: 20_241_210_050_837) do
   create_table 'achievements', force: :cascade do |t|
     t.string 'name'
-    t.integer 'target'
+    t.integer 'target', default: 0
     t.integer 'reward'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
@@ -61,7 +61,7 @@ ActiveRecord::Schema[7.0].define(version: 20_241_209_195_352) do
   create_table 'player_progresses', force: :cascade do |t|
     t.integer 'user_id', null: false
     t.integer 'achievement_id', null: false
-    t.integer 'current_progress'
+    t.integer 'current_progress', default: 0
     t.boolean 'claimed'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
