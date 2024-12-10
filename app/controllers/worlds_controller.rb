@@ -9,7 +9,7 @@ class WorldsController < ApplicationController
     return redirect_to single_player_path, alert: 'World not found.' unless @world
 
     player_cell = find_player_cell
-    return redirect_to world_path(@world), alert: 'Player not found on grid.' unless player_cell
+    return redirect_to single_player_path, alert: 'Player not found on grid.' unless player_cell
 
     process_player_move(player_cell, params[:direction])
 
