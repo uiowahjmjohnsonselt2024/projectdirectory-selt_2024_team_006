@@ -53,21 +53,18 @@ class GamesController < ApplicationController
     World.new(world_params).tap do |world|
       world.creator_id = current_user.id
       world.name = 'New World' if world.name.blank?
-      track_achievement_progress("First World")
-      track_achievement_progress("Explorer")
+      track_achievement_progress('First World')
+      track_achievement_progress('Explorer')
     end
   end
 
-  private
   def track_achievement_progress(name)
     achievement = Achievement.find_by(name: name)
     player_progress = current_user.player_progresses.find_or_create_by(achievement: achievement)
-    unless player_progress.completed?
-      player_progress.increment!(:current_progress)
-    end
-    if player_progress.completed? && !player_progress.claimed?
-      flash[:success] = "Achievement unlocked: " + name + " Claim your reward."
-    end
+    player_progress.increment!(:current_progress) unless player_progress.completed?
+    return unless player_progress.completed? && !player_progress.claimed?
+
+    flash[:success] = "Achievement unlocked: #{name} Claim your reward."
   end
 
   def handle_success

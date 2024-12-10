@@ -15,20 +15,39 @@ class UsersController < ApplicationController
   end
 
   def claim_achievement
-    achievement = Achievement.find(params[:achievement_id])
-    progress = current_user.player_progresses.find_by(achievement: achievement)
+    achievement = find_achievement
+    progress = find_player_progress(achievement)
 
-    if progress.completed? && !progress.claimed?
-
-      current_user.update!(shards_balance: current_user.shards_balance + achievement.reward)
-
-      progress.update!(claimed: true)
-
-      flash[:success] = "Achievement unlocked and reward claimed! You received " + achievement.reward.to_s + " shards."
+    if can_claim_reward?(progress)
+      process_claim(achievement, progress)
+      flash[:success] = success_message(achievement.reward)
     else
-      flash[:alert] = "Achievement not completed or already claimed."
+      flash[:alert] = 'Achievement not completed or already claimed.'
     end
 
     redirect_to achievements_path
+  end
+
+  private
+
+  def find_achievement
+    Achievement.find(params[:achievement_id])
+  end
+
+  def find_player_progress(achievement)
+    current_user.player_progresses.find_by(achievement: achievement)
+  end
+
+  def can_claim_reward?(progress)
+    progress.completed? && !progress.claimed?
+  end
+
+  def process_claim(achievement, progress)
+    current_user.update!(shards_balance: current_user.shards_balance + achievement.reward)
+    progress.update!(claimed: true)
+  end
+
+  def success_message(reward)
+    "Achievement unlocked and reward claimed! You received #{reward} shards."
   end
 end
