@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+Achievement.find_or_create_by(name: 'First Kill', description: 'Complete your first kill', target: 1, reward: 10)
+Achievement.find_or_create_by(name: 'First World', description: 'Create your first world', target: 1, reward: 10)
+Achievement.find_or_create_by(name: 'Slayer', description: 'Defeat 10 enemies', target: 10, reward: 50)
+Achievement.find_or_create_by(name: 'Explorer', description: 'Explore 10 different worlds', target: 10, reward: 50)
 Item.find_or_create_by(name: 'Flaming Axe', damage: 100,
                        description: 'An axe engulfed in flames, dealing extra fire damage',
                        price: 150, image_url: 'flaming_axe.jpg')

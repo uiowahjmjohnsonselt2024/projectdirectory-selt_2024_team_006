@@ -7,10 +7,14 @@ RSpec.describe WorldsController, type: :controller do
   let(:world) { create(:world, creator: user) }
   let(:item1) { Item.create!(name: 'Sword', image_url: 'url', price: 10, damage: 20) }
   let(:item2) { Item.create!(name: 'Shield', image_url: 'url', price: 15, damage: 30) }
+  let!(:first_kill) { create(:achievement, name: 'First Kill', target: 1) }
+  let!(:slayer) { create(:achievement, name: 'Slayer', target: 10) }
 
   before do
     sign_in user
     user.items << [item1, item2]
+    create(:player_progress, user: user, achievement: first_kill, current_progress: 0)
+    create(:player_progress, user: user, achievement: slayer, current_progress: 0)
     allow(ChatGptService).to receive(:call).and_return(
       { 'choices' => [{ 'message' => { 'content' => 'Test response.' } }] }
     )
@@ -131,6 +135,20 @@ RSpec.describe WorldsController, type: :controller do
         post :attack_with_item, params: { id: world.id, item_id: nil }
         expect(response).to redirect_to(world_path(world))
         expect(flash[:alert]).to eq('Invalid item!')
+      end
+    end
+
+    context 'when tracking achievements for victory' do
+      it 'increments progress for relevant achievements and resolves battle' do
+        battle.update!(enemy_data: { 'health' => 0, 'attack' => 10, 'max_health' => 10 })
+
+        expect_any_instance_of(WorldsController).to receive(:track_achievement_progress).with('First Kill')
+        expect_any_instance_of(WorldsController).to receive(:track_achievement_progress).with('Slayer')
+
+        post :attack_with_item, params: { id: world.id, item_id: item1.id }
+
+        expect(Battle.exists?(battle.id)).to be_falsey
+        expect(flash[:notice]).to match(/You defeated the enemy and earned \d+ shards!/)
       end
     end
 

@@ -8,6 +8,11 @@ Given('I am on the sign in page') do
   visit new_user_session_path
 end
 
+Given('I am logged in as a user') do
+  @user ||= User.create!(email: 'test@example.com', password: 'password')
+  login_as(@user, scope: :user)
+end
+
 Given('a user exists with email {string} and password {string}') do |email, password|
   User.create(email: email, password: password, password_confirmation: password)
 end
