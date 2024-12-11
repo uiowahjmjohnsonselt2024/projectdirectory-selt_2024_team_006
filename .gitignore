@@ -23,7 +23,6 @@
 
 /idea/*
 .idea/
-/coverage/*
 
 .byebug_history
 

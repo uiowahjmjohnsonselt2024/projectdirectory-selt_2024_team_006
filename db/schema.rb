@@ -12,7 +12,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_241_119_143_615) do
+ActiveRecord::Schema[7.0].define(version: 20_241_210_050_837) do
+  create_table 'achievements', force: :cascade do |t|
+    t.string 'name'
+    t.integer 'target', default: 0
+    t.integer 'reward'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.string 'description'
+  end
+
   create_table 'battles', force: :cascade do |t|
     t.integer 'world_id', null: false
     t.integer 'cell_id', null: false
@@ -47,6 +56,17 @@ ActiveRecord::Schema[7.0].define(version: 20_241_119_143_615) do
     t.datetime 'updated_at', null: false
     t.string 'image_url'
     t.integer 'damage'
+  end
+
+  create_table 'player_progresses', force: :cascade do |t|
+    t.integer 'user_id', null: false
+    t.integer 'achievement_id', null: false
+    t.integer 'current_progress', default: 0
+    t.boolean 'claimed'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['achievement_id'], name: 'index_player_progresses_on_achievement_id'
+    t.index ['user_id'], name: 'index_player_progresses_on_user_id'
   end
 
   create_table 'user_items', force: :cascade do |t|
@@ -94,6 +114,8 @@ ActiveRecord::Schema[7.0].define(version: 20_241_119_143_615) do
   add_foreign_key 'battles', 'users', column: 'player_id'
   add_foreign_key 'battles', 'worlds', on_delete: :cascade
   add_foreign_key 'cells', 'worlds', on_delete: :cascade
+  add_foreign_key 'player_progresses', 'achievements'
+  add_foreign_key 'player_progresses', 'users'
   add_foreign_key 'user_items', 'items'
   add_foreign_key 'user_items', 'users'
   add_foreign_key 'user_world_states', 'users'

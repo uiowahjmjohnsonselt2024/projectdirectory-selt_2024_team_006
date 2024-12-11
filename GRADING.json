@@ -1,8 +1,8 @@
 {
   "GROUP" : "G006",
   "ALL_SPRINTS" : {
-    "SPRINT1_URL" : "https://selt2024-team-006-project-f8750273ef78.herokuapp.com/",
-    "SPRINT2_URL" : "http://blah.blee.bloo/myapp",
+    "SPRINT1_URL" : "https://selt2024-group6-1-cac75d7dcd3c.herokuapp.com/",
+    "SPRINT2_URL" : "https://selt2024-group6-2-3f20ee09aa55.herokuapp.com/",
     "SPRINT3_URL" : "http://blah.blee.bloo/myapp",
     "FINAL_URL" : "http://blah.blee.bloo/myapp"
   }
