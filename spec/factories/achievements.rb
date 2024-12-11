@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # spec/factories/achievements.rb
 FactoryBot.define do
   factory :achievement do
