@@ -24,6 +24,11 @@ class GamesController < ApplicationController
   end
 
   def create
+    unless current_user.charge_shards(10)
+      flash[:alert] = "You don't have enough shards to create a world. Creating a new world costs 10 shards!"
+      redirect_to worlds_path and return
+    end
+
     @world = build_world
 
     if @world.save
@@ -106,7 +111,18 @@ class GamesController < ApplicationController
     World.new(world_params).tap do |world|
       world.creator_id = current_user.id
       world.name = 'New World' if world.name.blank?
+      track_achievement_progress('First World')
+      track_achievement_progress('Explorer')
     end
+  end
+
+  def track_achievement_progress(name)
+    achievement = Achievement.find_by(name: name)
+    player_progress = current_user.player_progresses.find_or_create_by(achievement: achievement)
+    player_progress.increment!(:current_progress) unless player_progress.completed?
+    return unless player_progress.completed? && !player_progress.claimed?
+
+    flash[:success] = "Achievement unlocked: #{name} Claim your reward."
   end
 
   def handle_success

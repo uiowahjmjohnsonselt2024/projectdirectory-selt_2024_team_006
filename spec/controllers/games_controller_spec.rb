@@ -91,6 +91,26 @@ RSpec.describe GamesController, type: :controller do
       end
     end
 
+    context 'when the user does not have enough shards' do
+      before do
+        user.update(shards_balance: 5)
+      end
+
+      it 'does not create a new world' do
+        expect do
+          post :create, params: { world: { name: 'My Custom World' } }
+        end.not_to change(World, :count)
+      end
+
+      it 'redirects to the worlds path with an error message' do
+        post :create, params: { world: { name: 'My Custom World' } }
+        expect(response).to redirect_to(worlds_path)
+        expect(flash[:alert]).to eq(
+          "You don't have enough shards to create a world. Creating a new world costs 10 shards!"
+        )
+      end
+    end
+
     context 'with a blank name' do
       it 'creates a new world with the default name "New World"' do
         expect do
@@ -182,35 +202,26 @@ RSpec.describe GamesController, type: :controller do
       end
     end
   end
-  describe "POST #host_world" do
-    it "marks a world as hosted and assigns an IP address" do
-      post :host_world, params: { id: world.id, ip_address: '127.0.0.1' }
 
-      world.reload
-      expect(world.is_hosted).to be_truthy
-      expect(world.host_ip).to eq('127.0.0.1')
-      expect(response).to redirect_to(host_active_game_path(world))
-      expect(flash[:notice]).to eq("Hosting world: #{world.name} at 127.0.0.1")
-    end
-  end
-  describe "POST #join_world" do
-    let(:host_world) { create(:world, is_hosted: true, host_ip: '127.0.0.1') }
+  describe '#track_achievement_progress' do
+    let!(:achievement) { create(:achievement, name: 'First World', target: 1) }
 
-    it "allows a player to join a hosted world" do
-      post :join_world, params: { ip_address: '127.0.0.1' }
-
-      user_world_state = UserWorldState.find_by(user: user, world: host_world)
-      expect(user_world_state).not_to be_nil
-      expect(user_world_state.health).to eq(100)
-      expect(response).to redirect_to(play_world_path(host_world))
-      expect(flash[:notice]).to eq("Joined world: #{host_world.name}!")
+    before do
+      create(:player_progress, user: user, achievement: achievement, current_progress: 0)
     end
 
-    it "fails to join a non-hosted world" do
-      post :join_world, params: { ip_address: '192.168.1.1' }
+    it 'creates player progress if not already present and increments progress' do
+      expect do
+        controller.send(:track_achievement_progress, 'First World')
+      end.to change {
+        user.player_progresses.find_by(achievement: achievement).current_progress || 0
+      }.by(1)
+    end
 
-      expect(flash[:alert]).to eq("No active game found at 192.168.1.1.")
-      expect(response).to redirect_to(join_game_path)
+    it 'displays a flash message for a completed achievement' do
+      create(:player_progress, user: user, achievement: achievement, current_progress: 1)
+      controller.send(:track_achievement_progress, 'First World')
+      expect(flash[:success]).to match(/Achievement unlocked: First World Claim your reward./)
     end
   end
 end

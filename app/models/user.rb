@@ -10,9 +10,18 @@ class User < ApplicationRecord
   has_many :items, through: :user_items
   has_many :battles, foreign_key: :player_id
   has_many :user_world_states, dependent: :destroy
+  has_many :player_progresses, dependent: :destroy
+  has_many :achievements, through: :player_progresses, dependent: :destroy
 
   after_initialize :set_default_shards_balance, if: :new_record?
   after_create :assign_default_sword
+
+  def charge_shards(amount)
+    return false if shards_balance < amount
+
+    decrement!(:shards_balance, amount)
+    true
+  end
 
   private
 
