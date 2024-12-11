@@ -4,7 +4,7 @@ Feature: Manage Worlds
   So that I can start a new game or continue an existing one
 
   Background:
-    Given I am logged in as a user
+    Given I am signed up and logged in as a user
     And I am on the single player page
 
   Scenario: Creating a new world with a custom name
