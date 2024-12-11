@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Achievement.find_or_create_by(name: 'First Kill', description: 'Complete your first kill', target: 1, reward: 10)
 Achievement.find_or_create_by(name: 'First World', description: 'Create your first world', target: 1, reward: 10)
 Achievement.find_or_create_by(name: 'Slayer', description: 'Defeat 10 enemies', target: 10, reward: 50)
