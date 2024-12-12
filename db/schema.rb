@@ -108,6 +108,7 @@ ActiveRecord::Schema[7.0].define(version: 20_241_210_050_837) do
     t.datetime 'updated_at', null: false
     t.text 'lore'
     t.string 'background_image_url'
+    t.boolean 'is_public'
   end
 
   add_foreign_key 'battles', 'cells'
