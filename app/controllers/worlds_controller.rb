@@ -2,7 +2,7 @@
 
 class WorldsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_world, only: %i[move resolve_battle attack_with_item]
+  before_action :set_world, only: %i[move resolve_battle attack_with_item acknowledge_encounter]
 
   def move
     @world = find_world
@@ -17,6 +17,16 @@ class WorldsController < ApplicationController
   end
 
   def index; end
+
+  def acknowledge_encounter
+    cell = @world.cells.find_by(content: current_user.id.to_s)
+    if cell
+      cell.update!(encounter: nil)
+      redirect_to world_path(@world), notice: 'Encounter acknowledged!'
+    else
+      redirect_to world_path(@world), alert: 'No cell found for the current user.'
+    end
+  end
 
   def attack_with_item
     item = find_valid_item

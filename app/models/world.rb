@@ -116,13 +116,17 @@ class World < ApplicationRecord
   def create_cells(grid_size, player_position, treasure_positions, enemy_positions)
     (0...grid_size).each do |x|
       (0...grid_size).each do |y|
-        cells.create!(x: x, y: y, content: cell_content(x, y, player_position, treasure_positions, enemy_positions))
+        position = [x, y]
+        content = cell_content(position, player_position, treasure_positions, enemy_positions)
+
+        encounter = generate_encounter if content == 'empty'
+
+        cells.create!(x: x, y: y, content: content, encounter: encounter)
       end
     end
   end
 
-  def cell_content(x_pos, y_pos, player_position, treasure_positions, enemy_positions)
-    position = [x_pos, y_pos]
+  def cell_content(position, player_position, treasure_positions, enemy_positions)
     return creator_id.to_s if position == player_position
     return 'treasure' if treasure_positions.include?(position)
     return 'enemy' if enemy_positions.include?(position)
@@ -132,6 +136,22 @@ class World < ApplicationRecord
 
   def build_image_prompt
     "Generate an 8 bit fantasy world background based on the lore: '#{lore}' (do not include any text in the image)"
+  end
+
+  def generate_encounter
+    prompt = 'Create a short and engaging encounter for a fantasy RPG.
+          The encounter should be suitable for a small grid-based world.
+          The content should be no longer than 10-20 words.'
+    response = ChatGptService.call([
+                                     { role: 'system', content: 'You are a creative RPG encounter generator.' },
+                                     { role: 'user', content: prompt }
+                                   ])
+    response['choices'][0]['message']['content'].strip
+  rescue StandardError => e
+    # :nocov:
+    Rails.logger.error("Error generating encounter: #{e.message}")
+    'You hear a strange sound in the wind, but nothing seems to happen.'
+    # :nocov:end
   end
 
   def fetch_image_from_service(prompt)

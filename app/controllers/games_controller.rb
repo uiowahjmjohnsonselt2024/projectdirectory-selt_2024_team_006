@@ -46,6 +46,8 @@ class GamesController < ApplicationController
     @world = find_world
     return redirect_to single_player_path, alert: 'World not found.' unless @world
 
+    @current_cell = @world.cells.find_by(content: current_user.id.to_s)
+
     load_world_details
   end
 
