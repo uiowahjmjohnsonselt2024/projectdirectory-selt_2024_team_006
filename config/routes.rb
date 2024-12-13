@@ -24,6 +24,12 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
+  resources :games do
+    member do
+      post :join
+    end
+  end
+
   resources :worlds do
     post 'move', on: :member
     post 'resolve_battle', on: :member

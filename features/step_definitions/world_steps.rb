@@ -18,6 +18,11 @@ Before do
     )
 end
 
+Given('I am signed up and logged in as a user') do
+  @user = FactoryBot.create(:user)
+  login_as(@user, scope: :user)
+end
+
 Given(/^(?:I am on|I visit) the single player page$/) do
   visit single_player_path
 end

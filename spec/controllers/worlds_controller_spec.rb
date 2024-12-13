@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe WorldsController, type: :controller do
   let(:user) { create(:user, email: "user#{Time.now.to_i}@example.com", shards_balance: 0) }
-  let(:world) { create(:world, creator: user) }
+  let(:world) { create(:world, creator: user, is_public: false) }
   let(:item1) { Item.create!(name: 'Sword', image_url: 'url', price: 10, damage: 20) }
   let(:item2) { Item.create!(name: 'Shield', image_url: 'url', price: 15, damage: 30) }
   let!(:first_kill) { create(:achievement, name: 'First Kill', target: 1) }
@@ -15,15 +15,31 @@ RSpec.describe WorldsController, type: :controller do
     user.items << [item1, item2]
     create(:player_progress, user: user, achievement: first_kill, current_progress: 0)
     create(:player_progress, user: user, achievement: slayer, current_progress: 0)
+
+    allow(GameChannel).to receive(:broadcast_to)
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
     allow(ChatGptService).to receive(:call).and_return(
       { 'choices' => [{ 'message' => { 'content' => 'Test response.' } }] }
     )
     allow(ChatGptService).to receive(:generate_image).and_return({ 'data' => [{ 'url' => 'default_image_url' }] })
+    world.cells.destroy_all
+
+    (0..6).each do |x|
+      (0..6).each do |y|
+        content = if x == 0 && y == 0
+                    user.id.to_s
+                  elsif x == 1 && y == 0
+                    'treasure'
+                  elsif x == 1 && y == 1
+                    'enemy'
+                  else
+                    'empty'
+                  end
+        create(:cell, world: world, x: x, y: y, content: content)
+      end
+    end
     allow_any_instance_of(World).to receive(:generate_grid)
-    create(:cell, world: world, x: 0, y: 0, content: 'player')
-    create(:cell, world: world, x: 0, y: 1, content: 'empty')
-    create(:cell, world: world, x: 1, y: 0, content: 'treasure')
-    create(:cell, world: world, x: 1, y: 1, content: 'enemy')
+    expect(world.cells.count).to eq(49)
   end
 
   describe 'POST #resolve_battle' do
@@ -72,6 +88,7 @@ RSpec.describe WorldsController, type: :controller do
 
   describe '#handle_enemy_turn' do
     let(:user_world_state) { create(:user_world_state, user: user, world: world, health: 20) }
+
     let(:battle) do
       create(
         :battle,
@@ -80,7 +97,7 @@ RSpec.describe WorldsController, type: :controller do
         player: user,
         enemy_data: { 'health' => 50, 'attack' => 15 },
         state: 'active',
-        turn: 'player'
+        turn: user.id.to_s
       )
     end
 
@@ -106,7 +123,7 @@ RSpec.describe WorldsController, type: :controller do
         post :attack_with_item, params: { id: world.id, item_id: item1.id }
 
         expect(user_world_state.reload.health).to eq(15)
-        expect(battle.reload.turn).to eq('player')
+        expect(battle.reload.turn).to eq(user.id.to_s)
       end
     end
   end
@@ -121,7 +138,7 @@ RSpec.describe WorldsController, type: :controller do
         player: user,
         enemy_data: { 'health' => 50, 'attack' => 10 },
         state: 'active',
-        turn: 'player'
+        turn: user.id.to_s
       )
     end
 
@@ -188,7 +205,7 @@ RSpec.describe WorldsController, type: :controller do
         post :attack_with_item, params: { id: world.id, item_id: item1.id }
 
         expect(battle.reload.enemy_data['health']).to be < 50
-        expect(battle.reload.turn).to eq('player')
+        expect(battle.reload.turn).to eq(user.id.to_s)
         expect(flash[:notice]).to match(/The enemy attacked you for \d+ damage!/)
       end
     end
@@ -203,7 +220,7 @@ RSpec.describe WorldsController, type: :controller do
         updated_empty_cell = world.cells.find_by(x: 0, y: 1)
 
         expect(updated_player_cell.content).to eq('empty')
-        expect(updated_empty_cell.content).to eq('player')
+        expect(updated_empty_cell.content).to eq(user.id.to_s)
       end
 
       it 'moves right and then left' do
@@ -213,7 +230,7 @@ RSpec.describe WorldsController, type: :controller do
         updated_player_cell = world.cells.find_by(x: 0, y: 0)
         updated_empty_cell = world.cells.find_by(x: 0, y: 1)
 
-        expect(updated_player_cell.content).to eq('player')
+        expect(updated_player_cell.content).to eq(user.id.to_s)
         expect(updated_empty_cell.content).to eq('empty')
       end
 
@@ -223,18 +240,26 @@ RSpec.describe WorldsController, type: :controller do
         updated_player_cell = world.cells.find_by(x: 0, y: 0)
         updated_empty_cell = world.cells.find_by(x: 0, y: 1)
 
-        expect(updated_player_cell.content).to eq('empty')
+        expect(updated_player_cell.content).to eq(user.id.to_s)
         expect(updated_empty_cell.content).to eq('empty')
       end
 
       it 'moves the player to a treasure cell and updates shards balance' do
+        expect(GameChannel).to receive(:broadcast_to).with(
+          world,
+          hash_including(html: kind_of(String))
+        )
+        treasure_cell = world.cells.find_by(x: 1, y: 0)
+        expect(treasure_cell).not_to be_nil
+        expect(treasure_cell.content).to eq('treasure')
+
         post :move, params: { id: world.id, direction: 'right' }
 
         updated_player_cell = world.cells.find_by(x: 0, y: 0)
         updated_treasure_cell = world.cells.find_by(x: 1, y: 0)
 
         expect(updated_player_cell.content).to eq('empty')
-        expect(updated_treasure_cell.content).to eq('player')
+        expect(updated_treasure_cell.content).to eq(user.id.to_s)
 
         expect(user.reload.shards_balance).to eq(10)
         expect(flash[:notice]).to eq('You found a treasure and earned 10 shards!')
@@ -248,7 +273,7 @@ RSpec.describe WorldsController, type: :controller do
         updated_enemy_cell = world.cells.find_by(x: 1, y: 1)
 
         expect(updated_player_cell.content).to eq('empty')
-        expect(updated_enemy_cell.content).to eq('player')
+        expect(updated_enemy_cell.content).to eq(user.id.to_s)
       end
 
       it 'moves the player to an enemy cell and narration is unavailable' do
@@ -260,7 +285,7 @@ RSpec.describe WorldsController, type: :controller do
         updated_enemy_cell = world.cells.find_by(x: 1, y: 1)
 
         expect(updated_player_cell.content).to eq('empty')
-        expect(updated_enemy_cell.content).to eq('player')
+        expect(updated_enemy_cell.content).to eq(user.id.to_s)
       end
     end
 
@@ -270,7 +295,7 @@ RSpec.describe WorldsController, type: :controller do
 
         updated_player_cell = world.cells.find_by(x: 0, y: 0)
 
-        expect(updated_player_cell.content).to eq('player')
+        expect(updated_player_cell.content).to eq(user.id.to_s)
         expect(flash[:alert]).to eq('Invalid move!')
       end
     end
@@ -282,6 +307,17 @@ RSpec.describe WorldsController, type: :controller do
       it 'redirects to the single_player_path' do
         post :move, params: { id: other_world.id, direction: 'down' }
         expect(response).to redirect_to(single_player_path)
+      end
+
+      it 'returns nil when no world is found' do
+        allow(World).to receive(:find_by).and_return(nil)
+        expect(controller.send(:find_world)).to be_nil
+      end
+
+      let(:world3) { create(:world, is_public: true) }
+      it 'returns the world when it is public' do
+        allow(World).to receive(:find_by).and_return(world3)
+        expect(controller.send(:find_world)).to eq(world3)
       end
     end
   end

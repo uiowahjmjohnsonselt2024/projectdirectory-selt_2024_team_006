@@ -32,8 +32,6 @@ ActiveRecord::Schema[7.0].define(version: 20_241_210_050_837) do
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.string 'turn', default: 'player'
-    t.integer 'current_turn'
-    t.text 'turn_order'
     t.index ['cell_id'], name: 'index_battles_on_cell_id'
     t.index %w[player_id world_id], name: 'index_battles_on_player_id_and_world_id', unique: true
     t.index ['player_id'], name: 'index_battles_on_player_id'
@@ -110,8 +108,7 @@ ActiveRecord::Schema[7.0].define(version: 20_241_210_050_837) do
     t.datetime 'updated_at', null: false
     t.text 'lore'
     t.string 'background_image_url'
-    t.boolean 'is_hosted'
-    t.string 'host_ip'
+    t.boolean 'is_public'
   end
 
   add_foreign_key 'battles', 'cells'

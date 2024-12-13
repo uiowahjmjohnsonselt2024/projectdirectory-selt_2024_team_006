@@ -1,4 +1,41 @@
-<div class="button-container">
-  <%= button_to 'Single Player', single_player_path, method: :get, class: 'btn btn-primary btn-lg button-style' %>
-  <%= button_to 'Multiplayer', multiplayer_menu_path, method: :get, class: 'btn btn-primary btn-lg button-style' %>
+<div class="container text-center mt-5">
+  <div class="jumbotron bg-light shadow rounded p-3" style="background: url('<%= asset_path 'dungeon_bg.jpg' %>') no-repeat center center; background-size: cover; height: auto; min-height: 400px;">
+    <h1 class="display-4 text-white">Shards of the Grid</h1>
+    <p class="lead text-white">Embark on epic adventures and forge your path in new worlds!</p>
+    <div class="d-flex justify-content-center mt-3">
+      <div class="mx-2">
+        <%= button_to 'View Games', single_player_path, method: :get, class: 'btn btn-primary btn-lg' %>
+      </div>
+      <div class="mx-2">
+        <%= button_to 'Create New World', new_world_path, method: :get, class: 'btn btn-success btn-lg' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <i class="fas fa-map-marked-alt fa-3x text-primary mb-3"></i>
+          <h5 class="card-title">Explore Worlds</h5>
+          <p class="card-text">Join new worlds or revisit your saved ones!</p>
+          <%= button_to 'View Games', single_player_path, method: :get, class: 'btn btn-outline-primary btn-sm' %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <i class="fas fa-globe fa-3x text-success mb-3"></i>
+          <h5 class="card-title">Create a World</h5>
+          <p class="card-text">Create a new and unique fantasy world!</p>
+          <%= button_to 'Create New World', new_world_path, method: :get, class: 'btn btn-outline-success btn-sm' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-4">
+    <p class="text-muted">&copy; Shards of the Grid</p>
+  </footer>
 </div>

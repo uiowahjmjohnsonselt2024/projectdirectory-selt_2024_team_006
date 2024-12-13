@@ -1,22 +1,46 @@
 <h1>Select a World</h1>
 
-<!-- Selection Box for Worlds -->
-  <div class="world-selection-box">
-    <% @saved_worlds.each do |world| %>
-      <div class="world-card" onclick="window.location.href='<%=game_path(world)%>'">
-        <h3><%= world.name %></h3>
-        <p>Created on: <%=world.created_at.strftime("%Y-%m-%d")%></p>
-      </div>
-      <%=button_to "Delete World #{world.name} #{world.id}", destroy_path(world),
-                    method: :delete,
-                    class: 'btn btn-danger'%>
-      <%end%>
+<ul class="nav nav-tabs" id="worldTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="saved-worlds-tab" data-bs-toggle="tab" data-bs-target="#saved-worlds" type="button" role="tab" aria-controls="saved-worlds" aria-selected="true">
+      Saved Worlds
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="multiplayer-worlds-tab" data-bs-toggle="tab" data-bs-target="#multiplayer-worlds" type="button" role="tab" aria-controls="multiplayer-worlds" aria-selected="false">
+      Multiplayer Worlds
+    </button>
+  </li>
+</ul>
+
+<div class="tab-content" id="worldTabsContent">
+  <div class="tab-pane fade show active" id="saved-worlds" role="tabpanel" aria-labelledby="saved-worlds-tab">
+    <div class="world-selection-box">
+      <% @saved_worlds.each do |world| %>
+        <div class="world-card" onclick="window.location.href='<%= game_path(world) %>'">
+          <h3><%= world.name %></h3>
+          <p>Created on: <%= world.created_at.strftime("%Y-%m-%d") %></p>
+        </div>
+        <%= button_to "Delete World #{world.name} #{world.id}", destroy_path(world),
+                      method: :delete,
+                      class: 'btn btn-danger' %>
+      <% end %>
+    </div>
   </div>
 
+  <div class="tab-pane fade" id="multiplayer-worlds" role="tabpanel" aria-labelledby="multiplayer-worlds-tab">
+    <div class="world-selection-box">
+      <% @multiplayer_worlds.each do |world| %>
+        <div class="world-card">
+          <h3><%= world.name %></h3>
+          <p>Created on: <%= world.created_at.strftime("%Y-%m-%d") %></p>
+          <%= button_to 'Join World', join_game_path(world), method: :post, class: 'btn btn-success' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
 
-
-
-<!-- Create New World Button -->
 <div style="margin-top: 20px;">
   <%= button_to 'Create New World', new_world_path, method: :get, class: 'btn btn-primary' %>
 </div>

@@ -1,6 +1,5 @@
 <h1 class="text-center" style="font-family: 'Press Start 2P', cursive; color: black; padding-top: 2.5rem"><%= @world.name %></h1>
 
-
 <% if @world.lore.present? %>
   <div class="world-lore" style="margin-top: 20px; background: #f8f8f8; padding: 10px; border-radius: 8px; text-align: center; font-size: 1rem;">
     <p><%= @world.lore %></p>
@@ -45,7 +44,7 @@
   <h2 class="text-center" style="color: red;">Enemy Stats</h2>
   <div class="enemy-health-bar">
     <% enemy_health = @current_battle.enemy_data['health'] || 0 %>
-    <% max_health = @current_battle.enemy_data['max_health'] || 100 %> <!-- Default to 100 if nil -->
+    <% max_health = @current_battle.enemy_data['max_health'] || 100 %>
     <div class="health-bar">
       <div class="health-bar-fill" style="width: <%= (enemy_health.to_f / max_health * 100).round(2) %>%;">
         <span class="health-text"><%= enemy_health %> / <%= max_health %></span>
@@ -54,7 +53,7 @@
   </div>
   <p class="text-center"><strong>Enemy Attack:</strong> <%= @current_battle.enemy_data['attack'] %></p>
 
-  <% if @current_battle.turn == 'player' %>
+  <% if @current_battle.turn == current_user.id.to_s %>
     <h3 class="text-center" style="color: blue;">It's Your Turn!</h3>
     <div class="inventory">
       <% current_user.items.each do |item| %>
@@ -80,15 +79,6 @@
         <%= button_to '➡️', move_world_path(@world, direction: 'right'), method: :post, class: 'btn btn-primary arrow-btn' %>
       </div>
       <%= button_to '⬇️', move_world_path(@world, direction: 'down'), method: :post, class: 'btn btn-primary arrow-btn mt-2' %>
-    </div>
-    <!-- New Form for Moving to Specific Cell -->
-    <div class="mt-4">
-      <h5>Move to Specific Cell</h5>
-      <%= form_with url: shard_move_world_path(@world), method: :post, class: 'd-flex align-items-center justify-content-center gap-2',data: { confirm: "This move will cost 50 shards. Are you sure you want to move to this cell?" } do %>
-        <%= number_field_tag :x, nil, placeholder: 'X Coordinate', class: 'form-control', required: true, min: 0, style: 'width: 180px;' %>
-        <%= number_field_tag :y, nil, placeholder: 'Y Coordinate', class: 'form-control', required: true, min: 0, style: 'width: 180px;' %>
-        <%= submit_tag 'Move', class: 'btn btn-success' %>
-      <% end %>
     </div>
   </div>
 <% end %>
@@ -216,7 +206,4 @@
         border-radius: 8px;
         text-align: center;
     }
-
-
 </style>
-
