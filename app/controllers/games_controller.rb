@@ -72,28 +72,6 @@ class GamesController < ApplicationController
     @players = @world.users # This assumes you’re storing players in `users`
   end
 
-  def join
-    # Displays the join game form
-  end
-
-  def join_world
-    ip_address = params[:ip_address]
-    host_world = World.find_by(host_ip: ip_address, is_hosted: true)
-
-    if host_world.nil?
-      flash[:alert] = "No active game found at #{ip_address}."
-      redirect_to join_game_path and return
-    end
-
-    # Find or create the UserWorldState for this user in the world
-    UserWorldState.find_or_create_by(user: current_user, world: host_world) do |state|
-      state.health ||= 100 # Set default health for new players
-    end
-
-    flash[:notice] = "Joined world: #{host_world.name}."
-    redirect_to world_path(host_world)
-  end
-
   def stop_hosting
     # Logic to stop hosting a world
     @world = World.find(params[:id])

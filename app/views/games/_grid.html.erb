@@ -4,7 +4,8 @@
       <% (0..6).each do |x| %>
         <% cell = cells.find { |c| c.x == x && c.y == y } %>
         <div class="col cell text-center pixel-cell">
-          <% if cell&.content&.match(/^\d+$/) %>
+          <%= button_to " ", shard_move_world_path(world, x: cell.x, y: cell.y), method: :post, class: "transparent-button" %>
+          <% if cell.content&.match(/^\d+$/) %>
             <div class="emoji">
               <%= '🧍' %>
             </div>
@@ -19,9 +20,56 @@
             <div class="emoji">
               <%= render_cell_content('empty') %>
             </div>
+            <div>
+            </div>
           <% end %>
         </div>
       <% end %>
     </div>
   <% end %>
 </div>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+
+    .pixel-cell {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        padding: 10px;
+        font-size: 2.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #3e3e3e;
+        background-color: rgba(162, 213, 242, 0.8);
+        color: #333;
+        font-family: 'Press Start 2P', cursive;
+        box-sizing: border-box;
+    }
+
+    .pixel-cell:hover {
+        cursor: pointer;
+        background-color: rgba(242, 141, 53, 0.8);
+        border-color: #000;
+    }
+    .content-wrapper {
+        position: relative; /* Keeps content and button together */
+        width: 100%; /* Ensure it fills the cell */
+        height: 100%;
+    }
+    .transparent-button {
+        position: absolute; /* Position over the content */
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%); /* Adjust for exact centering */
+        background: transparent; /* Optional background */
+        color: transparent; /* Button text color */
+        border: none;
+        border-radius: 5px; /* Optional rounded corners */
+        z-index: 10; /* Ensure it's above content */
+        padding: 40px 40px; /* Adjust button size */
+    }
+
+
+</style>

@@ -14,25 +14,25 @@ class WorldsController < ApplicationController
     process_player_move(player_cell, params[:direction])
 
     redirect_to game_path(@world)
-    redirect_to worlds_path(@world)
   end
 
   def shard_move
     @world = find_world
-    return redirect_to single_player_path, alert: 'World not found.' unless @world
-
-    return redirect_to worlds_path(@world), alert: 'Player is in battle' if player_in_battle?
+    return redirect_to_single_player('World not found.') unless @world
 
     player_cell = find_player_cell
-    return redirect_to worlds_path(@world), alert: 'Player not found on grid.' unless player_cell
+    return redirect_to_single_player('Player not found on grid.') unless player_cell
 
     x, y = target_coordinates
-    return redirect_to worlds_path(@world), alert: 'Player already at this location' if same_location?(player_cell, x,
-                                                                                                       y)
+    new_cell = find_new_cell([x, y])
 
-    return redirect_to single_player_path, alert: 'Insufficient funds' unless sufficient_funds?
+    return redirect_to_game('Player is in battle') if player_in_battle?
 
-    process_shard_move(player_cell, x, y)
+    return redirect_to_game('Player already at this location') if same_location?(player_cell, x, y)
+
+    return redirect_to_game('Insufficient funds') if insufficient_funds_for_move?
+
+    process_shard_move(player_cell, new_cell)
   end
 
   def index; end
@@ -74,28 +74,40 @@ class WorldsController < ApplicationController
 
   private
 
-  def target_coordinates
-    [params[:x].to_i, params[:y].to_i]
+  def redirect_to_single_player(alert_message)
+    redirect_to single_player_path, alert: alert_message
   end
 
-  def player_in_battle?
-    Battle.exists?(player: current_user, world: @world, state: 'active')
+  def redirect_to_game(alert_message)
+    redirect_to game_path(@world), alert: alert_message
+  end
+
+  def insufficient_funds_for_move?
+    current_user.shards_balance < 50
+  end
+
+  def process_shard_move(player_cell, new_cell)
+    if valid_position?([new_cell.x, new_cell.y])
+      process_move(player_cell, new_cell)
+      current_user.decrement!(:shards_balance, 50)
+    end
+    redirect_to game_path(@world)
+  end
+
+  def sufficient_funds_for_move?
+    current_user.shards_balance >= 50
   end
 
   def same_location?(player_cell, x_pos, y_pos)
     player_cell.x == x_pos && player_cell.y == y_pos
   end
 
-  def sufficient_funds?
-    current_user.shards_balance >= 50
+  def player_in_battle?
+    Battle.exists?(player: current_user, world: @world, state: 'active')
   end
 
-  def process_shard_move(player_cell, x_pos, y_pos)
-    if valid_position?([x_pos, y_pos])
-      move_player(player_cell, [x_pos, y_pos])
-      current_user.decrement!(:shards_balance, 50)
-    end
-    redirect_to worlds_path(@world)
+  def target_coordinates
+    [params[:x].to_i, params[:y].to_i]
   end
 
   def track_achievement_progress(name)
