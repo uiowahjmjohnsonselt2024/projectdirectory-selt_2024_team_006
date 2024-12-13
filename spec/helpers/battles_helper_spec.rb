@@ -7,6 +7,8 @@ RSpec.describe BattlesHelper, type: :helper do
   let(:world) { create(:world, creator: user) }
 
   before do
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+
     allow(ChatGptService).to receive(:call).and_return(
       { 'choices' => [{ 'message' => { 'content' => 'Test response.' } }] }
     )

@@ -24,7 +24,6 @@
 /idea/*
 .idea/
 
-
 .byebug_history
 
 # Ignore pidfiles, but keep the directory.

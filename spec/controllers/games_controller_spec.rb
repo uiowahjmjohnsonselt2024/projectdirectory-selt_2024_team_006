@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe GamesController, type: :controller do
   before do
     sign_in user
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
     allow(ChatGptService).to receive(:call).and_return(
       { 'choices' => [{ 'message' => { 'content' => 'Test response.' } }] }
     )
@@ -13,7 +14,7 @@ RSpec.describe GamesController, type: :controller do
 
   let(:user) { create(:user) }
   let(:other_user) { create(:user, email: 'unique_email@example.com') }
-  let!(:world) { create(:world, creator_id: user.id) }
+  let!(:world) { create(:world, creator_id: user.id, is_public: false) }
   let!(:other_world) { create(:world, creator_id: other_user.id) }
 
   describe 'GET #single_player' do
@@ -147,6 +148,53 @@ RSpec.describe GamesController, type: :controller do
     end
   end
 
+  describe 'POST #join' do
+    before do
+      sign_in other_user
+    end
+
+    context 'when the world is public' do
+      it 'allows the player to join the world' do
+        post :join, params: { id: world.id }
+
+        expect(response).to redirect_to(game_path(world))
+        expect(flash[:notice]).to eq('You have joined the world!')
+      end
+    end
+
+    context 'when the world is private and the player is not the creator' do
+      before { world.update!(is_public: false) }
+
+      it 'redirects to single_player_path with an alert' do
+        post :join, params: { id: world.id }
+
+        expect(response).to redirect_to(game_path(world))
+      end
+    end
+
+    context 'when the world does not exist' do
+      it 'redirects to single_player_path with an alert' do
+        post :join, params: { id: 9999 }
+
+        expect(response).to redirect_to(single_player_path)
+        expect(flash[:alert]).to eq('World not found or access denied.')
+      end
+    end
+
+    context 'when there is an error placing the player' do
+      before do
+        allow_any_instance_of(World).to receive(:place_player).and_raise('No empty squares available in the world')
+      end
+
+      it 'redirects to single_player_path with the error message' do
+        post :join, params: { id: world.id }
+
+        expect(response).to redirect_to(single_player_path)
+        expect(flash[:alert]).to eq('No empty squares available in the world')
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     context 'when the world exists and belongs to the user' do
       it 'deletes the world and redirects to the single player path with a success message' do
@@ -193,8 +241,14 @@ RSpec.describe GamesController, type: :controller do
     end
 
     context 'when the world does not belong to the user' do
+      let(:other_user) { create(:user, email: 'unique_email3@example.com') }
+      let(:world) { create(:world, creator_id: other_user.id, is_public: false) }
+
+      before do
+        sign_in user
+      end
+
       it 'returns nil' do
-        sign_in other_user
         controller.params = { id: world.id }
 
         found_world = controller.send(:find_world)

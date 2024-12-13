@@ -1,0 +1,7 @@
+<div id="world-<%= world.id %>" class="world-container">
+  <h2><%= world.name %></h2>
+  <p><%= world.lore %></p>
+  <% if world.background_image_url.present? %>
+    <img src="<%= world.background_image_url %>" alt="World Background">
+  <% end %>
+</div>
