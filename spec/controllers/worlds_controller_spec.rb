@@ -285,7 +285,7 @@ RSpec.describe WorldsController, type: :controller do
       end
     end
   end
-  describe "#next_turn" do
+  describe '#next_turn' do
     it "rotates to the next player's turn" do
       battle.next_turn
       expect(battle.current_turn).to eq(player2.id)
@@ -295,7 +295,7 @@ RSpec.describe WorldsController, type: :controller do
     end
   end
 
-  describe "#player_turn?" do
+  describe '#player_turn?' do
     it "returns true if it's the player's turn" do
       expect(battle.player_turn?(player1)).to be_truthy
       expect(battle.player_turn?(player2)).to be_falsey

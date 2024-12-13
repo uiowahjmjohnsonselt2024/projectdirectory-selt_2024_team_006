@@ -7,7 +7,6 @@ class Battle < ApplicationRecord
 
   serialize :turn_order, Array # Store turn order as an array in the database
 
-
   validates :state, inclusion: { in: %w[active won lost] }
   def initialize_turn_order
     self.turn_order = world.users.pluck(:id) # All players in the world

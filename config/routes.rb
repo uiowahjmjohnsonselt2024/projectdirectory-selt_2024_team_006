@@ -22,7 +22,6 @@ Rails.application.routes.draw do
   # General Game Routes
   get 'games/:id', to: 'games#show', as: 'game' # This must come AFTER multiplayer routes
 
-
   root 'home#index'
 
   resources :worlds do

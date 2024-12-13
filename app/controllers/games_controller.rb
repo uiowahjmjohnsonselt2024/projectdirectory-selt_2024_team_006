@@ -82,7 +82,7 @@ class GamesController < ApplicationController
     end
 
     # Find or create the UserWorldState for this user in the world
-    user_world_state = UserWorldState.find_or_create_by(user: current_user, world: host_world) do |state|
+    UserWorldState.find_or_create_by(user: current_user, world: host_world) do |state|
       state.health ||= 100 # Set default health for new players
     end
 

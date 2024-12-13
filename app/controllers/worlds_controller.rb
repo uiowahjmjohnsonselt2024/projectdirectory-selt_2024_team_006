@@ -10,7 +10,6 @@ class WorldsController < ApplicationController
     @players = @world.users # Fetch all players in the world
   end
 
-
   def move
     @world = find_world
     return redirect_to single_player_path, alert: 'World not found.' unless @world
@@ -25,29 +24,20 @@ class WorldsController < ApplicationController
 
   def shard_move
     @world = find_world
-    x = params[:x].to_i
-    y = params[:y].to_i
-    is_in_battle = Battle.find_by(player: current_user, world: @world, state: 'active')
     return redirect_to single_player_path, alert: 'World not found.' unless @world
-    return redirect_to worlds_path(@world), alert: 'Player is in battle' if is_in_battle
+
+    return redirect_to worlds_path(@world), alert: 'Player is in battle' if player_in_battle?
+
     player_cell = find_player_cell
-    player_cell_x = player_cell.x
-    player_cell_y = player_cell.y
-
-    if player_cell_x == x and player_cell_y == y
-      return redirect_to worlds_path(@world), alert: "Player already at this location"
-    end
-
     return redirect_to worlds_path(@world), alert: 'Player not found on grid.' unless player_cell
 
-    if current_user.shards_balance < 50
-      return redirect_to single_player_path, alert: "insufficent funds"
-    end
-    if valid_position?([x,y])
-      move_player(player_cell,[x,y])
-      current_user.decrement!(:shards_balance, 50)
-    end
-    redirect_to worlds_path(@world)
+    x, y = target_coordinates
+    return redirect_to worlds_path(@world), alert: 'Player already at this location' if same_location?(player_cell, x,
+                                                                                                       y)
+
+    return redirect_to single_player_path, alert: 'Insufficient funds' unless sufficient_funds?
+
+    process_shard_move(player_cell, x, y)
   end
 
   def attack_with_item
@@ -82,7 +72,6 @@ class WorldsController < ApplicationController
     redirect_to play_world_path(battle.world)
   end
 
-
   def handle_enemy_turn(battle)
     damage = calculate_damage_battle(battle)
 
@@ -110,6 +99,7 @@ class WorldsController < ApplicationController
       flash[:notice] = "The enemy attacked all players for #{damage} damage!"
     end
   end
+
   def handle_loss_for_player(battle, player, damage)
     user_world_state = UserWorldState.find_by(user: player, world: battle.world)
     user_world_state.destroy # Remove the defeated player from the game
@@ -117,11 +107,10 @@ class WorldsController < ApplicationController
     flash[:alert] = "#{player.name} has been defeated by the enemy after taking #{damage} damage!"
 
     # End the battle if no players are left
-    if battle.world.users.count.zero?
-      handle_loss(battle, damage) # Reuse single-player logic to end the battle
-    end
-  end
+    return unless battle.world.users.count.zero?
 
+    handle_loss(battle, damage) # Reuse single-player logic to end the battle
+  end
 
   def resolve_battle
     battle = Battle.find_by(player: current_user, world: @world, state: 'active')
@@ -134,6 +123,30 @@ class WorldsController < ApplicationController
   end
 
   private
+
+  def target_coordinates
+    [params[:x].to_i, params[:y].to_i]
+  end
+
+  def player_in_battle?
+    Battle.exists?(player: current_user, world: @world, state: 'active')
+  end
+
+  def same_location?(player_cell, x_pos, y_pos)
+    player_cell.x == x_pos && player_cell.y == y_pos
+  end
+
+  def sufficient_funds?
+    current_user.shards_balance >= 50
+  end
+
+  def process_shard_move(player_cell, x_pos, y_pos)
+    if valid_position?([x_pos, y_pos])
+      move_player(player_cell, [x_pos, y_pos])
+      current_user.decrement!(:shards_balance, 50)
+    end
+    redirect_to worlds_path(@world)
+  end
 
   def track_achievement_progress(name)
     achievement = Achievement.find_by(name: name)
@@ -395,7 +408,7 @@ class WorldsController < ApplicationController
     @world.destroy!
   end
 
-  #Multiplayer functionality
+  # Multiplayer functionality
   def host
     @world = World.find(params[:id])
     @world.host_game(request.remote_ip)
@@ -416,5 +429,4 @@ class WorldsController < ApplicationController
     flash[:notice] = "Attempting to join game hosted at IP: #{ip_address}"
     redirect_to multiplayer_path
   end
-
 end
