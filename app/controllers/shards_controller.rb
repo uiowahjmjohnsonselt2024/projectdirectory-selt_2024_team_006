@@ -7,7 +7,7 @@ class ShardsController < ApplicationController
   before_action :set_supported_currencies, only: %i[new create]
 
   SUPPORTED_CURRENCIES = %w[USD CAD GBP EUR JPY].freeze
-  SHARDS_PER_USD = 1
+  SHARDS_PER_USD = 0.75
   CONVERSION_API_URL = 'https://api.exchangerate-api.com/v4/latest/'
 
   def new

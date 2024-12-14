@@ -28,7 +28,7 @@ RSpec.describe ShardsController, type: :controller do
       expect(assigns(:currency)).to eq('USD')
       expect(assigns(:conversion_rate)).to eq(1.0)
       expect(assigns(:supported_currencies)).to eq(%w[USD CAD GBP EUR JPY])
-      expect(assigns(:shards_per_usd)).to eq(1)
+      expect(assigns(:shards_per_usd)).to eq(0.75)
     end
   end
 
@@ -146,7 +146,7 @@ RSpec.describe ShardsController, type: :controller do
 
         expect(response).to have_http_status(:success)
         json_response = JSON.parse(response.body)
-        expect(json_response['conversion_rate']).to eq(1.0)
+        expect(json_response['conversion_rate']).to eq(0.75)
       end
 
       it 'returns the conversion rate for CAD' do
@@ -161,7 +161,7 @@ RSpec.describe ShardsController, type: :controller do
 
         expect(response).to have_http_status(:success)
         json_response = JSON.parse(response.body)
-        expect(json_response['conversion_rate']).to eq(0.718)
+        expect(json_response['conversion_rate']).to eq(0.5385)
       end
     end
 
