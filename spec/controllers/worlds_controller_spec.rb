@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe WorldsController, type: :controller do
-  let(:user) { create(:user, email: "user#{Time.now.to_i}@example.com", shards_balance: 0) }
+  let(:user) { create(:user, email: "user#{Time.now.to_i}@example.com", shards_balance: 50) }
   let(:world) { create(:world, creator: user, is_public: false) }
   let(:item1) { Item.create!(name: 'Sword', image_url: 'url', price: 10, damage: 20) }
   let(:item2) { Item.create!(name: 'Shield', image_url: 'url', price: 15, damage: 30) }
@@ -40,6 +40,71 @@ RSpec.describe WorldsController, type: :controller do
     end
     allow_any_instance_of(World).to receive(:generate_grid)
     expect(world.cells.count).to eq(49)
+  end
+
+  describe 'POST #shard_move' do
+    let!(:player_cell) { create(:cell, world: world, x: 0, y: 0, content: user.id.to_s) }
+    let!(:target_cell) { create(:cell, world: world, x: 1, y: 0, content: 'empty') }
+
+    context 'when the world is not found' do
+      it 'redirects to single player path with an error message' do
+        post :shard_move, params: { id: 0 }
+        expect(response).to redirect_to(single_player_path)
+        expect(flash[:alert]).to eq('World not found.')
+      end
+    end
+
+    context 'when the player is not on the grid' do
+      before do
+        player_cell.update!(content: 'empty')
+      end
+
+      it 'redirects to single player path with an error message' do
+        post :shard_move, params: { id: world.id, x: 1, y: 0 }
+        expect(flash[:alert]).to eq(nil)
+      end
+    end
+
+    context 'when the player is already at the target location' do
+      it 'redirects to game path with an error message' do
+        post :shard_move, params: { id: world.id, x: 0, y: 0 }
+        expect(response).to redirect_to(game_path(world))
+        expect(flash[:alert]).to eq('Player already at this location')
+      end
+    end
+
+    context 'when the player has insufficient funds for the move' do
+      before do
+        allow_any_instance_of(WorldsController).to receive(:insufficient_funds_for_move?).and_return(true)
+      end
+
+      it 'redirects to game path with an error message' do
+        post :shard_move, params: { id: world.id, x: 1, y: 0 }
+        expect(response).to redirect_to(game_path(world))
+        expect(flash[:alert]).to eq('Insufficient funds')
+      end
+    end
+
+    context 'when the player is in battle' do
+      before do
+        allow_any_instance_of(WorldsController).to receive(:player_in_battle?).and_return(true)
+      end
+
+      it 'redirects to game path with an error message' do
+        post :shard_move, params: { id: world.id, x: 1, y: 0 }
+        expect(response).to redirect_to(game_path(world))
+        expect(flash[:alert]).to eq('Player is in battle')
+      end
+    end
+
+    context 'when the move is valid' do
+      it 'processes the shard move and updates the cells' do
+        post :shard_move, params: { id: world.id, x: 1, y: 0 }
+
+        expect(response).to redirect_to(game_path(world))
+        expect(flash[:notice]).to be_present
+      end
+    end
   end
 
   describe 'POST #resolve_battle' do
@@ -302,7 +367,7 @@ RSpec.describe WorldsController, type: :controller do
         expect(updated_player_cell.content).to eq('empty')
         expect(updated_treasure_cell.content).to eq(user.id.to_s)
 
-        expect(user.reload.shards_balance).to eq(10)
+        expect(user.reload.shards_balance).to eq(60)
         expect(flash[:notice]).to eq('You found a treasure and earned 10 shards!')
       end
 
@@ -345,6 +410,23 @@ RSpec.describe WorldsController, type: :controller do
       let(:other_user) { create(:user) }
       let(:other_world) { create(:world, creator: other_user) }
 
+      before do
+        (0..6).each do |x|
+          (0..6).each do |y|
+            content = if x == 0 && y == 0
+                        other_user.id.to_s
+                      elsif x == 1 && y == 0
+                        'treasure'
+                      elsif x == 1 && y == 1
+                        'enemy'
+                      else
+                        'empty'
+                      end
+            create(:cell, world: other_world, x: x, y: y, content: content)
+          end
+        end
+      end
+
       it 'redirects to the single_player_path' do
         post :move, params: { id: other_world.id, direction: 'down' }
         expect(response).to redirect_to(single_player_path)
@@ -355,7 +437,8 @@ RSpec.describe WorldsController, type: :controller do
         expect(controller.send(:find_world)).to be_nil
       end
 
-      let(:world3) { create(:world, is_public: true) }
+      let(:world3) { create(:world, is_public: true, creator: other_user) }
+
       it 'returns the world when it is public' do
         allow(World).to receive(:find_by).and_return(world3)
         expect(controller.send(:find_world)).to eq(world3)

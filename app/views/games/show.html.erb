@@ -22,7 +22,7 @@
 
 <div id="world-grid" data-world-id="<%= @world.id %>" class="container mt-5"
      style="background-image: url('<%= @world.background_image_url %>'); background-size: cover; background-position: center; padding: 20px; border: 4px solid #333;">
-  <%= render partial: "games/grid", locals: { cells: @cells } %>
+  <%= render partial: "games/grid", locals: { cells: @cells, world: @world } %>
 </div>
 
 <% if player_in_battle?(@world) %>
