@@ -72,7 +72,7 @@ class WorldsController < ApplicationController
 
   def resolve_battle
     battle = Battle.find_by(player: current_user, world: @world, state: 'active')
-    return redirect_to game_path(@world), alert: 'No active battle found!' unless battle
+    return redirect_to game_path(@world) unless battle
 
     turn_outcome(params, battle)
 
