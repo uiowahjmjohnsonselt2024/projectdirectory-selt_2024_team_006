@@ -43,9 +43,9 @@ class WorldsController < ApplicationController
     cell = @world.cells.find_by(content: current_user.id.to_s)
     if cell
       cell.update!(encounter: nil)
-      redirect_to world_path(@world), notice: 'Encounter acknowledged!'
+      redirect_to game_path(@world), notice: 'Encounter acknowledged!'
     else
-      redirect_to world_path(@world), alert: 'No cell found for the current user.'
+      redirect_to game_path(@world), alert: 'No cell found for the current user.'
     end
   end
 
@@ -72,12 +72,12 @@ class WorldsController < ApplicationController
 
   def resolve_battle
     battle = Battle.find_by(player: current_user, world: @world, state: 'active')
-    return redirect_to world_path(@world), alert: 'No active battle found!' unless battle
+    return redirect_to game_path(@world), alert: 'No active battle found!' unless battle
 
     turn_outcome(params, battle)
 
     battle.destroy
-    redirect_to world_path(@world)
+    redirect_to game_path(@world)
   end
 
   def player_in_world?
@@ -220,7 +220,7 @@ class WorldsController < ApplicationController
   def find_valid_item
     item = current_user.items.find_by(id: params[:item_id])
     unless item
-      redirect_to world_path(@world), alert: 'Invalid item!'
+      redirect_to game_path(@world), alert: 'Invalid item!'
       return nil
     end
     item
@@ -229,7 +229,7 @@ class WorldsController < ApplicationController
   def find_active_battle
     battle = Battle.find_by(player: current_user, world: @world, state: 'active')
     unless battle
-      redirect_to world_path(@world), alert: 'No active battle to attack!'
+      redirect_to game_path(@world), alert: 'No active battle to attack!'
       return nil
     end
     battle
@@ -238,7 +238,7 @@ class WorldsController < ApplicationController
   def player_turn?(battle)
     return true if battle.turn == current_user.id.to_s
 
-    redirect_to world_path(@world), alert: 'It is not your turn!'
+    redirect_to game_path(@world), alert: 'It is not your turn!'
     false
   end
 
@@ -402,7 +402,7 @@ class WorldsController < ApplicationController
   def handle_enemy_attack_success(battle, damage)
     battle.toggle_turn
     flash[:notice] = "The enemy attacked you for #{damage} damage! It is now your turn."
-    redirect_to world_path(@world)
+    redirect_to game_path(@world)
   end
 
   def resolve_battle_loss(battle)

@@ -126,7 +126,7 @@ RSpec.describe WorldsController, type: :controller do
         allow_any_instance_of(Battle).to receive(:enemy_data).and_return({ 'health' => 10, 'attack' => 10,
                                                                            'max_health' => 10 })
         post :resolve_battle, params: { id: world.id, outcome: 'win' }
-        expect(response).to redirect_to(world_path(world))
+        expect(response).to redirect_to(game_path(world))
         expect(flash[:notice]).to match(/You defeated the enemy and earned \d+ shards!/)
         expect(Battle.exists?(battle.id)).to be_falsey
       end
@@ -135,7 +135,7 @@ RSpec.describe WorldsController, type: :controller do
     context 'when the outcome is lose' do
       it 'shows a loss message and destroys the battle' do
         post :resolve_battle, params: { id: world.id, outcome: 'lose' }
-        expect(response).to redirect_to(world_path(world))
+        expect(response).to redirect_to(game_path(world))
         expect(flash[:alert]).to eq('You lost the battle!')
         expect(Battle.exists?(battle.id)).to be_falsey
       end
@@ -145,7 +145,7 @@ RSpec.describe WorldsController, type: :controller do
       it 'redirects with an alert' do
         battle.update!(state: 'won')
         post :resolve_battle, params: { id: world.id, outcome: 'win' }
-        expect(response).to redirect_to(world_path(world))
+        expect(response).to redirect_to(game_path(world))
         expect(flash[:alert]).to eq('No active battle found!')
       end
     end
@@ -215,7 +215,7 @@ RSpec.describe WorldsController, type: :controller do
     context 'when the item is invalid' do
       it 'redirects with an alert' do
         post :attack_with_item, params: { id: world.id, item_id: nil }
-        expect(response).to redirect_to(world_path(world))
+        expect(response).to redirect_to(game_path(world))
         expect(flash[:alert]).to eq('Invalid item!')
       end
     end
@@ -231,7 +231,7 @@ RSpec.describe WorldsController, type: :controller do
         it 'clears the encounter and redirects to the world page with a success message' do
           post :acknowledge_encounter, params: { id: world.id }
 
-          expect(response).to redirect_to(world_path(world))
+          expect(response).to redirect_to(game_path(world))
           expect(flash[:notice]).to eq('Encounter acknowledged!')
           expect(cell.reload.encounter).to be_nil
         end
@@ -246,7 +246,7 @@ RSpec.describe WorldsController, type: :controller do
         it 'redirects to the world page with an alert message' do
           post :acknowledge_encounter, params: { id: world.id }
 
-          expect(response).to redirect_to(world_path(world))
+          expect(response).to redirect_to(game_path(world))
           expect(flash[:alert]).to eq('No cell found for the current user.')
         end
       end
@@ -279,7 +279,7 @@ RSpec.describe WorldsController, type: :controller do
       it 'redirects with an alert' do
         battle.update!(state: 'won')
         post :attack_with_item, params: { id: world.id, item_id: item1.id }
-        expect(response).to redirect_to(world_path(world))
+        expect(response).to redirect_to(game_path(world))
         expect(flash[:alert]).to eq('No active battle to attack!')
       end
     end
@@ -288,7 +288,7 @@ RSpec.describe WorldsController, type: :controller do
       it 'redirects with an alert' do
         battle.update!(turn: 'enemy')
         post :attack_with_item, params: { id: world.id, item_id: item1.id }
-        expect(response).to redirect_to(world_path(world))
+        expect(response).to redirect_to(game_path(world))
         expect(flash[:alert]).to eq('It is not your turn!')
       end
     end
