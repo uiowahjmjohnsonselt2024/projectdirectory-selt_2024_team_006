@@ -206,7 +206,7 @@ class WorldsController < ApplicationController
                   The player has encountered an enemy in a mysterious world.
                   Describe the enemy with #{enemy_stats[:health]}
                   health and #{enemy_stats[:attack]} attack power in a vivid and exciting way.
-                  strictly limit the response to 20 words and no more."
+                  strictly limit the response to 30 words and no more."
       }
     ]
   end
