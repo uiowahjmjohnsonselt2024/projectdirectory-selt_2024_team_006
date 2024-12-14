@@ -16,15 +16,36 @@ class WorldsController < ApplicationController
     redirect_to game_path(@world)
   end
 
+  def shard_move
+    @world = find_world
+    return redirect_to_single_player('World not found.') unless @world
+
+    player_cell = find_player_cell
+    return redirect_to_single_player('Player not found on grid.') unless player_cell
+
+    x, y = target_coordinates
+    new_cell = find_new_cell([x, y])
+
+    return redirect_to_game('You must acknowledge the encounter first before moving') unless ack_encounter?(player_cell)
+
+    return redirect_to_game('Player is in battle') if player_in_battle?
+
+    return redirect_to_game('Player already at this location') if same_location?(player_cell, x, y)
+
+    return redirect_to_game('Insufficient funds') if insufficient_funds_for_move?
+
+    process_shard_move(player_cell, new_cell)
+  end
+
   def index; end
 
   def acknowledge_encounter
     cell = @world.cells.find_by(content: current_user.id.to_s)
     if cell
       cell.update!(encounter: nil)
-      redirect_to world_path(@world), notice: 'Encounter acknowledged!'
+      redirect_to game_path(@world), notice: 'Encounter acknowledged!'
     else
-      redirect_to world_path(@world), alert: 'No cell found for the current user.'
+      redirect_to game_path(@world), alert: 'No cell found for the current user.'
     end
   end
 
@@ -51,12 +72,12 @@ class WorldsController < ApplicationController
 
   def resolve_battle
     battle = Battle.find_by(player: current_user, world: @world, state: 'active')
-    return redirect_to world_path(@world), alert: 'No active battle found!' unless battle
+    return redirect_to game_path(@world), alert: 'No active battle found!' unless battle
 
     turn_outcome(params, battle)
 
     battle.destroy
-    redirect_to world_path(@world)
+    redirect_to game_path(@world)
   end
 
   def player_in_world?
@@ -64,6 +85,42 @@ class WorldsController < ApplicationController
   end
 
   private
+
+  def redirect_to_single_player(alert_message)
+    redirect_to single_player_path, alert: alert_message
+  end
+
+  def redirect_to_game(alert_message)
+    redirect_to game_path(@world), alert: alert_message
+  end
+
+  def insufficient_funds_for_move?
+    current_user.shards_balance < 50
+  end
+
+  def process_shard_move(player_cell, new_cell)
+    if valid_position?([new_cell.x, new_cell.y])
+      process_move(player_cell, new_cell)
+      current_user.decrement!(:shards_balance, 50)
+    end
+    redirect_to game_path(@world)
+  end
+
+  def same_location?(player_cell, x_pos, y_pos)
+    player_cell.x == x_pos && player_cell.y == y_pos
+  end
+
+  def player_in_battle?
+    Battle.exists?(player: current_user, world: @world, state: 'active')
+  end
+
+  def ack_encounter?(new_cell)
+    new_cell.encounter.nil?
+  end
+
+  def target_coordinates
+    [params[:x].to_i, params[:y].to_i]
+  end
 
   def track_achievement_progress(name)
     achievement = Achievement.find_by(name: name)
@@ -163,7 +220,7 @@ class WorldsController < ApplicationController
   def find_valid_item
     item = current_user.items.find_by(id: params[:item_id])
     unless item
-      redirect_to world_path(@world), alert: 'Invalid item!'
+      redirect_to game_path(@world), alert: 'Invalid item!'
       return nil
     end
     item
@@ -172,7 +229,7 @@ class WorldsController < ApplicationController
   def find_active_battle
     battle = Battle.find_by(player: current_user, world: @world, state: 'active')
     unless battle
-      redirect_to world_path(@world), alert: 'No active battle to attack!'
+      redirect_to game_path(@world), alert: 'No active battle to attack!'
       return nil
     end
     battle
@@ -181,7 +238,7 @@ class WorldsController < ApplicationController
   def player_turn?(battle)
     return true if battle.turn == current_user.id.to_s
 
-    redirect_to world_path(@world), alert: 'It is not your turn!'
+    redirect_to game_path(@world), alert: 'It is not your turn!'
     false
   end
 
@@ -345,7 +402,7 @@ class WorldsController < ApplicationController
   def handle_enemy_attack_success(battle, damage)
     battle.toggle_turn
     flash[:notice] = "The enemy attacked you for #{damage} damage! It is now your turn."
-    redirect_to world_path(@world)
+    redirect_to game_path(@world)
   end
 
   def resolve_battle_loss(battle)
