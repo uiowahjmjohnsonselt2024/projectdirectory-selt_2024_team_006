@@ -26,6 +26,8 @@ class WorldsController < ApplicationController
     x, y = target_coordinates
     new_cell = find_new_cell([x, y])
 
+    return redirect_to_game('You must acknowledge the encounter first before moving') unless ack_encounter?(player_cell)
+
     return redirect_to_game('Player is in battle') if player_in_battle?
 
     return redirect_to_game('Player already at this location') if same_location?(player_cell, x, y)
@@ -104,16 +106,16 @@ class WorldsController < ApplicationController
     redirect_to game_path(@world)
   end
 
-  def sufficient_funds_for_move?
-    current_user.shards_balance >= 50
-  end
-
   def same_location?(player_cell, x_pos, y_pos)
     player_cell.x == x_pos && player_cell.y == y_pos
   end
 
   def player_in_battle?
     Battle.exists?(player: current_user, world: @world, state: 'active')
+  end
+
+  def ack_encounter?(new_cell)
+    new_cell.encounter.nil?
   end
 
   def target_coordinates
