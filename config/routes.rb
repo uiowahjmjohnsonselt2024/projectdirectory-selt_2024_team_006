@@ -21,7 +21,7 @@ Rails.application.routes.draw do
 
   resources :worlds do
     post 'move', on: :member
-    post 'resolve_battle', on: :member
+    get 'resolve_battle', on: :member
     post 'attack_with_item', on: :member
     post 'shard_move', on: :member
     post 'acknowledge_encounter', on: :member
