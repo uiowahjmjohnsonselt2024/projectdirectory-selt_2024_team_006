@@ -59,6 +59,14 @@
   <% else %>
     <h3 class="text-center" style="color: darkorange;">Waiting for Enemy's Turn...</h3>
   <% end %>
+<% elsif @current_cell&.encounter.present? %>
+  <div class="world-lore" style="margin-top: 20px; background: #f8f8f8; padding: 10px; border-radius: 8px; text-align: center;">
+    <p><%= @current_cell.encounter %></p>
+  </div>
+
+  <div class="text-center mt-4">
+    <%= button_to 'Acknowledge Encounter', acknowledge_encounter_world_path(@world, cell_id: @current_cell.id), method: :post, class: 'btn btn-success' %>
+  </div>
 <% else %>
   <div class="mt-4 text-center">
     <div class="d-flex flex-column align-items-center">

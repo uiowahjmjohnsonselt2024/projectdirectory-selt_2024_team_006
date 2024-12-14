@@ -106,6 +106,8 @@ Style/AmbiguousEndlessMethodDefinition:
   Enabled: true
 Metrics/BlockLength:
   Enabled: false
+Metrics/MethodLength:
+  Max: 11
 Style/ArgumentsForwarding:
   Enabled: true
 Style/ArrayIntersect:

@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_241_210_050_837) do
+ActiveRecord::Schema[7.0].define(version: 20_241_213_151_340) do
   create_table 'achievements', force: :cascade do |t|
     t.string 'name'
     t.integer 'target', default: 0
@@ -45,6 +45,7 @@ ActiveRecord::Schema[7.0].define(version: 20_241_210_050_837) do
     t.string 'content'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.text 'encounter'
     t.index ['world_id'], name: 'index_cells_on_world_id'
   end
 

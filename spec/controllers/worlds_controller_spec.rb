@@ -155,6 +155,47 @@ RSpec.describe WorldsController, type: :controller do
       end
     end
 
+    describe 'POST #acknowledge_encounter' do
+      let(:cell) { world.cells.find_by(x: 0, y: 0) }
+
+      before do
+        cell.update!(encounter: 'A wild animal appears!')
+      end
+
+      context 'when the player is on a cell with an encounter' do
+        it 'clears the encounter and redirects to the world page with a success message' do
+          post :acknowledge_encounter, params: { id: world.id }
+
+          expect(response).to redirect_to(world_path(world))
+          expect(flash[:notice]).to eq('Encounter acknowledged!')
+          expect(cell.reload.encounter).to be_nil
+        end
+      end
+
+      context 'when the player is not on a cell with an encounter' do
+        before do
+          cell.update!(encounter: nil)
+          cell.update!(content: 'empty')
+        end
+
+        it 'redirects to the world page with an alert message' do
+          post :acknowledge_encounter, params: { id: world.id }
+
+          expect(response).to redirect_to(world_path(world))
+          expect(flash[:alert]).to eq('No cell found for the current user.')
+        end
+      end
+
+      context 'when the world is not found' do
+        it 'redirects to the single player path with an alert' do
+          post :acknowledge_encounter, params: { id: 9999 }
+
+          expect(response).to redirect_to(single_player_path)
+          expect(flash[:alert]).to eq('World not found or access denied.')
+        end
+      end
+    end
+
     context 'when tracking achievements for victory' do
       it 'increments progress for relevant achievements and resolves battle' do
         battle.update!(enemy_data: { 'health' => 0, 'attack' => 10, 'max_health' => 10 })
