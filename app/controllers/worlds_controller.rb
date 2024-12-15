@@ -112,7 +112,10 @@ class WorldsController < ApplicationController
     distance = calculate_distance(player_cell, new_cell)
     move_cost = distance * 50
 
-    if current_user.shards_balance < move_cost
+    if distance.zero?
+      flash[:notice] = 'You moved to an adjacent shard for free!'
+      process_move(player_cell, new_cell)
+    elsif current_user.shards_balance < move_cost
       flash[:alert] = "Insufficient funds for moving #{distance} squares (#{move_cost} shards required)."
     elsif valid_position?([new_cell.x, new_cell.y])
       process_move(player_cell, new_cell)
@@ -440,6 +443,7 @@ class WorldsController < ApplicationController
   end
 
   def calculate_distance(player_cell, new_cell)
-    (player_cell.x - new_cell.x).abs + (player_cell.y - new_cell.y).abs
+    distance = (player_cell.x - new_cell.x).abs + (player_cell.y - new_cell.y).abs
+    distance <= 1 ? 0 : distance
   end
 end
