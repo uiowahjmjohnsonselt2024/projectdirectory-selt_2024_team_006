@@ -11,14 +11,8 @@ class WorldsController < ApplicationController
     player_cell = find_player_cell
     return redirect_to single_player_path, alert: 'Player not found on grid.' unless player_cell
 
-    move_cost = 50
-    if current_user.shards_balance < move_cost
-      return redirect_to game_path(@world), alert: 'Insufficient funds to move.'
-    end
-
     if process_player_move(player_cell, params[:direction])
-      current_user.decrement!(:shards_balance, move_cost)
-      flash[:notice] = "You moved and were charged #{move_cost} shards."
+      flash[:notice] = 'You moved to an adjacent shard for free!'
     else
       flash[:alert] = 'Invalid move!'
     end
