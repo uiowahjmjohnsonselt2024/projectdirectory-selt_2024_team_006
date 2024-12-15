@@ -116,8 +116,6 @@ class WorldsController < ApplicationController
     redirect_to game_path(@world)
   end
 
-  private
-
   def calculate_move_cost(distance)
     distance * 50
   end
@@ -143,7 +141,6 @@ class WorldsController < ApplicationController
     current_user.decrement!(:shards_balance, move_cost)
     flash[:notice] = "You moved #{distance} squares and were charged #{move_cost} shards."
   end
-
 
   def same_location?(player_cell, x_pos, y_pos)
     player_cell.x == x_pos && player_cell.y == y_pos
