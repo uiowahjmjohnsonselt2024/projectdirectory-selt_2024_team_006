@@ -13,7 +13,7 @@
       <img src="./assets/0.13.1/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" class="hide">
-      <div class="timestamp">Generated <abbr class="timeago" title="2024-12-14T19:29:49-06:00">2024-12-14T19:29:49-06:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2024-12-14T19:38:26-06:00">2024-12-14T19:38:26-06:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -22,14 +22,14 @@
     <span class="group_name">All Files</span>
     (<span class="covered_percent">
       <span class="green">
-  99.59%
+  99.34%
 </span>
 
      </span>
      covered at
      <span class="covered_strength">
        <span class="green">
-         115.34
+         113.36
        </span>
     </span> hits/line
     )
@@ -42,11 +42,11 @@
   </div>
 
   <div class="t-line-summary">
-    <b>740</b> relevant lines,
-    <span class="green"><b>737</b> lines covered</span> and
-    <span class="red"><b>3</b> lines missed. </span>
+    <b>753</b> relevant lines,
+    <span class="green"><b>748</b> lines covered</span> and
+    <span class="red"><b>5</b> lines missed. </span>
     (<span class="green">
-  99.59%
+  99.34%
 </span>
 )
   </div>
@@ -159,12 +159,12 @@
         
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#00241d6606230415695b62ce446cfe7c50cd9d67" class="src_link" title="app/controllers/worlds_controller.rb">app/controllers/worlds_controller.rb</a></td>
-            <td class="green strong cell--number t-file__coverage">98.77 %</td>
-            <td class="cell--number">445</td>
-            <td class="cell--number">244</td>
-            <td class="cell--number">241</td>
-            <td class="cell--number">3</td>
-            <td class="cell--number">3.64</td>
+            <td class="green strong cell--number t-file__coverage">98.05 %</td>
+            <td class="cell--number">472</td>
+            <td class="cell--number">257</td>
+            <td class="cell--number">252</td>
+            <td class="cell--number">5</td>
+            <td class="cell--number">3.52</td>
             
           </tr>
         
@@ -340,7 +340,7 @@
             <td class="cell--number">84</td>
             <td class="cell--number">84</td>
             <td class="cell--number">0</td>
-            <td class="cell--number">818.26</td>
+            <td class="cell--number">818.24</td>
             
           </tr>
         
@@ -424,7 +424,7 @@
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#8163465bb40bdab91ec0965094fa786cde317350" class="src_link" title="config/initializers/devise.rb">config/initializers/devise.rb</a></td>
             <td class="green strong cell--number t-file__coverage">100.00 %</td>
-            <td class="cell--number">305</td>
+            <td class="cell--number">304</td>
             <td class="cell--number">16</td>
             <td class="cell--number">16</td>
             <td class="cell--number">0</td>
@@ -4992,7 +4992,7 @@
     <h3>app/controllers/worlds_controller.rb</h3>
     <h4>
       <span class="green">
-  98.77%
+  98.05%
 </span>
 
       lines covered
@@ -5001,9 +5001,9 @@
     
 
     <div class="t-line-summary">
-      <b>244</b> relevant lines.
-      <span class="green"><b>241</b> lines covered</span> and
-      <span class="red"><b>3</b> lines missed.</span>
+      <b>257</b> relevant lines.
+      <span class="green"><b>252</b> lines covered</span> and
+      <span class="red"><b>5</b> lines missed.</span>
     </div>
 
     
@@ -6267,7 +6267,7 @@
 
             
 
-            <code class="ruby">    move_cost = distance * 50</code>
+            <code class="ruby">    move_cost = calculate_move_cost(distance)</code>
           </li>
         </div>
       
@@ -6289,7 +6289,7 @@
 
             
 
-            <code class="ruby">    if current_user.shards_balance &lt; move_cost</code>
+            <code class="ruby">    if insufficient_funds?(move_cost)</code>
           </li>
         </div>
       
@@ -6299,7 +6299,7 @@
 
             
 
-            <code class="ruby">      flash[:alert] = &quot;Insufficient funds for moving #{distance} squares (#{move_cost} shards required).&quot;</code>
+            <code class="ruby">      handle_insufficient_funds(distance, move_cost)</code>
           </li>
         </div>
       
@@ -6311,31 +6311,27 @@
 
             
 
-            <code class="ruby">    elsif valid_position?([new_cell.x, new_cell.y])</code>
+            <code class="ruby">    elsif invalid_position?(new_cell)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="118">
-            
-              <span class="hits">2</span>
+          <li class="missed" data-hits="0" data-linenumber="118">
             
 
             
 
-            <code class="ruby">      process_move(player_cell, new_cell)</code>
+            <code class="ruby">      handle_invalid_move</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="119">
-            
-              <span class="hits">2</span>
+          <li class="never" data-hits="" data-linenumber="119">
             
 
             
 
-            <code class="ruby">      current_user.decrement!(:shards_balance, move_cost)</code>
+            <code class="ruby">    else</code>
           </li>
         </div>
       
@@ -6347,7 +6343,7 @@
 
             
 
-            <code class="ruby">      flash[:notice] = &quot;You moved #{distance} squares and were charged #{move_cost} shards.&quot;</code>
+            <code class="ruby">      handle_valid_move(player_cell, new_cell, distance, move_cost)</code>
           </li>
         </div>
       
@@ -6357,32 +6353,12 @@
 
             
 
-            <code class="ruby">    else</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="missed" data-hits="0" data-linenumber="122">
-            
-
-            
-
-            <code class="ruby">      flash[:alert] = &#39;Invalid move!&#39;</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="123">
-            
-
-            
-
             <code class="ruby">    end</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="124">
+          <li class="never" data-hits="" data-linenumber="122">
             
 
             
@@ -6392,7 +6368,7 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="125">
+          <li class="covered" data-hits="2" data-linenumber="123">
             
               <span class="hits">2</span>
             
@@ -6404,12 +6380,34 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="126">
+          <li class="never" data-hits="" data-linenumber="124">
             
 
             
 
             <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="125">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="126">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  private</code>
           </li>
         </div>
       
@@ -6431,19 +6429,19 @@
 
             
 
-            <code class="ruby">  def same_location?(player_cell, x_pos, y_pos)</code>
+            <code class="ruby">  def calculate_move_cost(distance)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="4" data-linenumber="129">
+          <li class="covered" data-hits="2" data-linenumber="129">
             
-              <span class="hits">4</span>
-            
-
+              <span class="hits">2</span>
             
 
-            <code class="ruby">    player_cell.x == x_pos &amp;&amp; player_cell.y == y_pos</code>
+            
+
+            <code class="ruby">    distance * 50</code>
           </li>
         </div>
       
@@ -6475,19 +6473,19 @@
 
             
 
-            <code class="ruby">  def player_in_battle?</code>
+            <code class="ruby">  def insufficient_funds?(cost)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="4" data-linenumber="133">
+          <li class="covered" data-hits="2" data-linenumber="133">
             
-              <span class="hits">4</span>
-            
-
+              <span class="hits">2</span>
             
 
-            <code class="ruby">    Battle.exists?(player: current_user, world: @world, state: &#39;active&#39;)</code>
+            
+
+            <code class="ruby">    current_user.shards_balance &lt; cost</code>
           </li>
         </div>
       
@@ -6519,19 +6517,19 @@
 
             
 
-            <code class="ruby">  def ack_encounter?(new_cell)</code>
+            <code class="ruby">  def invalid_position?(new_cell)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="5" data-linenumber="137">
+          <li class="covered" data-hits="2" data-linenumber="137">
             
-              <span class="hits">5</span>
-            
-
+              <span class="hits">2</span>
             
 
-            <code class="ruby">    new_cell.encounter.nil?</code>
+            
+
+            <code class="ruby">    !valid_position?([new_cell.x, new_cell.y])</code>
           </li>
         </div>
       
@@ -6563,19 +6561,17 @@
 
             
 
-            <code class="ruby">  def target_coordinates</code>
+            <code class="ruby">  def handle_insufficient_funds(distance, cost)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="5" data-linenumber="141">
-            
-              <span class="hits">5</span>
+          <li class="missed" data-hits="0" data-linenumber="141">
             
 
             
 
-            <code class="ruby">    [params[:x].to_i, params[:y].to_i]</code>
+            <code class="ruby">    flash[:alert] = &quot;Insufficient funds for moving #{distance} squares (#{cost} shards required).&quot;</code>
           </li>
         </div>
       
@@ -6607,60 +6603,32 @@
 
             
 
-            <code class="ruby">  def track_achievement_progress(name)</code>
+            <code class="ruby">  def handle_invalid_move</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="145">
-            
-              <span class="hits">2</span>
+          <li class="missed" data-hits="0" data-linenumber="145">
             
 
             
 
-            <code class="ruby">    achievement = Achievement.find_by(name: name)</code>
+            <code class="ruby">    flash[:alert] = &#39;Invalid move!&#39;</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="146">
-            
-              <span class="hits">2</span>
+          <li class="never" data-hits="" data-linenumber="146">
             
 
             
 
-            <code class="ruby">    player_progress = current_user.player_progresses.find_or_create_by(achievement: achievement)</code>
+            <code class="ruby">  end</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="147">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">    player_progress.increment!(:current_progress) unless player_progress.completed?</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="2" data-linenumber="148">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">    return unless player_progress.completed? &amp;&amp; !player_progress.claimed?</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="149">
+          <li class="never" data-hits="" data-linenumber="147">
             
 
             
@@ -6670,24 +6638,50 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="150">
+          <li class="covered" data-hits="1" data-linenumber="148">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">    flash[:success] = &quot;Achievement unlocked: #{name} Claim your reward.&quot;</code>
+            <code class="ruby">  def handle_valid_move(player_cell, new_cell, distance, move_cost)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="151">
+          <li class="covered" data-hits="2" data-linenumber="149">
+            
+              <span class="hits">2</span>
             
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">    process_move(player_cell, new_cell)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="150">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    current_user.decrement!(:shards_balance, move_cost)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="151">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    flash[:notice] = &quot;You moved #{distance} squares and were charged #{move_cost} shards.&quot;</code>
           </li>
         </div>
       
@@ -6697,53 +6691,51 @@
 
             
 
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="153">
+            
+
+            
+
             <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="153">
+          <li class="never" data-hits="" data-linenumber="154">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="155">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  def set_world</code>
+            <code class="ruby">  def same_location?(player_cell, x_pos, y_pos)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="25" data-linenumber="154">
+          <li class="covered" data-hits="4" data-linenumber="156">
             
-              <span class="hits">25</span>
-            
-
-            
-
-            <code class="ruby">    @world = World.find_by(id: params[:id])</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="155">
+              <span class="hits">4</span>
             
 
             
 
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="25" data-linenumber="156">
-            
-              <span class="hits">25</span>
-            
-
-            
-
-            <code class="ruby">    return if @world &amp;&amp; (@world.is_public == true || @world.creator_id == current_user.id || player_in_world?)</code>
+            <code class="ruby">    player_cell.x == x_pos &amp;&amp; player_cell.y == y_pos</code>
           </li>
         </div>
       
@@ -6753,39 +6745,41 @@
 
             
 
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="158">
+            
+
+            
+
             <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="158">
+          <li class="covered" data-hits="1" data-linenumber="159">
             
-              <span class="hits">2</span>
-            
-
+              <span class="hits">1</span>
             
 
-            <code class="ruby">    redirect_to single_player_path, alert: &#39;World not found or access denied.&#39;</code>
+            
+
+            <code class="ruby">  def player_in_battle?</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="159">
+          <li class="covered" data-hits="4" data-linenumber="160">
+            
+              <span class="hits">4</span>
             
 
             
 
-            <code class="ruby">    nil</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="160">
-            
-
-            
-
-            <code class="ruby">  end</code>
+            <code class="ruby">    Battle.exists?(player: current_user, world: @world, state: &#39;active&#39;)</code>
           </li>
         </div>
       
@@ -6795,41 +6789,41 @@
 
             
 
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="162">
+            
+
+            
+
             <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="162">
+          <li class="covered" data-hits="1" data-linenumber="163">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  def authorized_to_move?</code>
+            <code class="ruby">  def ack_encounter?(new_cell)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="10" data-linenumber="163">
+          <li class="covered" data-hits="5" data-linenumber="164">
             
-              <span class="hits">10</span>
-            
-
-            
-
-            <code class="ruby">    @world.creator_id == current_user.id || player_in_world?</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="164">
+              <span class="hits">5</span>
             
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">    new_cell.encounter.nil?</code>
           </li>
         </div>
       
@@ -6839,19 +6833,17 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">  end</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="166">
-            
-              <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="166">
             
 
             
 
-            <code class="ruby">  def flash_invalid_move</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -6863,17 +6855,19 @@
 
             
 
-            <code class="ruby">    flash[:alert] = &#39;Invalid move!&#39;</code>
+            <code class="ruby">  def target_coordinates</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="168">
+          <li class="covered" data-hits="5" data-linenumber="168">
+            
+              <span class="hits">5</span>
             
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">    [params[:x].to_i, params[:y].to_i]</code>
           </li>
         </div>
       
@@ -6883,12 +6877,310 @@
 
             
 
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="170">
+            
+
+            
+
             <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="170">
+          <li class="covered" data-hits="1" data-linenumber="171">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def track_achievement_progress(name)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="172">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    achievement = Achievement.find_by(name: name)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="173">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    player_progress = current_user.player_progresses.find_or_create_by(achievement: achievement)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="174">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    player_progress.increment!(:current_progress) unless player_progress.completed?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="175">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    return unless player_progress.completed? &amp;&amp; !player_progress.claimed?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="176">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="177">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    flash[:success] = &quot;Achievement unlocked: #{name} Claim your reward.&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="178">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="179">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="180">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def set_world</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="25" data-linenumber="181">
+            
+              <span class="hits">25</span>
+            
+
+            
+
+            <code class="ruby">    @world = World.find_by(id: params[:id])</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="182">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="25" data-linenumber="183">
+            
+              <span class="hits">25</span>
+            
+
+            
+
+            <code class="ruby">    return if @world &amp;&amp; (@world.is_public == true || @world.creator_id == current_user.id || player_in_world?)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="184">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="185">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    redirect_to single_player_path, alert: &#39;World not found or access denied.&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="186">
+            
+
+            
+
+            <code class="ruby">    nil</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="187">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="188">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="189">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def authorized_to_move?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="10" data-linenumber="190">
+            
+              <span class="hits">10</span>
+            
+
+            
+
+            <code class="ruby">    @world.creator_id == current_user.id || player_in_world?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="191">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="192">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="193">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def flash_invalid_move</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="194">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    flash[:alert] = &#39;Invalid move!&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="195">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="196">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="197">
             
               <span class="hits">1</span>
             
@@ -6900,7 +7192,7 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="14" data-linenumber="171">
+          <li class="covered" data-hits="14" data-linenumber="198">
             
               <span class="hits">14</span>
             
@@ -6912,312 +7204,12 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="172">
+          <li class="never" data-hits="" data-linenumber="199">
             
 
             
 
             <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="173">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="174">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def player_square_occupied?(cell)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="9" data-linenumber="175">
-            
-              <span class="hits">9</span>
-            
-
-            
-
-            <code class="ruby">    cell.content.match(/^\d+$/)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="176">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="177">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="178">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def flash_occupied_square</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="179">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">    flash[:alert] = &#39;That square is occupied by another player!&#39;</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="180">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="181">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="182">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def process_move(player_cell, new_cell)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="10" data-linenumber="183">
-            
-              <span class="hits">10</span>
-            
-
-            
-
-            <code class="ruby">    handle_cell_content(new_cell)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="10" data-linenumber="184">
-            
-              <span class="hits">10</span>
-            
-
-            
-
-            <code class="ruby">    update_cells(player_cell, new_cell)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="10" data-linenumber="185">
-            
-              <span class="hits">10</span>
-            
-
-            
-
-            <code class="ruby">    @world.broadcast_grid(current_user)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="186">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="187">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="188">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def process_attack(item, battle, user_world_state)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="5" data-linenumber="189">
-            
-              <span class="hits">5</span>
-            
-
-            
-
-            <code class="ruby">    handle_damage(item, battle)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="190">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="5" data-linenumber="191">
-            
-              <span class="hits">5</span>
-            
-
-            
-
-            <code class="ruby">    if enemy_defeated?(battle)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="2" data-linenumber="192">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">      handle_victory(battle)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="193">
-            
-
-            
-
-            <code class="ruby">    else</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="3" data-linenumber="194">
-            
-              <span class="hits">3</span>
-            
-
-            
-
-            <code class="ruby">      handle_turn_end(battle, user_world_state)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="195">
-            
-
-            
-
-            <code class="ruby">    end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="196">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="197">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="198">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def handle_turn_end(battle, user_world_state)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="3" data-linenumber="199">
-            
-              <span class="hits">3</span>
-            
-
-            
-
-            <code class="ruby">    battle.toggle_turn</code>
           </li>
         </div>
       
@@ -7232,24 +7224,26 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="3" data-linenumber="201">
+          <li class="covered" data-hits="1" data-linenumber="201">
             
-              <span class="hits">3</span>
-            
-
+              <span class="hits">1</span>
             
 
-            <code class="ruby">    handle_enemy_turn(battle, user_world_state)</code>
+            
+
+            <code class="ruby">  def player_square_occupied?(cell)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="202">
+          <li class="covered" data-hits="9" data-linenumber="202">
+            
+              <span class="hits">9</span>
             
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">    cell.content.match(/^\d+$/)</code>
           </li>
         </div>
       
@@ -7259,43 +7253,41 @@
 
             
 
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="204">
+            
+
+            
+
             <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="204">
+          <li class="covered" data-hits="1" data-linenumber="205">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  def handle_damage(item, battle)</code>
+            <code class="ruby">  def flash_occupied_square</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="5" data-linenumber="205">
+          <li class="covered" data-hits="1" data-linenumber="206">
             
-              <span class="hits">5</span>
-            
-
-            
-
-            <code class="ruby">    damage = rand(item.damage - 5..item.damage + 5)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="5" data-linenumber="206">
-            
-              <span class="hits">5</span>
+              <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">    damage = [damage, 0].max</code>
+            <code class="ruby">    flash[:alert] = &#39;That square is occupied by another player!&#39;</code>
           </li>
         </div>
       
@@ -7305,48 +7297,70 @@
 
             
 
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="208">
+            
+
+            
+
             <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="5" data-linenumber="208">
+          <li class="covered" data-hits="1" data-linenumber="209">
             
-              <span class="hits">5</span>
-            
-
+              <span class="hits">1</span>
             
 
-            <code class="ruby">    battle.enemy_data[&#39;health&#39;] -= damage</code>
+            
+
+            <code class="ruby">  def process_move(player_cell, new_cell)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="5" data-linenumber="209">
+          <li class="covered" data-hits="10" data-linenumber="210">
             
-              <span class="hits">5</span>
-            
-
+              <span class="hits">10</span>
             
 
-            <code class="ruby">    battle.enemy_data[&#39;health&#39;] = [0, battle.enemy_data[&#39;health&#39;]].max</code>
+            
+
+            <code class="ruby">    handle_cell_content(new_cell)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="5" data-linenumber="210">
+          <li class="covered" data-hits="10" data-linenumber="211">
             
-              <span class="hits">5</span>
-            
-
+              <span class="hits">10</span>
             
 
-            <code class="ruby">    battle.save!</code>
+            
+
+            <code class="ruby">    update_cells(player_cell, new_cell)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="211">
+          <li class="covered" data-hits="10" data-linenumber="212">
+            
+              <span class="hits">10</span>
+            
+
+            
+
+            <code class="ruby">    @world.broadcast_grid(current_user)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="213">
             
 
             
@@ -7356,7 +7370,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="212">
+          <li class="never" data-hits="" data-linenumber="214">
             
 
             
@@ -7366,41 +7380,31 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="213">
+          <li class="covered" data-hits="1" data-linenumber="215">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  def enemy_defeated?(battle)</code>
+            <code class="ruby">  def process_attack(item, battle, user_world_state)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="5" data-linenumber="214">
+          <li class="covered" data-hits="5" data-linenumber="216">
             
               <span class="hits">5</span>
             
 
             
 
-            <code class="ruby">    battle.enemy_data[&#39;health&#39;] &lt;= 0</code>
+            <code class="ruby">    handle_damage(item, battle)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="215">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="216">
+          <li class="never" data-hits="" data-linenumber="217">
             
 
             
@@ -7410,26 +7414,14 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="217">
+          <li class="covered" data-hits="5" data-linenumber="218">
             
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def handle_victory(battle)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="2" data-linenumber="218">
-            
-              <span class="hits">2</span>
+              <span class="hits">5</span>
             
 
             
 
-            <code class="ruby">    battle.resolve(&#39;won&#39;)</code>
+            <code class="ruby">    if enemy_defeated?(battle)</code>
           </li>
         </div>
       
@@ -7441,43 +7433,39 @@
 
             
 
-            <code class="ruby">    track_achievement_progress(&#39;First Kill&#39;)</code>
+            <code class="ruby">      handle_victory(battle)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="220">
-            
-              <span class="hits">2</span>
+          <li class="never" data-hits="" data-linenumber="220">
             
 
             
 
-            <code class="ruby">    track_achievement_progress(&#39;Slayer&#39;)</code>
+            <code class="ruby">    else</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="221">
+          <li class="covered" data-hits="3" data-linenumber="221">
             
-              <span class="hits">2</span>
-            
-
+              <span class="hits">3</span>
             
 
-            <code class="ruby">    shards = award_victory_shards(battle)</code>
+            
+
+            <code class="ruby">      handle_turn_end(battle, user_world_state)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="222">
-            
-              <span class="hits">2</span>
+          <li class="never" data-hits="" data-linenumber="222">
             
 
             
 
-            <code class="ruby">    flash[:notice] = &quot;You defeated the enemy and earned #{shards} shards!&quot;</code>
+            <code class="ruby">    end</code>
           </li>
         </div>
       
@@ -7487,24 +7475,12 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">  end</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="224">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">    @world.broadcast_grid(current_user)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="225">
+          <li class="never" data-hits="" data-linenumber="224">
             
 
             
@@ -7514,14 +7490,26 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="226">
+          <li class="covered" data-hits="1" data-linenumber="225">
             
-              <span class="hits">2</span>
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def handle_turn_end(battle, user_world_state)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="3" data-linenumber="226">
+            
+              <span class="hits">3</span>
             
 
             
 
-            <code class="ruby">    redirect_to resolve_battle_world_path(@world, outcome: &#39;win&#39;)</code>
+            <code class="ruby">    battle.toggle_turn</code>
           </li>
         </div>
       
@@ -7531,12 +7519,34 @@
 
             
 
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="3" data-linenumber="228">
+            
+              <span class="hits">3</span>
+            
+
+            
+
+            <code class="ruby">    handle_enemy_turn(battle, user_world_state)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="229">
+            
+
+            
+
             <code class="ruby">  end</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="228">
+          <li class="never" data-hits="" data-linenumber="230">
             
 
             
@@ -7546,60 +7556,38 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="229">
+          <li class="covered" data-hits="1" data-linenumber="231">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  def award_victory_shards(battle)</code>
+            <code class="ruby">  def handle_damage(item, battle)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="230">
+          <li class="covered" data-hits="5" data-linenumber="232">
             
-              <span class="hits">2</span>
-            
-
+              <span class="hits">5</span>
             
 
-            <code class="ruby">    shards = calculate_shard_drop(battle.enemy_data)</code>
+            
+
+            <code class="ruby">    damage = rand(item.damage - 5..item.damage + 5)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="231">
+          <li class="covered" data-hits="5" data-linenumber="233">
             
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">    current_user.update!(shards_balance: current_user.shards_balance + shards)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="2" data-linenumber="232">
-            
-              <span class="hits">2</span>
+              <span class="hits">5</span>
             
 
             
 
-            <code class="ruby">    shards</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="233">
-            
-
-            
-
-            <code class="ruby">  end</code>
+            <code class="ruby">    damage = [damage, 0].max</code>
           </li>
         </div>
       
@@ -7614,7 +7602,311 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="235">
+          <li class="covered" data-hits="5" data-linenumber="235">
+            
+              <span class="hits">5</span>
+            
+
+            
+
+            <code class="ruby">    battle.enemy_data[&#39;health&#39;] -= damage</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="5" data-linenumber="236">
+            
+              <span class="hits">5</span>
+            
+
+            
+
+            <code class="ruby">    battle.enemy_data[&#39;health&#39;] = [0, battle.enemy_data[&#39;health&#39;]].max</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="5" data-linenumber="237">
+            
+              <span class="hits">5</span>
+            
+
+            
+
+            <code class="ruby">    battle.save!</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="238">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="239">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="240">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def enemy_defeated?(battle)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="5" data-linenumber="241">
+            
+              <span class="hits">5</span>
+            
+
+            
+
+            <code class="ruby">    battle.enemy_data[&#39;health&#39;] &lt;= 0</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="242">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="243">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="244">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def handle_victory(battle)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="245">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    battle.resolve(&#39;won&#39;)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="246">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    track_achievement_progress(&#39;First Kill&#39;)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="247">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    track_achievement_progress(&#39;Slayer&#39;)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="248">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    shards = award_victory_shards(battle)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="249">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    flash[:notice] = &quot;You defeated the enemy and earned #{shards} shards!&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="250">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="251">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    @world.broadcast_grid(current_user)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="252">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="253">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    redirect_to resolve_battle_world_path(@world, outcome: &#39;win&#39;)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="254">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="255">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="256">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def award_victory_shards(battle)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="257">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    shards = calculate_shard_drop(battle.enemy_data)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="258">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    current_user.update!(shards_balance: current_user.shards_balance + shards)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="259">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    shards</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="260">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="261">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="262">
             
               <span class="hits">1</span>
             
@@ -7626,7 +7918,7 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="8" data-linenumber="236">
+          <li class="covered" data-hits="8" data-linenumber="263">
             
               <span class="hits">8</span>
             
@@ -7638,7 +7930,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="237">
+          <li class="never" data-hits="" data-linenumber="264">
             
 
             
@@ -7648,318 +7940,12 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="238">
+          <li class="never" data-hits="" data-linenumber="265">
             
 
             
 
             <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="239">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def find_valid_item</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="8" data-linenumber="240">
-            
-              <span class="hits">8</span>
-            
-
-            
-
-            <code class="ruby">    item = current_user.items.find_by(id: params[:item_id])</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="8" data-linenumber="241">
-            
-              <span class="hits">8</span>
-            
-
-            
-
-            <code class="ruby">    unless item</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="242">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">      redirect_to game_path(@world), alert: &#39;Invalid item!&#39;</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="243">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">      return nil</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="244">
-            
-
-            
-
-            <code class="ruby">    end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="7" data-linenumber="245">
-            
-              <span class="hits">7</span>
-            
-
-            
-
-            <code class="ruby">    item</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="246">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="247">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="248">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def find_active_battle</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="8" data-linenumber="249">
-            
-              <span class="hits">8</span>
-            
-
-            
-
-            <code class="ruby">    battle = Battle.find_by(player: current_user, world: @world, state: &#39;active&#39;)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="8" data-linenumber="250">
-            
-              <span class="hits">8</span>
-            
-
-            
-
-            <code class="ruby">    unless battle</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="251">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">      redirect_to game_path(@world), alert: &#39;No active battle to attack!&#39;</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="252">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">      return nil</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="253">
-            
-
-            
-
-            <code class="ruby">    end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="7" data-linenumber="254">
-            
-              <span class="hits">7</span>
-            
-
-            
-
-            <code class="ruby">    battle</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="255">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="256">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="257">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def player_turn?(battle)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="6" data-linenumber="258">
-            
-              <span class="hits">6</span>
-            
-
-            
-
-            <code class="ruby">    return true if battle.turn == current_user.id.to_s</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="259">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="260">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">    redirect_to game_path(@world), alert: &#39;It is not your turn!&#39;</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="261">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">    false</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="262">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="263">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="264">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def turn_outcome(params, battle)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="2" data-linenumber="265">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">    if params[:outcome] == &#39;win&#39;</code>
           </li>
         </div>
       
@@ -7971,31 +7957,31 @@
 
             
 
-            <code class="ruby">      shards = calculate_shard_drop(battle.enemy_data)</code>
+            <code class="ruby">  def find_valid_item</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="267">
+          <li class="covered" data-hits="8" data-linenumber="267">
             
-              <span class="hits">1</span>
-            
-
+              <span class="hits">8</span>
             
 
-            <code class="ruby">      current_user.update!(shards_balance: current_user.shards_balance + shards)</code>
+            
+
+            <code class="ruby">    item = current_user.items.find_by(id: params[:item_id])</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="268">
+          <li class="covered" data-hits="8" data-linenumber="268">
             
-              <span class="hits">1</span>
-            
-
+              <span class="hits">8</span>
             
 
-            <code class="ruby">      flash[:notice] = &quot;You defeated the enemy and earned #{shards} shards!&quot;</code>
+            
+
+            <code class="ruby">    unless item</code>
           </li>
         </div>
       
@@ -8007,7 +7993,7 @@
 
             
 
-            <code class="ruby">    elsif params[:outcome] == &#39;lose&#39;</code>
+            <code class="ruby">      redirect_to game_path(@world), alert: &#39;Invalid item!&#39;</code>
           </li>
         </div>
       
@@ -8019,7 +8005,7 @@
 
             
 
-            <code class="ruby">      flash[:alert] = &#39;You lost the battle!&#39;</code>
+            <code class="ruby">      return nil</code>
           </li>
         </div>
       
@@ -8034,12 +8020,14 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="272">
+          <li class="covered" data-hits="7" data-linenumber="272">
+            
+              <span class="hits">7</span>
             
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">    item</code>
           </li>
         </div>
       
@@ -8049,48 +8037,82 @@
 
             
 
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="274">
+            
+
+            
+
             <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="274">
+          <li class="covered" data-hits="1" data-linenumber="275">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  def find_world</code>
+            <code class="ruby">  def find_active_battle</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="18" data-linenumber="275">
+          <li class="covered" data-hits="8" data-linenumber="276">
             
-              <span class="hits">18</span>
-            
-
+              <span class="hits">8</span>
             
 
-            <code class="ruby">    World.find_by(id: params[:id]).tap do |world|</code>
+            
+
+            <code class="ruby">    battle = Battle.find_by(player: current_user, world: @world, state: &#39;active&#39;)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="18" data-linenumber="276">
+          <li class="covered" data-hits="8" data-linenumber="277">
             
-              <span class="hits">18</span>
-            
-
+              <span class="hits">8</span>
             
 
-            <code class="ruby">      return nil unless world &amp;&amp; (world.is_public == true || world.creator_id == current_user.id)</code>
+            
+
+            <code class="ruby">    unless battle</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="277">
+          <li class="covered" data-hits="1" data-linenumber="278">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">      redirect_to game_path(@world), alert: &#39;No active battle to attack!&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="279">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">      return nil</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="280">
             
 
             
@@ -8100,46 +8122,14 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="278">
+          <li class="covered" data-hits="7" data-linenumber="281">
+            
+              <span class="hits">7</span>
             
 
             
 
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="279">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="280">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def find_player_cell</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="15" data-linenumber="281">
-            
-              <span class="hits">15</span>
-            
-
-            
-
-            <code class="ruby">    @world.cells.find_by(content: user_id_str)</code>
+            <code class="ruby">    battle</code>
           </li>
         </div>
       
@@ -8171,19 +8161,19 @@
 
             
 
-            <code class="ruby">  def process_player_move(player_cell, direction)</code>
+            <code class="ruby">  def player_turn?(battle)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="10" data-linenumber="285">
+          <li class="covered" data-hits="6" data-linenumber="285">
             
-              <span class="hits">10</span>
-            
-
+              <span class="hits">6</span>
             
 
-            <code class="ruby">    return unless authorized_to_move?</code>
+            
+
+            <code class="ruby">    return true if battle.turn == current_user.id.to_s</code>
           </li>
         </div>
       
@@ -8198,26 +8188,26 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="10" data-linenumber="287">
+          <li class="covered" data-hits="1" data-linenumber="287">
             
-              <span class="hits">10</span>
-            
-
+              <span class="hits">1</span>
             
 
-            <code class="ruby">    new_position = calculate_new_position(player_cell, direction)</code>
+            
+
+            <code class="ruby">    redirect_to game_path(@world), alert: &#39;It is not your turn!&#39;</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="10" data-linenumber="288">
+          <li class="covered" data-hits="1" data-linenumber="288">
             
-              <span class="hits">10</span>
-            
-
+              <span class="hits">1</span>
             
 
-            <code class="ruby">    return flash_invalid_move unless valid_position?(new_position)</code>
+            
+
+            <code class="ruby">    false</code>
           </li>
         </div>
       
@@ -8227,73 +8217,77 @@
 
             
 
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="9" data-linenumber="290">
-            
-              <span class="hits">9</span>
-            
-
-            
-
-            <code class="ruby">    new_cell = find_new_cell(new_position)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="9" data-linenumber="291">
-            
-              <span class="hits">9</span>
-            
-
-            
-
-            <code class="ruby">    return flash_occupied_square if player_square_occupied?(new_cell)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="292">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="8" data-linenumber="293">
-            
-              <span class="hits">8</span>
-            
-
-            
-
-            <code class="ruby">    process_move(player_cell, new_cell)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="294">
-            
-
-            
-
             <code class="ruby">  end</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="295">
+          <li class="never" data-hits="" data-linenumber="290">
             
 
             
 
             <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="291">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def turn_outcome(params, battle)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="292">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    if params[:outcome] == &#39;win&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="293">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">      shards = calculate_shard_drop(battle.enemy_data)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="294">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">      current_user.update!(shards_balance: current_user.shards_balance + shards)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="295">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">      flash[:notice] = &quot;You defeated the enemy and earned #{shards} shards!&quot;</code>
           </li>
         </div>
       
@@ -8305,89 +8299,85 @@
 
             
 
-            <code class="ruby">  def calculate_new_position(player_cell, direction)</code>
+            <code class="ruby">    elsif params[:outcome] == &#39;lose&#39;</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="10" data-linenumber="297">
-            
-              <span class="hits">10</span>
-            
-
-            
-
-            <code class="ruby">    case direction</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="298">
+          <li class="covered" data-hits="1" data-linenumber="297">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">    when &#39;up&#39; then [player_cell.x, player_cell.y - 1]</code>
+            <code class="ruby">      flash[:alert] = &#39;You lost the battle!&#39;</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="3" data-linenumber="299">
-            
-              <span class="hits">3</span>
+          <li class="never" data-hits="" data-linenumber="298">
             
 
             
 
-            <code class="ruby">    when &#39;down&#39; then [player_cell.x, player_cell.y + 1]</code>
+            <code class="ruby">    end</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="300">
+          <li class="never" data-hits="" data-linenumber="299">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="300">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="301">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">    when &#39;left&#39; then [player_cell.x - 1, player_cell.y]</code>
+            <code class="ruby">  def find_world</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="4" data-linenumber="301">
+          <li class="covered" data-hits="18" data-linenumber="302">
             
-              <span class="hits">4</span>
-            
-
+              <span class="hits">18</span>
             
 
-            <code class="ruby">    when &#39;right&#39; then [player_cell.x + 1, player_cell.y]</code>
+            
+
+            <code class="ruby">    World.find_by(id: params[:id]).tap do |world|</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="302">
+          <li class="covered" data-hits="18" data-linenumber="303">
+            
+              <span class="hits">18</span>
             
 
             
 
-            <code class="ruby">    else</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="303">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">      [player_cell.x, player_cell.y]</code>
+            <code class="ruby">      return nil unless world &amp;&amp; (world.is_public == true || world.creator_id == current_user.id)</code>
           </li>
         </div>
       
@@ -8429,19 +8419,19 @@
 
             
 
-            <code class="ruby">  def valid_position?(position)</code>
+            <code class="ruby">  def find_player_cell</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="36" data-linenumber="308">
+          <li class="covered" data-hits="15" data-linenumber="308">
             
-              <span class="hits">36</span>
-            
-
+              <span class="hits">15</span>
             
 
-            <code class="ruby">    position.all? { |coord| coord.between?(0, 6) }</code>
+            
+
+            <code class="ruby">    @world.cells.find_by(content: user_id_str)</code>
           </li>
         </div>
       
@@ -8473,7 +8463,7 @@
 
             
 
-            <code class="ruby">  def handle_cell_content(cell)</code>
+            <code class="ruby">  def process_player_move(player_cell, direction)</code>
           </li>
         </div>
       
@@ -8485,7 +8475,7 @@
 
             
 
-            <code class="ruby">    case cell.content</code>
+            <code class="ruby">    return unless authorized_to_move?</code>
           </li>
         </div>
       
@@ -8495,56 +8485,36 @@
 
             
 
-            <code class="ruby">    when &#39;treasure&#39;</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="4" data-linenumber="314">
+          <li class="covered" data-hits="10" data-linenumber="314">
             
-              <span class="hits">4</span>
-            
-
+              <span class="hits">10</span>
             
 
-            <code class="ruby">      award_treasure</code>
+            
+
+            <code class="ruby">    new_position = calculate_new_position(player_cell, direction)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="315">
+          <li class="covered" data-hits="10" data-linenumber="315">
+            
+              <span class="hits">10</span>
             
 
             
 
-            <code class="ruby">    when &#39;enemy&#39;</code>
+            <code class="ruby">    return flash_invalid_move unless valid_position?(new_position)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="316">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">      start_battle(cell)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="317">
-            
-
-            
-
-            <code class="ruby">    end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="318">
+          <li class="never" data-hits="" data-linenumber="316">
             
 
             
@@ -8554,24 +8524,48 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="10" data-linenumber="319">
+          <li class="covered" data-hits="9" data-linenumber="317">
             
-              <span class="hits">10</span>
-            
-
+              <span class="hits">9</span>
             
 
-            <code class="ruby">    @world.broadcast_grid(current_user)</code>
+            
+
+            <code class="ruby">    new_cell = find_new_cell(new_position)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="320">
+          <li class="covered" data-hits="9" data-linenumber="318">
+            
+              <span class="hits">9</span>
             
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">    return flash_occupied_square if player_square_occupied?(new_cell)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="319">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="8" data-linenumber="320">
+            
+              <span class="hits">8</span>
+            
+
+            
+
+            <code class="ruby">    process_move(player_cell, new_cell)</code>
           </li>
         </div>
       
@@ -8581,125 +8575,121 @@
 
             
 
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="322">
+            
+
+            
+
             <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="322">
+          <li class="covered" data-hits="1" data-linenumber="323">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  def start_battle(cell)</code>
+            <code class="ruby">  def calculate_new_position(player_cell, direction)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="323">
+          <li class="covered" data-hits="10" data-linenumber="324">
             
-              <span class="hits">2</span>
-            
-
+              <span class="hits">10</span>
             
 
-            <code class="ruby">    existing_battle = Battle.find_by(player: current_user, world: @world, state: &#39;active&#39;)</code>
+            
+
+            <code class="ruby">    case direction</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="324">
+          <li class="covered" data-hits="1" data-linenumber="325">
             
-              <span class="hits">2</span>
-            
-
+              <span class="hits">1</span>
             
 
-            <code class="ruby">    return if existing_battle</code>
+            
+
+            <code class="ruby">    when &#39;up&#39; then [player_cell.x, player_cell.y - 1]</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="325">
+          <li class="covered" data-hits="3" data-linenumber="326">
+            
+              <span class="hits">3</span>
             
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">    when &#39;down&#39; then [player_cell.x, player_cell.y + 1]</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="326">
+          <li class="covered" data-hits="1" data-linenumber="327">
             
-              <span class="hits">2</span>
-            
-
+              <span class="hits">1</span>
             
 
-            <code class="ruby">    enemy_stats = generate_enemy_stats</code>
+            
+
+            <code class="ruby">    when &#39;left&#39; then [player_cell.x - 1, player_cell.y]</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="327">
+          <li class="covered" data-hits="4" data-linenumber="328">
             
-              <span class="hits">2</span>
-            
-
+              <span class="hits">4</span>
             
 
-            <code class="ruby">    messages = chat_gpt_message(enemy_stats)</code>
+            
+
+            <code class="ruby">    when &#39;right&#39; then [player_cell.x + 1, player_cell.y]</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="328">
-            
-              <span class="hits">2</span>
+          <li class="never" data-hits="" data-linenumber="329">
             
 
             
 
-            <code class="ruby">    narration = ChatGptService.call(messages)</code>
+            <code class="ruby">    else</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="329">
+          <li class="covered" data-hits="1" data-linenumber="330">
             
-              <span class="hits">2</span>
-            
-
+              <span class="hits">1</span>
             
 
-            <code class="ruby">    narration_text = extract_narration_text(narration)</code>
+            
+
+            <code class="ruby">      [player_cell.x, player_cell.y]</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="330">
-            
-              <span class="hits">2</span>
+          <li class="never" data-hits="" data-linenumber="331">
             
 
             
 
-            <code class="ruby">    create_base_battle(narration_text, cell, enemy_stats)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="2" data-linenumber="331">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">    cell.update!(content: &#39;battle&#39;)</code>
+            <code class="ruby">    end</code>
           </li>
         </div>
       
@@ -8731,17 +8721,19 @@
 
             
 
-            <code class="ruby">  def chat_gpt_message(enemy_stats)</code>
+            <code class="ruby">  def valid_position?(position)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="335">
+          <li class="covered" data-hits="36" data-linenumber="335">
+            
+              <span class="hits">36</span>
             
 
             
 
-            <code class="ruby">    [</code>
+            <code class="ruby">    position.all? { |coord| coord.between?(0, 6) }</code>
           </li>
         </div>
       
@@ -8751,39 +8743,41 @@
 
             
 
-            <code class="ruby">      {</code>
+            <code class="ruby">  end</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="337">
-            
-              <span class="hits">2</span>
+          <li class="never" data-hits="" data-linenumber="337">
             
 
             
 
-            <code class="ruby">        role: &#39;system&#39;,</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="338">
+          <li class="covered" data-hits="1" data-linenumber="338">
+            
+              <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">        content: &quot;You are a narrator for a text-based RPG game.</code>
+            <code class="ruby">  def handle_cell_content(cell)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="339">
+          <li class="covered" data-hits="10" data-linenumber="339">
+            
+              <span class="hits">10</span>
             
 
             
 
-            <code class="ruby">                  The player has encountered an enemy in a mysterious world.</code>
+            <code class="ruby">    case cell.content</code>
           </li>
         </div>
       
@@ -8793,17 +8787,19 @@
 
             
 
-            <code class="ruby">                  Describe the enemy with #{enemy_stats[:health]}</code>
+            <code class="ruby">    when &#39;treasure&#39;</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="341">
+          <li class="covered" data-hits="4" data-linenumber="341">
+            
+              <span class="hits">4</span>
             
 
             
 
-            <code class="ruby">                  health and #{enemy_stats[:attack]} attack power in a vivid and exciting way.</code>
+            <code class="ruby">      award_treasure</code>
           </li>
         </div>
       
@@ -8813,17 +8809,19 @@
 
             
 
-            <code class="ruby">                  strictly limit the response to 30 words and no more.&quot;</code>
+            <code class="ruby">    when &#39;enemy&#39;</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="343">
+          <li class="covered" data-hits="2" data-linenumber="343">
+            
+              <span class="hits">2</span>
             
 
             
 
-            <code class="ruby">      }</code>
+            <code class="ruby">      start_battle(cell)</code>
           </li>
         </div>
       
@@ -8833,7 +8831,7 @@
 
             
 
-            <code class="ruby">    ]</code>
+            <code class="ruby">    end</code>
           </li>
         </div>
       
@@ -8843,12 +8841,34 @@
 
             
 
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="10" data-linenumber="346">
+            
+              <span class="hits">10</span>
+            
+
+            
+
+            <code class="ruby">    @world.broadcast_grid(current_user)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="347">
+            
+
+            
+
             <code class="ruby">  end</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="346">
+          <li class="never" data-hits="" data-linenumber="348">
             
 
             
@@ -8858,56 +8878,38 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="347">
+          <li class="covered" data-hits="1" data-linenumber="349">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  def create_base_battle(narration_text, cell, enemy_stats)</code>
+            <code class="ruby">  def start_battle(cell)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="348">
+          <li class="covered" data-hits="2" data-linenumber="350">
             
               <span class="hits">2</span>
             
 
             
 
-            <code class="ruby">    Battle.create!(</code>
+            <code class="ruby">    existing_battle = Battle.find_by(player: current_user, world: @world, state: &#39;active&#39;)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="349">
+          <li class="covered" data-hits="2" data-linenumber="351">
+            
+              <span class="hits">2</span>
             
 
             
 
-            <code class="ruby">      world: @world,</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="350">
-            
-
-            
-
-            <code class="ruby">      cell: cell,</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="351">
-            
-
-            
-
-            <code class="ruby">      player: current_user,</code>
+            <code class="ruby">    return if existing_battle</code>
           </li>
         </div>
       
@@ -8917,42 +8919,84 @@
 
             
 
-            <code class="ruby">      enemy_data: enemy_stats.merge(&#39;narration&#39; =&gt; narration_text),</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="353">
+          <li class="covered" data-hits="2" data-linenumber="353">
+            
+              <span class="hits">2</span>
             
 
             
 
-            <code class="ruby">      state: &#39;active&#39;,</code>
+            <code class="ruby">    enemy_stats = generate_enemy_stats</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="354">
+          <li class="covered" data-hits="2" data-linenumber="354">
+            
+              <span class="hits">2</span>
             
 
             
 
-            <code class="ruby">      turn: current_user.id.to_s</code>
+            <code class="ruby">    messages = chat_gpt_message(enemy_stats)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="355">
+          <li class="covered" data-hits="2" data-linenumber="355">
+            
+              <span class="hits">2</span>
             
 
             
 
-            <code class="ruby">    )</code>
+            <code class="ruby">    narration = ChatGptService.call(messages)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="356">
+          <li class="covered" data-hits="2" data-linenumber="356">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    narration_text = extract_narration_text(narration)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="357">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    create_base_battle(narration_text, cell, enemy_stats)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="358">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    cell.update!(content: &#39;battle&#39;)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="359">
             
 
             
@@ -8962,46 +9006,12 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="357">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="358">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def extract_narration_text(narration)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="2" data-linenumber="359">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">    if narration &amp;&amp; narration[&#39;choices&#39;] &amp;&amp; narration[&#39;choices&#39;][0] &amp;&amp;</code>
-          </li>
-        </div>
-      
-        <div>
           <li class="never" data-hits="" data-linenumber="360">
             
 
             
 
-            <code class="ruby">       narration[&#39;choices&#39;][0][&#39;message&#39;]</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -9013,7 +9023,7 @@
 
             
 
-            <code class="ruby">      narration[&#39;choices&#39;][0][&#39;message&#39;][&#39;content&#39;].strip</code>
+            <code class="ruby">  def chat_gpt_message(enemy_stats)</code>
           </li>
         </div>
       
@@ -9023,12 +9033,294 @@
 
             
 
+            <code class="ruby">    [</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="363">
+            
+
+            
+
+            <code class="ruby">      {</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="364">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">        role: &#39;system&#39;,</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="365">
+            
+
+            
+
+            <code class="ruby">        content: &quot;You are a narrator for a text-based RPG game.</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="366">
+            
+
+            
+
+            <code class="ruby">                  The player has encountered an enemy in a mysterious world.</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="367">
+            
+
+            
+
+            <code class="ruby">                  Describe the enemy with #{enemy_stats[:health]}</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="368">
+            
+
+            
+
+            <code class="ruby">                  health and #{enemy_stats[:attack]} attack power in a vivid and exciting way.</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="369">
+            
+
+            
+
+            <code class="ruby">                  strictly limit the response to 30 words and no more.&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="370">
+            
+
+            
+
+            <code class="ruby">      }</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="371">
+            
+
+            
+
+            <code class="ruby">    ]</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="372">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="373">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="374">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def create_base_battle(narration_text, cell, enemy_stats)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="375">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    Battle.create!(</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="376">
+            
+
+            
+
+            <code class="ruby">      world: @world,</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="377">
+            
+
+            
+
+            <code class="ruby">      cell: cell,</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="378">
+            
+
+            
+
+            <code class="ruby">      player: current_user,</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="379">
+            
+
+            
+
+            <code class="ruby">      enemy_data: enemy_stats.merge(&#39;narration&#39; =&gt; narration_text),</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="380">
+            
+
+            
+
+            <code class="ruby">      state: &#39;active&#39;,</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="381">
+            
+
+            
+
+            <code class="ruby">      turn: current_user.id.to_s</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="382">
+            
+
+            
+
+            <code class="ruby">    )</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="383">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="384">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="385">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def extract_narration_text(narration)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="386">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    if narration &amp;&amp; narration[&#39;choices&#39;] &amp;&amp; narration[&#39;choices&#39;][0] &amp;&amp;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="387">
+            
+
+            
+
+            <code class="ruby">       narration[&#39;choices&#39;][0][&#39;message&#39;]</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="388">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">      narration[&#39;choices&#39;][0][&#39;message&#39;][&#39;content&#39;].strip</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="389">
+            
+
+            
+
             <code class="ruby">    else</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="363">
+          <li class="covered" data-hits="1" data-linenumber="390">
             
               <span class="hits">1</span>
             
@@ -9040,7 +9332,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="364">
+          <li class="never" data-hits="" data-linenumber="391">
             
 
             
@@ -9050,308 +9342,12 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="365">
+          <li class="never" data-hits="" data-linenumber="392">
             
 
             
 
             <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="366">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="367">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def generate_enemy_stats</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="2" data-linenumber="368">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">    max_health = rand(50..150)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="369">
-            
-
-            
-
-            <code class="ruby">    {</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="2" data-linenumber="370">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">      health: max_health,</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="371">
-            
-
-            
-
-            <code class="ruby">      max_health: max_health,</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="372">
-            
-
-            
-
-            <code class="ruby">      attack: rand(5..20),</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="373">
-            
-
-            
-
-            <code class="ruby">      defense: rand(3..10)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="374">
-            
-
-            
-
-            <code class="ruby">    }</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="375">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="376">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="377">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def award_treasure</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="4" data-linenumber="378">
-            
-              <span class="hits">4</span>
-            
-
-            
-
-            <code class="ruby">    current_user.update!(shards_balance: current_user.shards_balance + 10)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="4" data-linenumber="379">
-            
-              <span class="hits">4</span>
-            
-
-            
-
-            <code class="ruby">    flash[:notice] = &#39;You found a treasure and earned 10 shards!&#39;</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="380">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="381">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="382">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def update_cells(player_cell, new_cell)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="10" data-linenumber="383">
-            
-              <span class="hits">10</span>
-            
-
-            
-
-            <code class="ruby">    player_cell.update!(content: &#39;empty&#39;)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="10" data-linenumber="384">
-            
-              <span class="hits">10</span>
-            
-
-            
-
-            <code class="ruby">    new_cell.update!(content: current_user.id)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="385">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="386">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="387">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def calculate_shard_drop(enemy_data)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="3" data-linenumber="388">
-            
-              <span class="hits">3</span>
-            
-
-            
-
-            <code class="ruby">    max_health = enemy_data[&#39;max_health&#39;]</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="3" data-linenumber="389">
-            
-              <span class="hits">3</span>
-            
-
-            
-
-            <code class="ruby">    attack = enemy_data[&#39;attack&#39;]</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="390">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="391">
-            
-
-            
-
-            <code class="ruby">    # heuristic: higher health and damage yield more shards</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="3" data-linenumber="392">
-            
-              <span class="hits">3</span>
-            
-
-            
-
-            <code class="ruby">    base_shards = (max_health / 10) + (attack / 2)</code>
           </li>
         </div>
       
@@ -9366,24 +9362,26 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="3" data-linenumber="394">
+          <li class="covered" data-hits="1" data-linenumber="394">
             
-              <span class="hits">3</span>
-            
-
+              <span class="hits">1</span>
             
 
-            <code class="ruby">    rand(base_shards..(base_shards * 1.5)).to_i</code>
+            
+
+            <code class="ruby">  def generate_enemy_stats</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="395">
+          <li class="covered" data-hits="2" data-linenumber="395">
+            
+              <span class="hits">2</span>
             
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">    max_health = rand(50..150)</code>
           </li>
         </div>
       
@@ -9393,31 +9391,29 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">    {</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="397">
+          <li class="covered" data-hits="2" data-linenumber="397">
             
-              <span class="hits">1</span>
-            
-
+              <span class="hits">2</span>
             
 
-            <code class="ruby">  def calculate_damage_battle(battle)</code>
+            
+
+            <code class="ruby">      health: max_health,</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="3" data-linenumber="398">
-            
-              <span class="hits">3</span>
+          <li class="never" data-hits="" data-linenumber="398">
             
 
             
 
-            <code class="ruby">    rand(battle.enemy_data[&#39;attack&#39;] - 5..battle.enemy_data[&#39;attack&#39;] + 5).clamp(0, Float::INFINITY)</code>
+            <code class="ruby">      max_health: max_health,</code>
           </li>
         </div>
       
@@ -9427,7 +9423,7 @@
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">      attack: rand(5..20),</code>
           </li>
         </div>
       
@@ -9437,60 +9433,22 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">      defense: rand(3..10)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="401">
-            
-              <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="401">
             
 
             
 
-            <code class="ruby">  def apply_damage_to_player(user_world_state, damage)</code>
+            <code class="ruby">    }</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="3" data-linenumber="402">
-            
-              <span class="hits">3</span>
-            
-
-            
-
-            <code class="ruby">    user_world_state.health -= damage</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="3" data-linenumber="403">
-            
-              <span class="hits">3</span>
-            
-
-            
-
-            <code class="ruby">    user_world_state.health = [0, user_world_state.health].max</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="3" data-linenumber="404">
-            
-              <span class="hits">3</span>
-            
-
-            
-
-            <code class="ruby">    user_world_state.save!</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="405">
+          <li class="never" data-hits="" data-linenumber="402">
             
 
             
@@ -9500,7 +9458,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="406">
+          <li class="never" data-hits="" data-linenumber="403">
             
 
             
@@ -9510,31 +9468,43 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="407">
+          <li class="covered" data-hits="1" data-linenumber="404">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  def player_defeated?(user_world_state)</code>
+            <code class="ruby">  def award_treasure</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="3" data-linenumber="408">
+          <li class="covered" data-hits="4" data-linenumber="405">
             
-              <span class="hits">3</span>
-            
-
+              <span class="hits">4</span>
             
 
-            <code class="ruby">    user_world_state.health &lt;= 0</code>
+            
+
+            <code class="ruby">    current_user.update!(shards_balance: current_user.shards_balance + 10)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="409">
+          <li class="covered" data-hits="4" data-linenumber="406">
+            
+              <span class="hits">4</span>
+            
+
+            
+
+            <code class="ruby">    flash[:notice] = &#39;You found a treasure and earned 10 shards!&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="407">
             
 
             
@@ -9544,7 +9514,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="410">
+          <li class="never" data-hits="" data-linenumber="408">
             
 
             
@@ -9554,38 +9524,58 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="411">
+          <li class="covered" data-hits="1" data-linenumber="409">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  def handle_loss(battle, damage)</code>
+            <code class="ruby">  def update_cells(player_cell, new_cell)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="412">
+          <li class="covered" data-hits="10" data-linenumber="410">
             
-              <span class="hits">1</span>
-            
-
+              <span class="hits">10</span>
             
 
-            <code class="ruby">    resolve_battle_loss(battle)</code>
+            
+
+            <code class="ruby">    player_cell.update!(content: &#39;empty&#39;)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="413">
+          <li class="covered" data-hits="10" data-linenumber="411">
             
-              <span class="hits">1</span>
+              <span class="hits">10</span>
+            
+
+            
+
+            <code class="ruby">    new_cell.update!(content: current_user.id)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="412">
             
 
             
 
-            <code class="ruby">    destroy_world</code>
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="413">
+            
+
+            
+
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -9597,29 +9587,31 @@
 
             
 
-            <code class="ruby">    flash[:alert] = &quot;The enemy defeated you! You took #{damage} damage and your world has been destroyed. Game over!&quot;</code>
+            <code class="ruby">  def calculate_shard_drop(enemy_data)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="415">
+          <li class="covered" data-hits="3" data-linenumber="415">
+            
+              <span class="hits">3</span>
             
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">    max_health = enemy_data[&#39;max_health&#39;]</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="416">
+          <li class="covered" data-hits="3" data-linenumber="416">
             
-              <span class="hits">1</span>
-            
-
+              <span class="hits">3</span>
             
 
-            <code class="ruby">    @world.broadcast_grid(current_user)</code>
+            
+
+            <code class="ruby">    attack = enemy_data[&#39;attack&#39;]</code>
           </li>
         </div>
       
@@ -9634,24 +9626,24 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="418">
-            
-              <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="418">
             
 
             
 
-            <code class="ruby">    redirect_to single_player_path</code>
+            <code class="ruby">    # heuristic: higher health and damage yield more shards</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="419">
+          <li class="covered" data-hits="3" data-linenumber="419">
+            
+              <span class="hits">3</span>
             
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">    base_shards = (max_health / 10) + (attack / 2)</code>
           </li>
         </div>
       
@@ -9666,55 +9658,19 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="421">
+          <li class="covered" data-hits="3" data-linenumber="421">
             
-              <span class="hits">1</span>
-            
-
+              <span class="hits">3</span>
             
 
-            <code class="ruby">  def handle_enemy_attack_success(battle, damage)</code>
+            
+
+            <code class="ruby">    rand(base_shards..(base_shards * 1.5)).to_i</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="422">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">    battle.toggle_turn</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="2" data-linenumber="423">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">    flash[:notice] = &quot;The enemy attacked you for #{damage} damage! It is now your turn.&quot;</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="2" data-linenumber="424">
-            
-              <span class="hits">2</span>
-            
-
-            
-
-            <code class="ruby">    redirect_to game_path(@world)</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="425">
+          <li class="never" data-hits="" data-linenumber="422">
             
 
             
@@ -9724,7 +9680,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="426">
+          <li class="never" data-hits="" data-linenumber="423">
             
 
             
@@ -9734,14 +9690,46 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="427">
+          <li class="covered" data-hits="1" data-linenumber="424">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  def resolve_battle_loss(battle)</code>
+            <code class="ruby">  def calculate_damage_battle(battle)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="3" data-linenumber="425">
+            
+              <span class="hits">3</span>
+            
+
+            
+
+            <code class="ruby">    rand(battle.enemy_data[&#39;attack&#39;] - 5..battle.enemy_data[&#39;attack&#39;] + 5).clamp(0, Float::INFINITY)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="426">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="427">
+            
+
+            
+
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -9753,12 +9741,48 @@
 
             
 
-            <code class="ruby">    battle.resolve(&#39;lost&#39;)</code>
+            <code class="ruby">  def apply_damage_to_player(user_world_state, damage)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="429">
+          <li class="covered" data-hits="3" data-linenumber="429">
+            
+              <span class="hits">3</span>
+            
+
+            
+
+            <code class="ruby">    user_world_state.health -= damage</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="3" data-linenumber="430">
+            
+              <span class="hits">3</span>
+            
+
+            
+
+            <code class="ruby">    user_world_state.health = [0, user_world_state.health].max</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="3" data-linenumber="431">
+            
+              <span class="hits">3</span>
+            
+
+            
+
+            <code class="ruby">    user_world_state.save!</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="432">
             
 
             
@@ -9768,48 +9792,12 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="430">
+          <li class="never" data-hits="" data-linenumber="433">
             
 
             
 
             <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="431">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  def destroy_world</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="432">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">    @world.battles.destroy_all</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="433">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">    @world.cells.destroy_all</code>
           </li>
         </div>
       
@@ -9821,19 +9809,19 @@
 
             
 
-            <code class="ruby">    @world.user_world_states.destroy_all</code>
+            <code class="ruby">  def player_defeated?(user_world_state)</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="435">
+          <li class="covered" data-hits="3" data-linenumber="435">
             
-              <span class="hits">1</span>
-            
-
+              <span class="hits">3</span>
             
 
-            <code class="ruby">    @world.destroy!</code>
+            
+
+            <code class="ruby">    user_world_state.health &lt;= 0</code>
           </li>
         </div>
       
@@ -9865,12 +9853,316 @@
 
             
 
+            <code class="ruby">  def handle_loss(battle, damage)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="439">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    resolve_battle_loss(battle)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="440">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    destroy_world</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="441">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    flash[:alert] = &quot;The enemy defeated you! You took #{damage} damage and your world has been destroyed. Game over!&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="442">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="443">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    @world.broadcast_grid(current_user)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="444">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="445">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    redirect_to single_player_path</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="446">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="447">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="448">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def handle_enemy_attack_success(battle, damage)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="449">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    battle.toggle_turn</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="450">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    flash[:notice] = &quot;The enemy attacked you for #{damage} damage! It is now your turn.&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="451">
+            
+              <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    redirect_to game_path(@world)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="452">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="453">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="454">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def resolve_battle_loss(battle)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="455">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    battle.resolve(&#39;lost&#39;)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="456">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="457">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="458">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  def destroy_world</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="459">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    @world.battles.destroy_all</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="460">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    @world.cells.destroy_all</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="461">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    @world.user_world_states.destroy_all</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="462">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    @world.destroy!</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="463">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="464">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="465">
+            
+              <span class="hits">1</span>
+            
+
+            
+
             <code class="ruby">  def user_id_str</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="15" data-linenumber="439">
+          <li class="covered" data-hits="15" data-linenumber="466">
             
               <span class="hits">15</span>
             
@@ -9882,7 +10174,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="440">
+          <li class="never" data-hits="" data-linenumber="467">
             
 
             
@@ -9892,7 +10184,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="441">
+          <li class="never" data-hits="" data-linenumber="468">
             
 
             
@@ -9902,7 +10194,7 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="442">
+          <li class="covered" data-hits="1" data-linenumber="469">
             
               <span class="hits">1</span>
             
@@ -9914,7 +10206,7 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="2" data-linenumber="443">
+          <li class="covered" data-hits="2" data-linenumber="470">
             
               <span class="hits">2</span>
             
@@ -9926,7 +10218,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="444">
+          <li class="never" data-hits="" data-linenumber="471">
             
 
             
@@ -9936,7 +10228,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="445">
+          <li class="never" data-hits="" data-linenumber="472">
             
 
             
@@ -13102,9 +13394,9 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="58" data-linenumber="62">
+          <li class="covered" data-hits="56" data-linenumber="62">
             
-              <span class="hits">58</span>
+              <span class="hits">56</span>
             
 
             
@@ -19893,7 +20185,7 @@
 
             
 
-            <code class="ruby">  config.omniauth :google_oauth2, ENV[&#39;GOOGLE_CLIENT_ID&#39;], ENV[&#39;GOOGLE_CLIENT_SECRET&#39;], {}</code>
+            <code class="ruby">  config.omniauth :google_oauth2, ENV.fetch(&#39;GOOGLE_CLIENT_ID&#39;, nil), ENV.fetch(&#39;GOOGLE_CLIENT_SECRET&#39;, nil), {}</code>
           </li>
         </div>
       
@@ -19913,7 +20205,7 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">  # ==&gt; Warden configuration</code>
           </li>
         </div>
       
@@ -19923,7 +20215,7 @@
 
             
 
-            <code class="ruby">  # ==&gt; Warden configuration</code>
+            <code class="ruby">  # If you want to use other strategies, that are not supported by Devise, or</code>
           </li>
         </div>
       
@@ -19933,7 +20225,7 @@
 
             
 
-            <code class="ruby">  # If you want to use other strategies, that are not supported by Devise, or</code>
+            <code class="ruby">  # change the failure app, you can configure them inside the config.warden block.</code>
           </li>
         </div>
       
@@ -19943,7 +20235,7 @@
 
             
 
-            <code class="ruby">  # change the failure app, you can configure them inside the config.warden block.</code>
+            <code class="ruby">  #</code>
           </li>
         </div>
       
@@ -19953,7 +20245,7 @@
 
             
 
-            <code class="ruby">  #</code>
+            <code class="ruby">  # config.warden do |manager|</code>
           </li>
         </div>
       
@@ -19963,7 +20255,7 @@
 
             
 
-            <code class="ruby">  # config.warden do |manager|</code>
+            <code class="ruby">  #   manager.intercept_401 = false</code>
           </li>
         </div>
       
@@ -19973,7 +20265,7 @@
 
             
 
-            <code class="ruby">  #   manager.intercept_401 = false</code>
+            <code class="ruby">  #   manager.default_strategies(scope: :user).unshift :some_external_strategy</code>
           </li>
         </div>
       
@@ -19983,7 +20275,7 @@
 
             
 
-            <code class="ruby">  #   manager.default_strategies(scope: :user).unshift :some_external_strategy</code>
+            <code class="ruby">  # end</code>
           </li>
         </div>
       
@@ -19993,7 +20285,7 @@
 
             
 
-            <code class="ruby">  # end</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -20003,7 +20295,7 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">  # ==&gt; Mountable engine configurations</code>
           </li>
         </div>
       
@@ -20013,7 +20305,7 @@
 
             
 
-            <code class="ruby">  # ==&gt; Mountable engine configurations</code>
+            <code class="ruby">  # When using Devise inside an engine, let&#39;s call it `MyEngine`, and this engine</code>
           </li>
         </div>
       
@@ -20023,7 +20315,7 @@
 
             
 
-            <code class="ruby">  # When using Devise inside an engine, let&#39;s call it `MyEngine`, and this engine</code>
+            <code class="ruby">  # is mountable, there are some extra configurations to be taken into account.</code>
           </li>
         </div>
       
@@ -20033,7 +20325,7 @@
 
             
 
-            <code class="ruby">  # is mountable, there are some extra configurations to be taken into account.</code>
+            <code class="ruby">  # The following options are available, assuming the engine is mounted as:</code>
           </li>
         </div>
       
@@ -20043,7 +20335,7 @@
 
             
 
-            <code class="ruby">  # The following options are available, assuming the engine is mounted as:</code>
+            <code class="ruby">  #</code>
           </li>
         </div>
       
@@ -20053,7 +20345,7 @@
 
             
 
-            <code class="ruby">  #</code>
+            <code class="ruby">  #     mount MyEngine, at: &#39;/my_engine&#39;</code>
           </li>
         </div>
       
@@ -20063,7 +20355,7 @@
 
             
 
-            <code class="ruby">  #     mount MyEngine, at: &#39;/my_engine&#39;</code>
+            <code class="ruby">  #</code>
           </li>
         </div>
       
@@ -20073,7 +20365,7 @@
 
             
 
-            <code class="ruby">  #</code>
+            <code class="ruby">  # The router that invoked `devise_for`, in the example above, would be:</code>
           </li>
         </div>
       
@@ -20083,7 +20375,7 @@
 
             
 
-            <code class="ruby">  # The router that invoked `devise_for`, in the example above, would be:</code>
+            <code class="ruby">  # config.router_name = :my_engine</code>
           </li>
         </div>
       
@@ -20093,7 +20385,7 @@
 
             
 
-            <code class="ruby">  # config.router_name = :my_engine</code>
+            <code class="ruby">  #</code>
           </li>
         </div>
       
@@ -20103,7 +20395,7 @@
 
             
 
-            <code class="ruby">  #</code>
+            <code class="ruby">  # When using OmniAuth, Devise cannot automatically set OmniAuth path,</code>
           </li>
         </div>
       
@@ -20113,7 +20405,7 @@
 
             
 
-            <code class="ruby">  # When using OmniAuth, Devise cannot automatically set OmniAuth path,</code>
+            <code class="ruby">  # so you need to do it manually. For the users scope, it would be:</code>
           </li>
         </div>
       
@@ -20123,7 +20415,7 @@
 
             
 
-            <code class="ruby">  # so you need to do it manually. For the users scope, it would be:</code>
+            <code class="ruby">  # config.omniauth_path_prefix = &#39;/my_engine/users/auth&#39;</code>
           </li>
         </div>
       
@@ -20133,7 +20425,7 @@
 
             
 
-            <code class="ruby">  # config.omniauth_path_prefix = &#39;/my_engine/users/auth&#39;</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -20143,7 +20435,7 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">  # ==&gt; Hotwire/Turbo configuration</code>
           </li>
         </div>
       
@@ -20153,7 +20445,7 @@
 
             
 
-            <code class="ruby">  # ==&gt; Hotwire/Turbo configuration</code>
+            <code class="ruby">  # When using Devise with Hotwire/Turbo, the http status for error responses</code>
           </li>
         </div>
       
@@ -20163,7 +20455,7 @@
 
             
 
-            <code class="ruby">  # When using Devise with Hotwire/Turbo, the http status for error responses</code>
+            <code class="ruby">  # and some redirects must match the following. The default in Devise for existing</code>
           </li>
         </div>
       
@@ -20173,7 +20465,7 @@
 
             
 
-            <code class="ruby">  # and some redirects must match the following. The default in Devise for existing</code>
+            <code class="ruby">  # apps is `200 OK` and `302 Found` respectively, but new apps are generated with</code>
           </li>
         </div>
       
@@ -20183,7 +20475,7 @@
 
             
 
-            <code class="ruby">  # apps is `200 OK` and `302 Found` respectively, but new apps are generated with</code>
+            <code class="ruby">  # these new defaults that match Hotwire/Turbo behavior.</code>
           </li>
         </div>
       
@@ -20193,22 +20485,12 @@
 
             
 
-            <code class="ruby">  # these new defaults that match Hotwire/Turbo behavior.</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="296">
-            
-
-            
-
             <code class="ruby">  # Note: These might become the new default in future versions of Devise.</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="297">
+          <li class="covered" data-hits="1" data-linenumber="296">
             
               <span class="hits">1</span>
             
@@ -20220,7 +20502,7 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="298">
+          <li class="covered" data-hits="1" data-linenumber="297">
             
               <span class="hits">1</span>
             
@@ -20232,7 +20514,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="299">
+          <li class="never" data-hits="" data-linenumber="298">
             
 
             
@@ -20242,7 +20524,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="300">
+          <li class="never" data-hits="" data-linenumber="299">
             
 
             
@@ -20252,7 +20534,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="301">
+          <li class="never" data-hits="" data-linenumber="300">
             
 
             
@@ -20262,7 +20544,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="302">
+          <li class="never" data-hits="" data-linenumber="301">
             
 
             
@@ -20272,7 +20554,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="303">
+          <li class="never" data-hits="" data-linenumber="302">
             
 
             
@@ -20282,7 +20564,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="304">
+          <li class="never" data-hits="" data-linenumber="303">
             
 
             
@@ -20292,7 +20574,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="305">
+          <li class="never" data-hits="" data-linenumber="304">
             
 
             
