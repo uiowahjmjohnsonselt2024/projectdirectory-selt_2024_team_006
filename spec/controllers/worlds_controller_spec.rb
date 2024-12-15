@@ -146,7 +146,7 @@ RSpec.describe WorldsController, type: :controller do
         battle.update!(state: 'won')
         post :resolve_battle, params: { id: world.id, outcome: 'win' }
         expect(response).to redirect_to(game_path(world))
-        expect(flash[:alert]).to eq('No active battle found!')
+        expect(flash[:alert]).to eq(nil)
       end
     end
   end

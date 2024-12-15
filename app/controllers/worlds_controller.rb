@@ -11,7 +11,17 @@ class WorldsController < ApplicationController
     player_cell = find_player_cell
     return redirect_to single_player_path, alert: 'Player not found on grid.' unless player_cell
 
-    process_player_move(player_cell, params[:direction])
+    move_cost = 50
+    if current_user.shards_balance < move_cost
+      return redirect_to game_path(@world), alert: 'Insufficient funds to move.'
+    end
+
+    if process_player_move(player_cell, params[:direction])
+      current_user.decrement!(:shards_balance, move_cost)
+      flash[:notice] = "You moved and were charged #{move_cost} shards."
+    else
+      flash[:alert] = 'Invalid move!'
+    end
 
     redirect_to game_path(@world)
   end
@@ -99,10 +109,19 @@ class WorldsController < ApplicationController
   end
 
   def process_shard_move(player_cell, new_cell)
-    if valid_position?([new_cell.x, new_cell.y])
+    distance = calculate_distance(player_cell, new_cell)
+    move_cost = distance * 50
+
+    if current_user.shards_balance < move_cost
+      flash[:alert] = "Insufficient funds for moving #{distance} squares (#{move_cost} shards required)."
+    elsif valid_position?([new_cell.x, new_cell.y])
       process_move(player_cell, new_cell)
-      current_user.decrement!(:shards_balance, 50)
+      current_user.decrement!(:shards_balance, move_cost)
+      flash[:notice] = "You moved #{distance} squares and were charged #{move_cost} shards."
+    else
+      flash[:alert] = 'Invalid move!'
     end
+
     redirect_to game_path(@world)
   end
 
@@ -418,5 +437,9 @@ class WorldsController < ApplicationController
 
   def user_id_str
     current_user.id.to_s
+  end
+
+  def calculate_distance(player_cell, new_cell)
+    (player_cell.x - new_cell.x).abs + (player_cell.y - new_cell.y).abs
   end
 end

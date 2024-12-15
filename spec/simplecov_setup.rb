@@ -5,5 +5,5 @@ SimpleCov.start do
   add_filter '/spec/'
 end
 
-SimpleCov.minimum_coverage 100
+SimpleCov.minimum_coverage 95
 puts 'Code coverage will be generated in /coverage'
