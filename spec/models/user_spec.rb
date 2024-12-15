@@ -46,4 +46,34 @@ RSpec.describe User, type: :model do
       expect(UserItem.find_by(id: user_item.id)).to be_nil
     end
   end
+  describe '.from_omniauth' do
+    let(:auth_hash) do
+      OmniAuth::AuthHash.new(
+        info: {
+          email: 'test@example.com'
+        }
+      )
+    end
+
+    context 'when a user with the given email already exists' do
+      let!(:existing_user) { create(:user, email: 'test@example.com') }
+
+      it 'returns the existing user' do
+        user = User.from_omniauth(auth_hash)
+        expect(user).to eq(existing_user)
+      end
+    end
+
+    context 'when a user with the given email does not exist' do
+      it 'creates a new user and returns it' do
+        expect do
+          User.from_omniauth(auth_hash)
+        end.to change(User, :count).by(1)
+
+        new_user = User.last
+        expect(new_user.email).to eq('test@example.com')
+        expect(new_user.valid?).to be true
+      end
+    end
+  end
 end

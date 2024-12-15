@@ -36,3 +36,19 @@ end
 Then('I should see {string}') do |content|
   expect(page).to have_content(content)
 end
+Given('a user with email {string} exists') do |email|
+  User.create!(email: email, password: 'password123')
+end
+
+Given('no user with email {string} exists') do |email|
+  User.where(email: email).delete_all
+end
+
+Then('a user with email {string} should exist') do |email|
+  user = User.find_by(email: email)
+  expect(user).not_to be_nil
+end
+
+Given('I am on the login page') do
+  visit new_user_session_path
+end

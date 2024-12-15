@@ -104,22 +104,42 @@ class WorldsController < ApplicationController
 
   def process_shard_move(player_cell, new_cell)
     distance = calculate_distance(player_cell, new_cell)
-    move_cost = distance * 50
-
-    if distance.zero?
-      flash[:notice] = 'You moved to an adjacent shard for free!'
-      process_move(player_cell, new_cell)
-    elsif current_user.shards_balance < move_cost
-      flash[:alert] = "Insufficient funds for moving #{distance} squares (#{move_cost} shards required)."
-    elsif valid_position?([new_cell.x, new_cell.y])
-      process_move(player_cell, new_cell)
-      current_user.decrement!(:shards_balance, move_cost)
-      flash[:notice] = "You moved #{distance} squares and were charged #{move_cost} shards."
+    move_cost = calculate_move_cost(distance)
+    if insufficient_funds?(move_cost)
+      handle_insufficient_funds(distance, move_cost)
+    elsif invalid_position?(new_cell)
+      handle_invalid_move
     else
-      flash[:alert] = 'Invalid move!'
+      handle_valid_move(player_cell, new_cell, distance, move_cost)
     end
 
     redirect_to game_path(@world)
+  end
+
+  def calculate_move_cost(distance)
+    distance * 50
+  end
+
+  def insufficient_funds?(cost)
+    current_user.shards_balance < cost
+  end
+
+  def invalid_position?(new_cell)
+    !valid_position?([new_cell.x, new_cell.y])
+  end
+
+  def handle_insufficient_funds(distance, cost)
+    flash[:alert] = "Insufficient funds for moving #{distance} squares (#{cost} shards required)."
+  end
+
+  def handle_invalid_move
+    flash[:alert] = 'Invalid move!'
+  end
+
+  def handle_valid_move(player_cell, new_cell, distance, move_cost)
+    process_move(player_cell, new_cell)
+    current_user.decrement!(:shards_balance, move_cost)
+    flash[:notice] = "You moved #{distance} squares and were charged #{move_cost} shards."
   end
 
   def same_location?(player_cell, x_pos, y_pos)

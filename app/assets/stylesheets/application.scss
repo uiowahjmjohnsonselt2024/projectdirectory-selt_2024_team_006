@@ -470,4 +470,23 @@
 .nav-tabs .nav-link {
     color: black;
 }
+.google-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #D2382C;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.google-btn:hover {
+    background-color: #B63024;
+    color: #fff;
+
+}
+
 
