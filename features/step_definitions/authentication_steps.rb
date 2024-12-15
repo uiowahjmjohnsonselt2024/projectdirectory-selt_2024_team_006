@@ -49,7 +49,6 @@ Then('a user with email {string} should exist') do |email|
   expect(user).not_to be_nil
 end
 
-Given("I am on the login page") do
+Given('I am on the login page') do
   visit new_user_session_path
 end
-

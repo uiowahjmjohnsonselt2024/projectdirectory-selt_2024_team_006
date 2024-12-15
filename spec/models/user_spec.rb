@@ -50,13 +50,13 @@ RSpec.describe User, type: :model do
     let(:auth_hash) do
       OmniAuth::AuthHash.new(
         info: {
-          email: "test@example.com"
+          email: 'test@example.com'
         }
       )
     end
 
     context 'when a user with the given email already exists' do
-      let!(:existing_user) { create(:user, email: "test@example.com") }
+      let!(:existing_user) { create(:user, email: 'test@example.com') }
 
       it 'returns the existing user' do
         user = User.from_omniauth(auth_hash)
@@ -66,12 +66,12 @@ RSpec.describe User, type: :model do
 
     context 'when a user with the given email does not exist' do
       it 'creates a new user and returns it' do
-        expect {
+        expect do
           User.from_omniauth(auth_hash)
-        }.to change(User, :count).by(1)
+        end.to change(User, :count).by(1)
 
         new_user = User.last
-        expect(new_user.email).to eq("test@example.com")
+        expect(new_user.email).to eq('test@example.com')
         expect(new_user.valid?).to be true
       end
     end
