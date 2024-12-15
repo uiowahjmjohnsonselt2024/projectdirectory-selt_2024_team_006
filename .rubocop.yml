@@ -107,7 +107,9 @@ Style/AmbiguousEndlessMethodDefinition:
 Metrics/BlockLength:
   Enabled: false
 Metrics/MethodLength:
-  Max: 11
+  Max: 15
+Metrics/AbcSize:
+  Max: 23
 Style/ArgumentsForwarding:
   Enabled: true
 Style/ArrayIntersect:
