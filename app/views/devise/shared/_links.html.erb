@@ -1,3 +1,14 @@
+<%- if devise_mapping.omniauthable? %>
+  <%- resource_class.omniauth_providers.each do |provider| %>
+    <% google_button_text = controller_name == 'registrations' ? "Sign up with Google Oauth" : "Sign in with Google Oauth" %>
+
+    <%= button_to google_button_text,
+                  omniauth_authorize_path(resource_name, provider),
+                  data: { turbo: false },
+                  class: "btn google-btn mb-3" %>
+  <% end %>
+<% end %>
+
 <%- if controller_name != 'sessions' %>
   <%= link_to "Log in", new_session_path(resource_name) %><br />
 <% end %>
@@ -18,8 +29,3 @@
   <%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name) %><br />
 <% end %>
 
-<%- if devise_mapping.omniauthable? %>
-  <%- resource_class.omniauth_providers.each do |provider| %>
-    <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), data: { turbo: false } %><br />
-  <% end %>
-<% end %>
